@@ -1,0 +1,190 @@
+.requiredData {
+    color:red !important;
+
+}
+
+.documentDiv{
+    position:relative; left:15px;
+    border:1px solid #D1D5DB;
+    width: 71rem !important;
+}
+
+  /* for datatables   */
+  div.dataTables_filter, div.dataTables_length, div.dataTables_info {
+    padding: 25px !important;
+  }
+
+  .dataTables_wrapper .dataTables_length select {
+    margin: 5px !important;
+  }
+  /* for inputmask  */
+
+  .money, .phoneNumber{
+    text-align: left !important;
+   }
+
+   /*Start: for calender fix  */
+   #calendar1 {
+    max-width: 900px;
+    margin: 10px auto;
+    max-height: 100px;
+  }
+  .fc .fc-scroller {
+      overflow: hidden auto;
+      height: 276.4px;
+  }
+
+  .fc-icon-left-single-arrow {
+    font-size: 100%;
+    height:20px !important;
+    top: -7%; }
+
+  .fc-icon-right-single-arrow {
+    font-size: 100%;
+    height:20px !important;
+    }
+
+    .fc-state-hover {
+      background-position: 0 -30px !important;
+    }
+     /*End: for calender fix  */
+
+      /*Start: Client communtiy list page fix  */
+     .community_div{
+      /* height: fit-content;
+      width: fit-content; */
+      width: 290px;
+    }
+
+    .community_card{
+      /* height: fit-content;
+      width: fit-content; */
+      height: 330px;
+      width: 260px;
+    }
+
+    .community_content{
+      color:black;
+      width: 222px;
+      /* width: fit-content; */
+    }
+     /*End: Client communtiy list page fix  */
+    /*Start: Client Homepage My apps  */
+     .apps{
+         /* width: 190px !important;
+         height: 190px !important; */
+         border-radius: 24px !important;
+        background-color: #f8f8f8 !important;
+
+     }
+
+     /* Css for Safari  */
+    @media screen and (-webkit-min-device-pixel-ratio:0){
+      ::i-block-chrome, .browser {
+        width: 210px !important;
+      }
+    }
+     /*End: Client Homepage My apps   */
+
+    .kb_del_btn{
+        margin: 2px !important;
+        height: 25px !important;
+        width: 110px !important;
+    }
+
+/*Start: Jobadder(Performance) page css */
+    /* loading-spinner */
+    .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.3) !important;
+        border-top: 4px solid #3498db  !important;
+        border-radius: 50% !important;
+        width: 40px !important;
+        height: 40px !important;
+        animation: spin 2s linear infinite !important;
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg) !important; }
+        100% { transform: rotate(360deg) !important; }
+    }
+
+    /* On hover card colour change */
+    .jobadder_cards:hover  {
+        transform: scale(1.05); /* Increase size on hover (1.05 is 105% of the original size) */
+        font-size: 1.2em !important; /* Increase text size on hover */
+        cursor: pointer !important; /* Change cursor to pointer on hover */
+        animation: blink 1s infinite alternate !important; /* Add blinking animation */
+    }
+
+    @keyframes blink {
+        0% {
+            filter: brightness(1); /* Full brightness */
+          }
+          100% {
+            filter: brightness(0.5); /* Half brightness */
+          }
+    }
+/*End: Jobadder page css */
+
+/*Start: Community page css */
+    .bootstrap-tagsinput .tag {
+        background: #0c83ff;
+        padding: 1px;
+        font-size: 15px;
+        border-radius: 6px;
+
+    }
+
+    .bootstrap-tagsinput{
+        width: 500px !important;
+    }
+
+    .bootstrap-tagsinput input{
+        border: none;
+        box-shadow: none;
+        outline: none;
+        background-color: transparent;
+        padding: 0 6px;
+        margin: 0px;
+        width:140px !important;
+            height: 24px;
+        max-width: inherit;
+    }
+
+    .keywords_break {
+        width:400px !important;
+        display:inline-block;
+    }
+/*End: Community page css */
+
+
+.app_card_body {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+/* Media query for screens with a width of 1440px */
+@media (min-width: 1200px) {
+    .app_card{
+        flex: 0 0 calc(18% - 20px) !important;
+        /* width: 20% !important; */
+    }
+}
+
+/* Start: css for knowledge base list view  */
+.custom-accordion-button {
+    width: 30px !important; /* Adjust the width as needed */
+}
+.question_block{
+    padding: 10px !important;
+    font-size: 15px !important;
+    width: 100% !important;
+}
+/* End: css for knowledge base list view  */
+
+
+
