@@ -13,12 +13,12 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-     use SoftDeletes;
+    use SoftDeletes;
     // protected $softDelete = true;
 
-    use HasApiTokens, HasFactory, Notifiable, HasRoles ;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    protected $table = 'users'; 
+    protected $table = 'users';
 
     protected $dates = ['deleted_at'];
     /**
@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-     protected $with = ['user_details'];
+    protected $with = ['user_details'];
     protected $fillable = [
         'name',
         'email',

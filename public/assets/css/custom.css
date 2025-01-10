@@ -168,11 +168,10 @@
 }
 
 /* Media query for screens with a width of 1440px */
-@media (min-width: 1200px) {
-    .app_card{
-        flex: 0 0 calc(18% - 20px) !important;
-        /* width: 20% !important; */
-    }
+.app_card{
+    width: 88px;
+    margin: 0.4rem;
+    /* width: 20% !important; */
 }
 
 /* Start: css for knowledge base list view  */
