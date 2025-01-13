@@ -2,12 +2,12 @@ import { apiService } from "./../../app.service";
 
 export const homeApi = apiService.injectEndpoints({
     endpoints: (builder) => ({
-        getUser: builder.query({
+        fetchMe: builder.query({
             query: () => ({
-                url: "/user",
+                url: "/me",
             }),
         }),
     }),
 });
 
-export const { useGetUserQuery } = homeApi;
+export const { useFetchMeQuery } = homeApi;

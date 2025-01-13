@@ -1,16 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-    Layout,
-    Button,
-    Row,
-    Col,
-    Typography,
-    Form,
-    Input,
-    message,
-} from "antd";
+import { Layout, Button, Row, Col, Typography, Form, Input } from "antd";
 import { toast } from "react-toastify";
 
 import signinbg from "./../../../imgs/2.webp";
@@ -40,7 +31,9 @@ export default function Login() {
     useEffect(() => {
         if (isSuccess) {
             navigate("/home");
-            toast.success("Login successful");
+            toast.success("Login successful", {
+                position: "bottom-right",
+            });
         }
 
         if (error) toast.error(`Login failed`);
@@ -84,7 +77,7 @@ export default function Login() {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="Email" />
+                                    <Input size="large" placeholder="Email" />
                                 </Form.Item>
 
                                 <Form.Item
@@ -99,7 +92,10 @@ export default function Login() {
                                         },
                                     ]}
                                 >
-                                    <Input.Password placeholder="Password" />
+                                    <Input.Password
+                                        size="small"
+                                        placeholder="Password"
+                                    />
                                 </Form.Item>
 
                                 <Form.Item>
