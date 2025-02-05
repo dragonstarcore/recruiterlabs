@@ -6,6 +6,7 @@ export const homeApi = apiService.injectEndpoints({
             query: () => ({
                 url: "/me",
             }),
+            providesTags: ["Me"],
         }),
     }),
 });

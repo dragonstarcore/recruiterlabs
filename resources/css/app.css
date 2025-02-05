@@ -526,7 +526,7 @@ h4 {
 
 .layout-dashboard .header-control .btn-sign-in {
     height: auto;
-    padding: 0 7px;
+    /* padding: 0 7px; */
     margin: 0;
     box-shadow: none;
     color: #8c8c8c;
@@ -2250,7 +2250,7 @@ small.redtext {
     stroke: transparent;
 }
 
-section.ant-layout.layout-content .ant-layout-content.content-ant {
+div.ant-layout.layout-content .ant-layout-content.content-ant {
     padding: 0px !important;
 }
 
@@ -2585,29 +2585,38 @@ section.ant-layout.layout-content .ant-layout-content.content-ant {
     background-position: 50%;
 }
 
-section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
+div.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
     span.ant-page-header-heading-title {
     color: #fff;
 }
 
-section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
+div.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
     span.ant-breadcrumb-separator {
     color: #fff;
 }
 
-section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
+div.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
     span.ant-breadcrumb-link {
     color: #fff;
 }
 
-section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
+span.ant-breadcrumb-link a {
+    color: #8c8c8c !important;
+}
+
+div.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
+    .ant-breadcrumb-separator {
+    color: #ffffff !important;
+}
+
+div.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
     .header-control
     svg
     path {
     fill: #fff;
 }
 
-section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
+div.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
     .btn-sign-in {
     color: #fff;
 }
@@ -2625,7 +2634,7 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
 }
 
 .card-profile-head .ant-card-head .ant-avatar {
-    box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
+    /* box-shadow: 0 5px 10px rgb(0 0 0 / 12%); */
     border-radius: 8px;
     margin: 0;
 }
@@ -3026,7 +3035,7 @@ button.ant-btn.ant-btn-dashed.ant-full-box svg {
     border-color: #096dd9;
 }
 
-section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
+div.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
     .header-control
     span.ant-input-affix-wrapper.header-search
     .anticon-search

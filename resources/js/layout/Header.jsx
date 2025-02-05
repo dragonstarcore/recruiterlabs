@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { Row, Col, Breadcrumb, Input, Dropdown, Space } from "antd";
 import {
@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 
 function Header({ name, subName }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => window.scrollTo(0, 0));
 
@@ -39,7 +40,7 @@ function Header({ name, subName }) {
         {
             key: "1",
             label: (
-                <Space>
+                <Space onClick={() => navigate("/profile")}>
                     <SettingOutlined />
                     <span>Update Profile</span>
                 </Space>
@@ -79,7 +80,7 @@ function Header({ name, subName }) {
                     <Dropdown menu={{ items }} placement="bottomLeft">
                         <Space style={{ cursor: "pointer" }}>
                             <UserOutlined />
-                            <span>{userData.name}</span>
+                            <span className="btn-sign-in">{userData.name}</span>
                         </Space>
                     </Dropdown>
                     <Input
