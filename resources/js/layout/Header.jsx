@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { Row, Col, Breadcrumb, Input, Dropdown, Space } from "antd";
+import { Row, Col, Breadcrumb, Input, Dropdown, Space, Button } from "antd";
 import {
     LogoutOutlined,
+    MenuUnfoldOutlined,
     SearchOutlined,
     SettingOutlined,
     UserOutlined,
@@ -15,7 +16,7 @@ import { logout, storeMe } from "./../app.slice";
 import { useFetchMeQuery } from "./../pages/home/home.service";
 import { toast } from "react-toastify";
 
-function Header({ name, subName }) {
+function Header({ name, subName, onPress }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -83,6 +84,13 @@ function Header({ name, subName }) {
                             <span className="btn-sign-in">{userData.name}</span>
                         </Space>
                     </Dropdown>
+                    <Button
+                        type="link"
+                        className="sidebar-toggler"
+                        onClick={() => onPress()}
+                    >
+                        {<MenuUnfoldOutlined />}
+                    </Button>
                     <Input
                         className="header-search"
                         placeholder="Type here..."
