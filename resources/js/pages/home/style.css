@@ -10,3 +10,41 @@
  .card-img-body{
     padding:0px !important
  }
+  .job-card{
+   font-weight: bold;
+  }
+  span{
+   color: grey;
+  }
+ .card-icon{
+   font-size:large;
+   color:rgb(39, 145, 250);
+ }
+ 
+.icon-box {
+   width: 48px;
+   height: 48px;
+   text-align: center;
+   background: #1890ff;
+   color: #fff;
+   border-radius: 0.5rem;
+   margin-left: auto;
+   line-height: 55px;
+ }
+ 
+ .icon-box span {
+   color: #fff;
+   font-size: 24px;
+ }
+ .custom-dates{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+ }
+
+ .jobadder-body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+ }

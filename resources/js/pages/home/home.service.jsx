@@ -14,7 +14,19 @@ export const homeApi = apiService.injectEndpoints({
             }),
             providesTags: ["Dashboard"],
         }),
+        fetchJobadderData: builder.mutation({
+            query: (data) => ({
+                url: "/dashboard_jobadder",
+                method: "POST",
+                body: data,
+            }),
+            providesTags: ["Jobadder"],
+        }),
     }),
 });
 
-export const { useFetchMeQuery,useFetchDataQuery  } = homeApi;
+export const {
+    useFetchMeQuery,
+    useFetchDataQuery,
+    useFetchJobadderDataMutation,
+} = homeApi;
