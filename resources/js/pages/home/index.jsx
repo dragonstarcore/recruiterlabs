@@ -1,21 +1,43 @@
 import React, { useState } from 'react';
-import { Card, Row, Col, Button, Select, Input, Alert, Typography, DatePicker, Spin } from 'antd';
+import { Card, Row,Image, Col, Button, Select, Input, Alert, Typography, DatePicker, Spin } from 'antd';
 import { useEffect } from 'react';
 import moment from 'moment';
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useFetchDataQuery } from "./home.service";
-
+import './style.css'
 const { Option } = Select;
 const { Title, Paragraph } = Typography;
-
+const apps = [
+    { link: 'https://www.xero.com/', imgSrc: 'xero.jpg' },
+    { link: 'https://jobadder.com/', imgSrc: 'jobadder.jpg' },
+    { link: 'https://www.linkedin.com/', imgSrc: 'linkedin.jpg' },
+    { link: 'https://www.microsoft.com/', imgSrc: 'msoffice.jpg' },
+    { link: 'https://www.dropbox.com/', imgSrc: 'dropbox.jpg' },
+    { link: 'https://login.microsoftonline.com/', imgSrc: 'sharepoint.jpg' },
+    { link: 'https://calendly.com/', imgSrc: 'calendly.jpg' },
+    { link: 'https://www.vincere.io/', imgSrc: 'vincere.jpg' },
+    { link: 'https://www.sourcebreaker.com/', imgSrc: 'sourcebreaker.jpg' },
+    { link: 'https://www.sonovate.com/', imgSrc: 'sonovate.jpg' },
+    { link: 'https://www.lastpass.com/', imgSrc: 'lastpass.jpg' },
+  ];
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { data: user, isError, isSuccess } = useFetchDataQuery();
+    const { dashboardData, isError, isSuccess ,isLoading} = useFetchDataQuery();
+   
+
     const userData = useSelector((apps) => apps.app.user);
     console.log(userData)
-    const [jobadder, setJobadder] = useState({});
+    const [jobadder, setJobadder] = useState({
+        fullname: "",
+        account_email: "",
+        jobs: 50,
+        contacts: 200,
+        interviews: 30,
+        candidates: 150,
+        jobs_graph: true,
+    });
     const [xero, setXero] = useState({});
     const [pageViews, setPageViews] = useState(null);
     const [totalVisitors, setTotalVisitors] = useState(null);
@@ -24,27 +46,24 @@ const Dashboard = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [apps, setApps] = useState([
-        { name: "Jobadder", connected: true },
-        { name: "Google Analytics", connected: false },
-        { name: "Xero", connected: true },
-    ]);
-
+     
+    useEffect(()=>{
+        if(!dashboardData)
+            return;
+        const {jobadder,page_views,total_visitors,GA_error,xero}=dashboardData
+        setJobadder(jobadder)
+        setTotalVisitors(total_visitors)
+        setPageViews(page_views)
+        setGAError(GA_error)
+        setXero(xero)
+    },[dashboardData])
     // Simulating fetching data
     useEffect(() => {
         // Simulate fetching data
-        setJobadder({
-            fullname: "John Doe",
-            account_email: "john.doe@example.com",
-            jobs: 50,
-            contacts: 200,
-            interviews: 30,
-            candidates: 150,
-            jobs_graph: true,
-        });
+         
         setXero({
-            organisationName: "Test Org",
-            username: "admin",
+            organisationName: "",
+            username: "",
             balance: [null, 5000],
             data: {
                 draft_count: 5,
@@ -55,8 +74,8 @@ const Dashboard = () => {
                 overdue_amount: 500,
             }
         });
-        setPageViews(1200);
-        setTotalVisitors(300);
+        setPageViews(0);
+        setTotalVisitors(0);
     }, []);
 
     const handleDateChange = (value) => {
@@ -87,15 +106,16 @@ const Dashboard = () => {
         setEndDate(dateString);
     };
 
-    if (loading) {
+    if (isLoading) {
         return <Spin size="large" />;
     }
     if(userData.role_type==2)
         return (
             <div className="content">
                 {/* Jobadder Section */}
-                {jobadder.fullname && (
-                    <Card>
+                <Card title="Jobadder">
+                {jobadder.fullname ? (
+                    <>
                         <Card.Meta
                             title="Jobadder"
                             description={
@@ -184,12 +204,26 @@ const Dashboard = () => {
                                 Filter
                             </Button>
                         )}
-                    </Card>
+                    </>
+
+                         
+                ):(
+                    
+                        <Card.Meta
+                             
+                            description={
+                                <Alert
+                                message="You have not connected any account yet, please connect your Jobadder account."
+                                type="error"
+                              />
+                            }
+                        />
                 )}
+                  </Card>
+
                 {/* Google Analytics Section */}
-                <Card>
+                <Card  style={{marginTop:10}} title="Google Analytics Data">
                     <Card.Meta
-                        title="Google Analytics Data"
                         description={
                             pageViews ? (
                                 <Row gutter={16}>
@@ -203,15 +237,17 @@ const Dashboard = () => {
                                     </Col>
                                 </Row>
                             ) : (
+                                GAError?(
+                                    <Alert message={GAError} type="error" />
+                                ):
                                 <Alert message="You have not connected any account yet, please connect your Google Analytics account." type="error" />
                             )
                         }
                     />
                 </Card>
                 {/* Xero Section */}
-                <Card>
+                <Card style={{marginTop:10}}  title="Xero Data">
                     <Card.Meta
-                        title="Xero Data"
                         description={
                             xero.organisationName ? (
                                 <>
@@ -239,62 +275,37 @@ const Dashboard = () => {
                         }
                     />
                 </Card>
-                <Card>
-                    <Title level={3}>My Apps</Title>
-                    <Row gutter={16}>
-                        {apps.map((app) => (
-                            <Col span={8} key={app.name}>
-                                <Card
-                                    title={app.name}
-                                    extra={app.connected ? <span style={{ color: 'green' }}>Connected</span> : <span style={{ color: 'red' }}>Not Connected</span>}
-                                    bordered={false}
-                                    style={{ width: '100%' }}
-                                >
-                                    {app.connected ? (
-                                        <Button type="primary" disabled>
-                                            Connected
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            type="primary"
-                                            onClick={() => handleConnect(app.name)}
-                                            loading={loading && app.name === "Jobadder"}
-                                        >
-                                            Connect
-                                        </Button>
-                                    )}
-                                </Card>
-                            </Col>
+                <Card title="My Apps" style={{ marginTop: 20 }} className='app_card_body'>
+                    <Row gutter={[16, 16]}>
+                        {apps.map((app, index) => (
+                        <Col key={index}   className='app_card'>
+                            <a href={app.link} target="_blank" rel="noopener noreferrer">
+                            <div className='card-img-body'  >
+                                <div className="card-img-actions mx-1 mt-1">
+                                <Image
+                                    className="card-img img-fluid"
+                                    src={`./assets/images/${app.imgSrc}`}
+                                    alt=""
+                                    preview={false}
+                                />
+                                </div>
+                            </div>
+                            </a>
+                        </Col>
                         ))}
                     </Row>
-                    {!apps.some(app => app.connected) && (
-                        <Alert
-                            message="You have not connected any apps yet. Please connect at least one."
-                            type="warning"
-                            showIcon
-                            style={{ marginTop: 16 }}
-                        />
-                    )}
                 </Card>
             </div>
 
         );
-        return (
-            <Card title="Dashboard" bordered={false}>
-            <Typography>
-                <Paragraph>No data</Paragraph>
-                {/* If you need to add a link to another page */}
-                {/* <Link to="/dates_data" target="_blank">
-                data
-                </Link> */}
-                {/* If you want a button instead of a link */}
-                <Button type="link" href="/dates_data" target="_blank">
-                data
-                </Button>
-            </Typography>
-            </Card>
+    return (
+        <Card title="Dashboard" bordered={false}>
+        <Typography>
+            <Paragraph>No data</Paragraph>
+        </Typography>
+        </Card>
 
-        );    
+    );    
 };
 
 export default Dashboard;

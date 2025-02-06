@@ -1,0 +1,12 @@
+.content{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+}
+ .app_card{
+    flex: 0 0 calc(12% - 20px) !important;
+ }
+ .card-img-body{
+    padding:0px !important
+ }
