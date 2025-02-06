@@ -132,8 +132,7 @@ class HomeController extends Controller
                 $GA_error = null;
         }
 
-
-        return view('home',compact('xero','page_views','total_visitors','jobadder','GA_error'));
+        return response()->json(['xero' => $xero, 'page_views' => $page_views, 'total_visitors' => $total_visitors,'jobadder' => $jobadder, 'GA_error' => $GA_error,], 200);
     }
 
     public function check_analytics_view_id(){

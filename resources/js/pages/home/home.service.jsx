@@ -8,7 +8,13 @@ export const homeApi = apiService.injectEndpoints({
             }),
             providesTags: ["Me"],
         }),
+        fetchData: builder.query({
+            query: () => ({
+                url: "/home",
+            }),
+            providesTags: ["Dashboard"],
+        }),
     }),
 });
 
-export const { useFetchMeQuery } = homeApi;
+export const { useFetchMeQuery,useFetchDataQuery  } = homeApi;
