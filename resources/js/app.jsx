@@ -16,15 +16,15 @@ import { store } from "./app.store";
 import Layout from "./layout";
 import Login from "./pages/login";
 import Home from "./pages/home";
-import Apps from "./pages/Apps";
+import Apps from "./pages/myapps";
 import Business from "./pages/business";
 import Community from "./pages/community";
 import GoogleAnalytics from "./pages/google";
 import KnowledgeBase from "./pages/knowledge";
 import Performance from "./pages/performance";
 import Staff from "./pages/staff";
-import Tickets from "./pages/Tickets";
-import FinanceForecast from "./pages/Forecast";
+import Tickets from "./pages/tickets";
+import FinanceForecast from "./pages/forecast";
 import Profile from "./pages/profile";
 
 import "antd/dist/reset.css";
