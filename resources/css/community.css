@@ -28,7 +28,8 @@
     margin: 0.4rem;
 }
 
-.ant-card-body {
+.community-card {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
 }

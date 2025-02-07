@@ -116,44 +116,46 @@ export default function Community() {
             }
             bordered={false}
         >
-            {filteredUsers.map((item, index) => (
-                <div key={index} className="card-container">
-                    <div className="header-container">
-                        <div className="full-width-image">
+            <div className="community-card">
+                {filteredUsers.map((item, index) => (
+                    <div key={index} className="card-container">
+                        <div className="header-container">
+                            <div className="full-width-image">
+                                <img
+                                    src={BgProfile}
+                                    alt="Subimage"
+                                    className="header-image"
+                                />
+                            </div>
                             <img
-                                src={BgProfile}
-                                alt="Subimage"
-                                className="header-image"
+                                src={`./${item.logo}`}
+                                className="avatar-style"
+                                alt="Logo"
                             />
                         </div>
-                        <img
-                            src={`./${item.logo}`}
-                            className="avatar-style"
-                            alt="Logo"
-                        />
-                    </div>
 
-                    <div className="content-section">
-                        <h2>{item.name}</h2>
+                        <div className="content-section">
+                            <h2>{item.name}</h2>
 
-                        <span className="card-container-email">
-                            <MailOutlined /> {item.email}
-                        </span>
-                        <br />
-                        <span className="card-container-location">
-                            <AimOutlined /> {item.location}
-                        </span>
+                            <span className="card-container-email">
+                                <MailOutlined /> {item.email}
+                            </span>
+                            <br />
+                            <span className="card-container-location">
+                                <AimOutlined /> {item.location}
+                            </span>
 
-                        <div style={{ marginTop: "1rem" }}>
-                            <strong>Industry</strong>
-                            <p>{item.industry}</p>
+                            <div style={{ marginTop: "1rem" }}>
+                                <strong>Industry</strong>
+                                <p>{item.industry}</p>
+                            </div>
+
+                            <strong>Specialism</strong>
+                            <TagsList keywords={item.keywords.split(",")} />
                         </div>
-
-                        <strong>Specialism</strong>
-                        <TagsList keywords={item.keywords.split(",")} />
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </Card>
     );
 }
