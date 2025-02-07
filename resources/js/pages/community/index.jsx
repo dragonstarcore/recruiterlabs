@@ -79,6 +79,7 @@ export default function Community() {
                             className="community-title-search1"
                         />
                         <Select
+                            allowClear={true}
                             className="community-title-search2"
                             size="large"
                             value={locationFilter}
