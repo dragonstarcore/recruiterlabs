@@ -247,8 +247,8 @@ const Dashboard = () => {
                 <Card
                     title="Jobadder"
                     headStyle={{
-                        backgroundColor: "lightblue",
                         fontSize: "20px",
+                        fontWeight: "bold",
                     }}
                 >
                     <div className="card-header">
@@ -474,15 +474,74 @@ const Dashboard = () => {
                                                     }}
                                                 >
                                                     <Col span={12}>
-                                                        <Card>
-                                                            <ChartContainer
-                                                                chartData={formatData(
-                                                                    jobadder.jobs_graph
-                                                                )}
-                                                                title="Jobs Data"
-                                                                chartType="bar"
-                                                                chartId="container5"
-                                                                color="#5997DE"
+                                                        <Card className="bar-chart">
+                                                            <ApexCharts
+                                                                options={{
+                                                                    chart: {
+                                                                        type: "bar",
+                                                                        zoom: {
+                                                                            enabled: true,
+                                                                        },
+                                                                    },
+                                                                    colors: [
+                                                                        "white",
+                                                                    ],
+                                                                    title: {
+                                                                        text: "Jobs Data",
+                                                                        style: {
+                                                                            color: "#fff", // Set color for chart title
+                                                                        },
+                                                                    },
+                                                                    xaxis: {
+                                                                        categories:
+                                                                            formatData(
+                                                                                jobadder.jobs_graph
+                                                                            )
+                                                                                .names,
+                                                                        labels: {
+                                                                            style: {
+                                                                                colors: "#fff", // Set color for X-axis labels
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    yaxis: {
+                                                                        labels: {
+                                                                            style: {
+                                                                                colors: "#fff", // Set color for X-axis labels
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    tooltip: {
+                                                                        stickOnContact: true,
+                                                                    },
+
+                                                                    plotOptions:
+                                                                        {
+                                                                            bar: {
+                                                                                horizontal: false,
+                                                                                columnWidth:
+                                                                                    "40%",
+                                                                                borderRadius: 7,
+                                                                            },
+                                                                        },
+                                                                    grid: {
+                                                                        show: true,
+                                                                        borderColor:
+                                                                            "#ccc",
+                                                                        strokeDashArray: 2,
+                                                                    },
+                                                                }}
+                                                                series={[
+                                                                    {
+                                                                        name: "count",
+                                                                        data: formatData(
+                                                                            jobadder.jobs_graph
+                                                                        )
+                                                                            .values,
+                                                                    },
+                                                                ]}
+                                                                type="bar"
+                                                                height={350}
                                                             />
                                                         </Card>
                                                     </Col>
@@ -552,8 +611,8 @@ const Dashboard = () => {
                     style={{ marginTop: 10 }}
                     title="Google Analytics Data"
                     headStyle={{
-                        backgroundColor: "lightblue",
                         fontSize: "20px",
+                        fontWeight: "bold",
                     }}
                 >
                     <Card.Meta
@@ -589,8 +648,8 @@ const Dashboard = () => {
                     style={{ marginTop: 10 }}
                     title="Xero Data"
                     headStyle={{
-                        backgroundColor: "lightblue",
                         fontSize: "20px",
+                        fontWeight: "bold",
                     }}
                 >
                     <Card.Meta
@@ -688,17 +747,17 @@ const Dashboard = () => {
                                                 <ApexCharts
                                                     options={{
                                                         chart: {
-                                                            type: "bar",
+                                                            type: "line",
                                                             zoom: {
                                                                 enabled: true,
                                                                 type: "y",
                                                             },
                                                         },
                                                         title: {
-                                                            text: undefined,
+                                                            text: "Cash in and out Data",
                                                         },
                                                         subtitle: {
-                                                            text: "Cash in and out Data",
+                                                            text: undefined,
                                                         },
                                                         xaxis: {
                                                             categories:
@@ -715,6 +774,10 @@ const Dashboard = () => {
                                                                             return `£ ${val}`;
                                                                         },
                                                                 },
+                                                                borderRadius: 4,
+                                                                borderRadiusApplication:
+                                                                    "end",
+                                                                horizontal: true,
                                                             },
                                                         },
                                                         tooltip: {
@@ -735,13 +798,15 @@ const Dashboard = () => {
                                                         {
                                                             name: "In",
                                                             data: cashIn,
+                                                            color: "rgb(24, 144, 255)",
                                                         },
                                                         {
                                                             name: "Out",
                                                             data: cashOut,
+                                                            color: "rgb(4, 175, 41)",
                                                         },
                                                     ]}
-                                                    type="bar"
+                                                    type="line"
                                                     height={350}
                                                 />
                                             </Card>
@@ -761,8 +826,8 @@ const Dashboard = () => {
                     title="My Apps"
                     style={{ marginTop: 20 }}
                     headStyle={{
-                        backgroundColor: "lightblue",
                         fontSize: "20px",
+                        fontWeight: "bold",
                     }}
                     className="app_card_body"
                 >
