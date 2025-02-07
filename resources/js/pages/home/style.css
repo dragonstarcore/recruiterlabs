@@ -5,7 +5,7 @@
 
 }
  .app_card{
-    flex: 0 0 calc(12% - 20px) !important;
+    flex: 0 0 calc(8%) !important;
  }
  .card-img-body{
     padding:0px !important
@@ -13,9 +13,19 @@
   .job-card{
    font-weight: bold;
   }
-  span{
+  .dashboard-info{
    color: grey;
   }
+.alert{
+
+  color: rgb(167, 48, 48);
+}
+.analytics-info{
+font-size: large;
+font-weight: bold;
+color: black;
+margin-bottom:7px;
+}
  .card-icon{
    font-size:large;
    color:rgb(39, 145, 250);

@@ -73,16 +73,12 @@ const Dashboard = () => {
         ]);
 
         return (
-            <Col span={12}>
-                <Card>
-                    <ApexCharts
-                        options={options}
-                        series={series}
-                        type={chartType}
-                        height={350}
-                    />
-                </Card>
-            </Col>
+            <ApexCharts
+                options={options}
+                series={series}
+                type={chartType}
+                height={350}
+            />
         );
     };
     const profile = [
@@ -248,7 +244,13 @@ const Dashboard = () => {
         return (
             <div className="content">
                 {/* Jobadder Section */}
-                <Card title="Jobadder">
+                <Card
+                    title="Jobadder"
+                    headStyle={{
+                        backgroundColor: "lightblue",
+                        fontSize: "20px",
+                    }}
+                >
                     <div className="card-header">
                         <Form
                             form={form}
@@ -300,16 +302,25 @@ const Dashboard = () => {
                                                         <Form.Item>
                                                             <Button
                                                                 type="primary"
+                                                                size="small"
+                                                                style={{
+                                                                    width: "100%",
+                                                                    height: "30px",
+                                                                    padding: 0,
+                                                                    fontSize:
+                                                                        "large",
+                                                                }}
                                                                 onClick={
                                                                     handleSubmit
                                                                 }
-                                                                style={{
-                                                                    width: "60%",
-                                                                    height: "80%",
-                                                                    color: "white",
-                                                                }}
                                                             >
-                                                                Filter
+                                                                <span
+                                                                    style={{
+                                                                        color: "white",
+                                                                    }}
+                                                                >
+                                                                    Filter
+                                                                </span>
                                                             </Button>
                                                         </Form.Item>
                                                     </Col>
@@ -351,202 +362,215 @@ const Dashboard = () => {
                         </Form>
                     </div>
                     <div>
-                        {isJobadderLoading && <Spin size="large" />}
-                        {!isJobadderLoading &&
-                            (jobadder.fullname ? (
-                                <>
-                                    <Card.Meta
-                                        description={
-                                            <>
-                                                <p>
-                                                    {jobadder.fullname} -{" "}
-                                                    {jobadder.account_email}
-                                                </p>
-                                                <Row gutter={16}>
-                                                    <Col span={6}>
-                                                        <Card className="job-card">
-                                                            <Row>
-                                                                <Col xs={18}>
-                                                                    <span>
-                                                                        Total
-                                                                        Jobs
-                                                                    </span>
-                                                                    <Title
-                                                                        level={
-                                                                            2
-                                                                        }
-                                                                    >
-                                                                        {"+" +
-                                                                            jobadder.jobs}
-                                                                    </Title>
-                                                                </Col>
-                                                                <Col xs={6}>
-                                                                    <div className="icon-box">
-                                                                        <ProjectFilled />
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
+                        {isJobadderLoading ? (
+                            <Spin size="large" fullscreen />
+                        ) : jobadder.fullname ? (
+                            <>
+                                <Card.Meta
+                                    description={
+                                        <>
+                                            <p>
+                                                {jobadder.fullname} -{" "}
+                                                {jobadder.account_email}
+                                            </p>
+                                            <Row gutter={16}>
+                                                <Col span={6}>
+                                                    <Card className="job-card">
+                                                        <Row>
+                                                            <Col xs={18}>
+                                                                <div className="dashboard-info">
+                                                                    Total Jobs
+                                                                </div>
+                                                                <Title
+                                                                    level={2}
+                                                                >
+                                                                    {"+" +
+                                                                        jobadder.jobs}
+                                                                </Title>
+                                                            </Col>
+                                                            <Col xs={6}>
+                                                                <div className="icon-box">
+                                                                    <ProjectFilled />
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                </Col>
+                                                <Col span={6}>
+                                                    <Card className="job-card">
+                                                        <Row>
+                                                            <Col xs={18}>
+                                                                <div className="dashboard-info">
+                                                                    Total
+                                                                    Contacts
+                                                                </div>
+                                                                <Title
+                                                                    level={2}
+                                                                >
+                                                                    {"+" +
+                                                                        jobadder.contacts}
+                                                                </Title>
+                                                            </Col>
+                                                            <Col xs={6}>
+                                                                <div className="icon-box">
+                                                                    <ContactsFilled />
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                </Col>
+                                                <Col span={6}>
+                                                    <Card className="job-card">
+                                                        <Row>
+                                                            <Col xs={18}>
+                                                                <div className="dashboard-info">
+                                                                    Total
+                                                                    Interviews
+                                                                </div>
+                                                                <Title
+                                                                    level={2}
+                                                                >
+                                                                    {"+" +
+                                                                        jobadder.interviews}
+                                                                </Title>
+                                                            </Col>
+                                                            <Col xs={6}>
+                                                                <div className="icon-box">
+                                                                    <WechatWorkFilled />
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                </Col>
+                                                <Col span={6}>
+                                                    <Card className="job-card">
+                                                        <Row>
+                                                            <Col xs={18}>
+                                                                <div className="dashboard-info">
+                                                                    Total
+                                                                    Candidates
+                                                                </div>
+                                                                <Title
+                                                                    level={2}
+                                                                >
+                                                                    {"+" +
+                                                                        jobadder.candidates}
+                                                                </Title>
+                                                            </Col>
+                                                            <Col xs={6}>
+                                                                <div className="icon-box">
+                                                                    {profile}
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                </Col>
+                                            </Row>
+                                            {jobadder.jobs_graph && (
+                                                <Row
+                                                    gutter={[16, 16]}
+                                                    style={{
+                                                        marginTop: 10,
+                                                    }}
+                                                >
+                                                    <Col span={12}>
+                                                        <Card>
+                                                            <ChartContainer
+                                                                chartData={formatData(
+                                                                    jobadder.jobs_graph
+                                                                )}
+                                                                title="Jobs Data"
+                                                                chartType="bar"
+                                                                chartId="container5"
+                                                                color="#5997DE"
+                                                            />
                                                         </Card>
                                                     </Col>
-                                                    <Col span={6}>
-                                                        <Card className="job-card">
-                                                            <Row>
-                                                                <Col xs={18}>
-                                                                    <span>
-                                                                        Total
-                                                                        Contacts
-                                                                    </span>
-                                                                    <Title
-                                                                        level={
-                                                                            2
-                                                                        }
-                                                                    >
-                                                                        {"+" +
-                                                                            jobadder.contacts}
-                                                                    </Title>
-                                                                </Col>
-                                                                <Col xs={6}>
-                                                                    <div className="icon-box">
-                                                                        <ContactsFilled />
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
+                                                    <Col span={12}>
+                                                        <Card>
+                                                            {/* Candidates Data Chart */}
+                                                            <ChartContainer
+                                                                chartData={formatData(
+                                                                    jobadder.candidates_graph
+                                                                )}
+                                                                title="Candidates Data"
+                                                                chartType="line"
+                                                                chartId="container6"
+                                                                color="#FF9655"
+                                                            />
                                                         </Card>
                                                     </Col>
-                                                    <Col span={6}>
-                                                        <Card className="job-card">
-                                                            <Row>
-                                                                <Col xs={18}>
-                                                                    <span>
-                                                                        Total
-                                                                        Interviews
-                                                                    </span>
-                                                                    <Title
-                                                                        level={
-                                                                            2
-                                                                        }
-                                                                    >
-                                                                        {"+" +
-                                                                            jobadder.interviews}
-                                                                    </Title>
-                                                                </Col>
-                                                                <Col xs={6}>
-                                                                    <div className="icon-box">
-                                                                        <WechatWorkFilled />
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
+                                                    {/* Contacts Data Chart */}
+                                                    <Col span={12}>
+                                                        <Card>
+                                                            <ChartContainer
+                                                                chartData={formatData(
+                                                                    jobadder.contacts_graph
+                                                                )}
+                                                                title="Contacts Data"
+                                                                chartType="line"
+                                                                chartId="container7"
+                                                                color="#f35c86"
+                                                            />
                                                         </Card>
                                                     </Col>
-                                                    <Col span={6}>
-                                                        <Card className="job-card">
-                                                            <Row>
-                                                                <Col xs={18}>
-                                                                    <span>
-                                                                        Total
-                                                                        Candidates
-                                                                    </span>
-                                                                    <Title
-                                                                        level={
-                                                                            2
-                                                                        }
-                                                                    >
-                                                                        {"+" +
-                                                                            jobadder.candidates}
-                                                                    </Title>
-                                                                </Col>
-                                                                <Col xs={6}>
-                                                                    <div className="icon-box">
-                                                                        {
-                                                                            profile
-                                                                        }
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
+                                                    <Col span={12}>
+                                                        {/* Interviews Data Chart */}
+                                                        <Card>
+                                                            <ChartContainer
+                                                                chartData={formatData(
+                                                                    jobadder.interviews_graph
+                                                                )}
+                                                                title="Interviews Data"
+                                                                chartType="area"
+                                                                chartId="container8"
+                                                                color="#26a69a"
+                                                            />
                                                         </Card>
                                                     </Col>
                                                 </Row>
-                                                {jobadder.jobs_graph && (
-                                                    <Row
-                                                        gutter={[16, 16]}
-                                                        style={{
-                                                            marginTop: 10,
-                                                        }}
-                                                    >
-                                                        <ChartContainer
-                                                            chartData={formatData(
-                                                                jobadder.jobs_graph
-                                                            )}
-                                                            title="Jobs Data"
-                                                            chartType="bar"
-                                                            chartId="container5"
-                                                            color="#5997DE"
-                                                        />
-
-                                                        {/* Candidates Data Chart */}
-                                                        <ChartContainer
-                                                            chartData={formatData(
-                                                                jobadder.candidates_graph
-                                                            )}
-                                                            title="Candidates Data"
-                                                            chartType="line"
-                                                            chartId="container6"
-                                                            color="#FF9655"
-                                                        />
-
-                                                        {/* Contacts Data Chart */}
-                                                        <ChartContainer
-                                                            chartData={formatData(
-                                                                jobadder.contacts_graph
-                                                            )}
-                                                            title="Contacts Data"
-                                                            chartType="line"
-                                                            chartId="container7"
-                                                            color="#f35c86"
-                                                        />
-
-                                                        {/* Interviews Data Chart */}
-                                                        <ChartContainer
-                                                            chartData={formatData(
-                                                                jobadder.interviews_graph
-                                                            )}
-                                                            title="Interviews Data"
-                                                            chartType="area"
-                                                            chartId="container8"
-                                                            color="#26a69a"
-                                                        />
-                                                    </Row>
-                                                )}
-                                            </>
-                                        }
-                                    />
-                                </>
-                            ) : (
-                                <Card.Meta
-                                    description={
-                                        <Alert
-                                            message="You have not connected any account yet, please connect your Jobadder account."
-                                            type="error"
-                                        />
+                                            )}
+                                        </>
                                     }
                                 />
-                            ))}
+                            </>
+                        ) : (
+                            <Card.Meta
+                                description={
+                                    <Alert
+                                        message="You have not connected any account yet, please connect your Jobadder account."
+                                        type="error"
+                                    />
+                                }
+                            />
+                        )}
                     </div>
                 </Card>
 
                 {/* Google Analytics Section */}
-                <Card style={{ marginTop: 10 }} title="Google Analytics Data">
+                <Card
+                    style={{ marginTop: 10 }}
+                    title="Google Analytics Data"
+                    headStyle={{
+                        backgroundColor: "lightblue",
+                        fontSize: "20px",
+                    }}
+                >
                     <Card.Meta
                         description={
                             pageViews ? (
                                 <Row gutter={16}>
                                     <Col span={12}>
-                                        <h6>Page Views</h6>
-                                        <p>{pageViews}</p>
+                                        <div className="analytics-info">
+                                            Page Views
+                                        </div>
+                                        <h3>{pageViews}</h3>
                                     </Col>
                                     <Col span={12}>
-                                        <h6>Unique Users</h6>
-                                        <p>{totalVisitors}</p>
+                                        <div className="analytics-info">
+                                            Unique Users
+                                        </div>
+                                        <h3>{totalVisitors}</h3>
                                     </Col>
                                 </Row>
                             ) : GAError ? (
@@ -561,7 +585,14 @@ const Dashboard = () => {
                     />
                 </Card>
                 {/* Xero Section */}
-                <Card style={{ marginTop: 10 }} title="Xero Data">
+                <Card
+                    style={{ marginTop: 10 }}
+                    title="Xero Data"
+                    headStyle={{
+                        backgroundColor: "lightblue",
+                        fontSize: "20px",
+                    }}
+                >
                     <Card.Meta
                         description={
                             xero.organisationName ? (
@@ -572,41 +603,62 @@ const Dashboard = () => {
                                     <Row gutter={16}>
                                         <Col span={12}>
                                             <Card
+                                                style={{ width: "100%" }}
                                                 title={
                                                     <>
                                                         <h6>
                                                             Invoices owed to you
                                                         </h6>
-                                                        <p>
-                                                            {
-                                                                xero.data
-                                                                    .draft_count
-                                                            }{" "}
-                                                            Draft invoices:{" "}
-                                                            {
-                                                                xero.data
-                                                                    .draft_amount
-                                                            }
-                                                        </p>
-                                                        <p>
-                                                            {xero.data.aw_count}{" "}
-                                                            Awaiting payment:{" "}
-                                                            {
-                                                                xero.data
-                                                                    .aw_amount
-                                                            }
-                                                        </p>
-                                                        <p>
-                                                            {
-                                                                xero.data
-                                                                    .overdue_count
-                                                            }{" "}
-                                                            Overdue:{" "}
-                                                            {
-                                                                xero.data
-                                                                    .overdue_amount
-                                                            }
-                                                        </p>
+                                                        <Row gutter={[6, 6]}>
+                                                            <Col span={6}>
+                                                                <p>
+                                                                    {
+                                                                        xero
+                                                                            .data
+                                                                            .draft_count
+                                                                    }
+                                                                    Draft
+                                                                    invoices:
+                                                                    {
+                                                                        xero
+                                                                            .data
+                                                                            .draft_amount
+                                                                    }
+                                                                </p>
+                                                            </Col>
+                                                            <Col span={6}>
+                                                                <p>
+                                                                    {
+                                                                        xero
+                                                                            .data
+                                                                            .aw_count
+                                                                    }{" "}
+                                                                    Awaiting
+                                                                    payment:{" "}
+                                                                    {
+                                                                        xero
+                                                                            .data
+                                                                            .aw_amount
+                                                                    }
+                                                                </p>
+                                                            </Col>
+                                                            <Col span={6}>
+                                                                {" "}
+                                                                <p>
+                                                                    {
+                                                                        xero
+                                                                            .data
+                                                                            .overdue_count
+                                                                    }{" "}
+                                                                    Overdue:{" "}
+                                                                    {
+                                                                        xero
+                                                                            .data
+                                                                            .overdue_amount
+                                                                    }
+                                                                </p>
+                                                            </Col>
+                                                        </Row>
                                                     </>
                                                 }
                                             >
@@ -651,9 +703,6 @@ const Dashboard = () => {
                                                         xaxis: {
                                                             categories:
                                                                 categories,
-                                                            title: {
-                                                                text: "Weeks",
-                                                            },
                                                         },
                                                         plotOptions: {
                                                             bar: {
@@ -693,7 +742,7 @@ const Dashboard = () => {
                                                         },
                                                     ]}
                                                     type="bar"
-                                                    height={400}
+                                                    height={350}
                                                 />
                                             </Card>
                                         </Col>
@@ -711,6 +760,10 @@ const Dashboard = () => {
                 <Card
                     title="My Apps"
                     style={{ marginTop: 20 }}
+                    headStyle={{
+                        backgroundColor: "lightblue",
+                        fontSize: "20px",
+                    }}
                     className="app_card_body"
                 >
                     <Row gutter={[16, 16]}>
