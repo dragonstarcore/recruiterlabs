@@ -1,37 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
-import ApexCharts from "react-apexcharts";
 import { toast } from "react-toastify";
 import {
     Card,
     Form,
     Row,
-    Image,
     Col,
     Button,
     Select,
-    Input,
     DatePicker,
     Alert,
     Typography,
     Spin,
 } from "antd";
 import moment from "moment";
-import Icon, {
-    ProjectFilled,
-    ContactsFilled,
-    WechatWorkFilled,
-    TeamOutlined,
-} from "@ant-design/icons";
-
+import JobContainer from "./home.job";
+import GoogleAnalytics from "./home.google";
+import XeroContainer from "./home.xero";
 import {
     useFetchDataQuery,
     useFetchJobadderDataMutation,
 } from "./home.service";
-import ChartContainer from "./home.chart";
 import { setJobadder, setDashboard } from "./home.slice";
-import apps from "./home.const";
 import "./style.css";
 
 const { Option } = Select;
@@ -39,25 +29,7 @@ const { Title, Paragraph } = Typography;
 
 const Dashboard = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-
-    const formatData = (data) => {
-        if (!data) return;
-        const names = [];
-        const values = [];
-
-        // Ensure data exists and contains 'name' and 'y'
-        data.forEach((item) => {
-            if (item && item.name && item.y !== undefined) {
-                names.push(item.name);
-                values.push(item.y);
-            }
-        });
-
-        return { names, values };
-    };
     const { data, isError, isSuccess, isLoading } = useFetchDataQuery();
-
     useEffect(() => {
         console.log(data);
         if (isSuccess) {
@@ -96,45 +68,6 @@ const Dashboard = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [customDateVisible, setCustomDateVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        if (!xero) return;
-        const totalCash = xero["total_cash"];
-
-        try {
-            const inData = [];
-            const outData = [];
-
-            // Process 'In' data
-            for (let i = 0; i < Object.keys(totalCash["y"]["In"]).length; i++) {
-                inData.push(Math.round(totalCash["y"]["In"][i] * 100) / 100);
-            }
-            // Process 'Out' data
-            for (
-                let i = 0;
-                i < Object.keys(totalCash["y"]["Out"]).length;
-                i++
-            ) {
-                outData.push(Math.round(totalCash["y"]["Out"][i] * 100) / 100);
-            }
-
-            // Set the data to state variables
-            setCashIn(inData);
-            setCashOut(outData);
-            setCategories(totalCash["name"]);
-            setHasError(false);
-        } catch (error) {
-            setHasError(true);
-            console.error("Error fetching or processing data:", error);
-        }
-    }, [xero]);
-
-    const [cashIn, setCashIn] = useState([]);
-    const [cashOut, setCashOut] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [hasError, setHasError] = useState(false);
-
-    // Simulating fetching data
 
     const handleDateOptionChange = async (value) => {
         setCustomDateVisible(value === "custom");
@@ -160,7 +93,6 @@ const Dashboard = () => {
     if (userData.role_type == 2)
         return (
             <div className="content">
-                {/* Jobadder Section */}
                 <Card
                     title="Jobadder"
                     headStyle={{
@@ -282,274 +214,7 @@ const Dashboard = () => {
                         {isJobadderLoading ? (
                             <Spin size="large" fullscreen />
                         ) : jobadder.fullname ? (
-                            <>
-                                <Card.Meta
-                                    description={
-                                        <>
-                                            <p>
-                                                {jobadder.fullname} -{" "}
-                                                {jobadder.account_email}
-                                            </p>
-                                            <Row
-                                                gutter={[32, 64]}
-                                                style={{
-                                                    marginTop: "50px",
-                                                    marginBottom: "32px",
-                                                }}
-                                            >
-                                                <Col
-                                                    xs={24}
-                                                    sm={24}
-                                                    md={12}
-                                                    lg={12}
-                                                    xl={6}
-                                                >
-                                                    <Card>
-                                                        <div className="job-card">
-                                                            <div className="icon-box">
-                                                                <ProjectFilled />
-                                                            </div>
-                                                            <div className="job-card-title">
-                                                                <span className="dashboard-info">
-                                                                    Total Jobs
-                                                                </span>
-                                                                <Title className="job-card-number">
-                                                                    {"+" +
-                                                                        jobadder.jobs}
-                                                                </Title>
-                                                            </div>
-                                                        </div>
-                                                    </Card>
-                                                </Col>
-                                                <Col
-                                                    xs={24}
-                                                    sm={24}
-                                                    md={12}
-                                                    lg={12}
-                                                    xl={6}
-                                                >
-                                                    <Card>
-                                                        <div className="job-card">
-                                                            <div className="icon-box">
-                                                                <ContactsFilled />
-                                                            </div>
-                                                            <div className="job-card-title">
-                                                                <span className="dashboard-info">
-                                                                    Total
-                                                                    Contacts
-                                                                </span>
-                                                                <Title className="job-card-number">
-                                                                    {"+" +
-                                                                        jobadder.contacts}
-                                                                </Title>
-                                                            </div>
-                                                        </div>
-                                                    </Card>
-                                                </Col>
-                                                <Col
-                                                    xs={24}
-                                                    sm={24}
-                                                    md={12}
-                                                    lg={12}
-                                                    xl={6}
-                                                >
-                                                    <Card>
-                                                        <div className="job-card">
-                                                            <div className="icon-box">
-                                                                <WechatWorkFilled />
-                                                            </div>
-                                                            <div className="job-card-title">
-                                                                <span className="dashboard-info">
-                                                                    Total
-                                                                    Interviews
-                                                                </span>
-                                                                <Title className="job-card-number">
-                                                                    {"+" +
-                                                                        jobadder.interviews}
-                                                                </Title>
-                                                            </div>
-                                                        </div>
-                                                    </Card>
-                                                </Col>
-                                                <Col
-                                                    xs={24}
-                                                    sm={24}
-                                                    md={12}
-                                                    lg={12}
-                                                    xl={6}
-                                                >
-                                                    <Card>
-                                                        <div className="job-card">
-                                                            <div className="icon-box">
-                                                                <span>
-                                                                    <TeamOutlined />
-                                                                </span>
-                                                            </div>
-                                                            <div className="job-card-title">
-                                                                <span className="dashboard-info">
-                                                                    Total
-                                                                    Candidates
-                                                                </span>
-                                                                <Title className="job-card-number">
-                                                                    {"+" +
-                                                                        jobadder.candidates}
-                                                                </Title>
-                                                            </div>
-                                                        </div>
-                                                    </Card>
-                                                </Col>
-                                            </Row>
-                                            {jobadder.jobs_graph && (
-                                                <Row
-                                                    gutter={[32, 32]}
-                                                    style={{
-                                                        marginTop: 10,
-                                                    }}
-                                                >
-                                                    <Col
-                                                        xs={24}
-                                                        sm={24}
-                                                        md={24}
-                                                        lg={24}
-                                                        xl={12}
-                                                    >
-                                                        <Card className="bar-chart">
-                                                            <ApexCharts
-                                                                options={{
-                                                                    chart: {
-                                                                        type: "bar",
-                                                                        zoom: {
-                                                                            enabled: true,
-                                                                        },
-                                                                    },
-                                                                    colors: [
-                                                                        "white",
-                                                                    ],
-                                                                    title: {
-                                                                        text: "Jobs Data",
-                                                                        style: {
-                                                                            color: "#fff", // Set color for chart title
-                                                                        },
-                                                                    },
-                                                                    xaxis: {
-                                                                        categories:
-                                                                            formatData(
-                                                                                jobadder.jobs_graph
-                                                                            )
-                                                                                .names,
-                                                                        labels: {
-                                                                            style: {
-                                                                                colors: "#fff", // Set color for X-axis labels
-                                                                            },
-                                                                        },
-                                                                    },
-                                                                    yaxis: {
-                                                                        labels: {
-                                                                            style: {
-                                                                                colors: "#fff", // Set color for X-axis labels
-                                                                            },
-                                                                        },
-                                                                    },
-                                                                    tooltip: {
-                                                                        stickOnContact: true,
-                                                                    },
-
-                                                                    plotOptions:
-                                                                        {
-                                                                            bar: {
-                                                                                horizontal: false,
-                                                                                columnWidth:
-                                                                                    "40%",
-                                                                                borderRadius: 7,
-                                                                            },
-                                                                        },
-                                                                    grid: {
-                                                                        show: true,
-                                                                        borderColor:
-                                                                            "#ccc",
-                                                                        strokeDashArray: 2,
-                                                                    },
-                                                                }}
-                                                                series={[
-                                                                    {
-                                                                        name: "count",
-                                                                        data: formatData(
-                                                                            jobadder.jobs_graph
-                                                                        )
-                                                                            .values,
-                                                                    },
-                                                                ]}
-                                                                type="bar"
-                                                                height={350}
-                                                            />
-                                                        </Card>
-                                                    </Col>
-                                                    <Col
-                                                        xs={24}
-                                                        sm={24}
-                                                        md={24}
-                                                        lg={24}
-                                                        xl={12}
-                                                    >
-                                                        <Card>
-                                                            {/* Candidates Data Chart */}
-                                                            <ChartContainer
-                                                                chartData={formatData(
-                                                                    jobadder.candidates_graph
-                                                                )}
-                                                                title="Candidates Data"
-                                                                chartType="line"
-                                                                chartId="container6"
-                                                                color="#FF9655"
-                                                            />
-                                                        </Card>
-                                                    </Col>
-                                                    {/* Contacts Data Chart */}
-                                                    <Col
-                                                        xs={24}
-                                                        sm={24}
-                                                        md={24}
-                                                        lg={24}
-                                                        xl={12}
-                                                    >
-                                                        <Card>
-                                                            <ChartContainer
-                                                                chartData={formatData(
-                                                                    jobadder.contacts_graph
-                                                                )}
-                                                                title="Contacts Data"
-                                                                chartType="line"
-                                                                chartId="container7"
-                                                                color="#f35c86"
-                                                            />
-                                                        </Card>
-                                                    </Col>
-                                                    <Col
-                                                        xs={24}
-                                                        sm={24}
-                                                        md={24}
-                                                        lg={24}
-                                                        xl={12}
-                                                    >
-                                                        {/* Interviews Data Chart */}
-                                                        <Card>
-                                                            <ChartContainer
-                                                                chartData={formatData(
-                                                                    jobadder.interviews_graph
-                                                                )}
-                                                                title="Interviews Data"
-                                                                chartType="area"
-                                                                chartId="container8"
-                                                                color="#26a69a"
-                                                            />
-                                                        </Card>
-                                                    </Col>
-                                                </Row>
-                                            )}
-                                        </>
-                                    }
-                                />
-                            </>
+                            <JobContainer jobadder={jobadder} />
                         ) : (
                             <Card.Meta
                                 description={
@@ -563,269 +228,12 @@ const Dashboard = () => {
                     </div>
                 </Card>
 
-                {/* Google Analytics Section */}
-                <Card
-                    style={{ marginTop: 10 }}
-                    title="Google Analytics Data"
-                    headStyle={{
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                    }}
-                >
-                    <Card.Meta
-                        description={
-                            pageViews ? (
-                                <Row gutter={16}>
-                                    <Col span={12}>
-                                        <div className="analytics-info">
-                                            Page Views
-                                        </div>
-                                        <h3>{pageViews}</h3>
-                                    </Col>
-                                    <Col span={12}>
-                                        <div className="analytics-info">
-                                            Unique Users
-                                        </div>
-                                        <h3>{totalVisitors}</h3>
-                                    </Col>
-                                </Row>
-                            ) : GAError ? (
-                                <Alert message={GAError} type="error" />
-                            ) : (
-                                <Alert
-                                    message="You have not connected any account yet, please connect your Google Analytics account."
-                                    type="error"
-                                />
-                            )
-                        }
-                    />
-                </Card>
-                {/* Xero Section */}
-                <Card
-                    style={{ marginTop: 10 }}
-                    title="Xero Data"
-                    headStyle={{
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                    }}
-                >
-                    <Card.Meta
-                        description={
-                            xero.organisationName ? (
-                                <>
-                                    <Paragraph>
-                                        Organisation: {xero.organisationName}
-                                    </Paragraph>
-                                    <Row gutter={[32, 32]}>
-                                        <Col
-                                            xs={24}
-                                            sm={24}
-                                            md={24}
-                                            lg={24}
-                                            xl={12}
-                                        >
-                                            <Card
-                                                style={{ width: "100%" }}
-                                                title={
-                                                    <>
-                                                        <h6>
-                                                            Invoices owed to you
-                                                        </h6>
-                                                        <Row gutter={[6, 6]}>
-                                                            <Col span={6}>
-                                                                <p>
-                                                                    {
-                                                                        xero
-                                                                            .data
-                                                                            .draft_count
-                                                                    }
-                                                                    Draft
-                                                                    invoices:
-                                                                    {
-                                                                        xero
-                                                                            .data
-                                                                            .draft_amount
-                                                                    }
-                                                                </p>
-                                                            </Col>
-                                                            <Col span={6}>
-                                                                <p>
-                                                                    {
-                                                                        xero
-                                                                            .data
-                                                                            .aw_count
-                                                                    }{" "}
-                                                                    Awaiting
-                                                                    payment:{" "}
-                                                                    {
-                                                                        xero
-                                                                            .data
-                                                                            .aw_amount
-                                                                    }
-                                                                </p>
-                                                            </Col>
-                                                            <Col span={6}>
-                                                                {" "}
-                                                                <p>
-                                                                    {
-                                                                        xero
-                                                                            .data
-                                                                            .overdue_count
-                                                                    }{" "}
-                                                                    Overdue:{" "}
-                                                                    {
-                                                                        xero
-                                                                            .data
-                                                                            .overdue_amount
-                                                                    }
-                                                                </p>
-                                                            </Col>
-                                                        </Row>
-                                                    </>
-                                                }
-                                            >
-                                                <ChartContainer
-                                                    chartData={formatData(
-                                                        xero.invoices_array
-                                                    )}
-                                                    title="Invoice Data"
-                                                    chartType="line"
-                                                    chartId="container"
-                                                    color="#f35c86"
-                                                />
-                                            </Card>
-                                        </Col>
-                                        <Col
-                                            xs={24}
-                                            sm={24}
-                                            md={24}
-                                            lg={24}
-                                            xl={12}
-                                        >
-                                            <Card
-                                                title={
-                                                    <>
-                                                        <h6>Balance in Xero</h6>
-                                                        <p>
-                                                            {xero.balance[1] ||
-                                                                "No data"}
-                                                        </p>{" "}
-                                                    </>
-                                                }
-                                            >
-                                                <ApexCharts
-                                                    options={{
-                                                        chart: {
-                                                            type: "line",
-                                                            zoom: {
-                                                                enabled: true,
-                                                                type: "y",
-                                                            },
-                                                        },
-                                                        title: {
-                                                            text: "Cash in and out Data",
-                                                        },
-                                                        stroke: {
-                                                            curve: "smooth",
-                                                        },
-                                                        subtitle: {
-                                                            text: undefined,
-                                                        },
-                                                        xaxis: {
-                                                            categories:
-                                                                categories,
-                                                        },
-                                                        plotOptions: {
-                                                            bar: {
-                                                                dataLabels: {
-                                                                    enabled: true,
-                                                                    formatter:
-                                                                        function (
-                                                                            val
-                                                                        ) {
-                                                                            return `£ ${val}`;
-                                                                        },
-                                                                },
-                                                                borderRadius: 4,
-                                                                borderRadiusApplication:
-                                                                    "end",
-                                                                horizontal: true,
-                                                            },
-                                                        },
-                                                        tooltip: {
-                                                            y: {
-                                                                formatter:
-                                                                    function (
-                                                                        val
-                                                                    ) {
-                                                                        return `£ ${val}`;
-                                                                    },
-                                                            },
-                                                        },
-                                                        legend: {
-                                                            show: false,
-                                                        },
-                                                    }}
-                                                    series={[
-                                                        {
-                                                            name: "In",
-                                                            data: cashIn,
-                                                            color: "rgb(24, 144, 255)",
-                                                        },
-                                                        {
-                                                            name: "Out",
-                                                            data: cashOut,
-                                                            color: "rgb(4, 175, 41)",
-                                                        },
-                                                    ]}
-                                                    type="line"
-                                                    height={350}
-                                                />
-                                            </Card>
-                                        </Col>
-                                    </Row>
-                                </>
-                            ) : (
-                                <Alert
-                                    message="You have not connected any account yet, please connect your Xero account."
-                                    type="error"
-                                />
-                            )
-                        }
-                    />
-                </Card>
-                <Card
-                    title="My Apps"
-                    style={{ marginTop: 20 }}
-                    headStyle={{
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                    }}
-                    className="app_card_body"
-                >
-                    <Row gutter={[16, 16]}>
-                        {apps.map((app, index) => (
-                            <Col key={index} className="app_card">
-                                <a
-                                    href={app.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <div className="card-img-body">
-                                        <div className="card-img-actions mx-1 mt-1">
-                                            <Image
-                                                className="card-img img-fluid"
-                                                src={`./assets/images/${app.imgSrc}`}
-                                                alt=""
-                                                preview={false}
-                                            />
-                                        </div>
-                                    </div>
-                                </a>
-                            </Col>
-                        ))}
-                    </Row>
-                </Card>
+                <GoogleAnalytics
+                    totalVisitors={totalVisitors}
+                    GAError={GAError}
+                    pageViews={pageViews}
+                />
+                <XeroContainer xero={xero} />
             </div>
         );
     return (

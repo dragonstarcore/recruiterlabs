@@ -1,6 +1,7 @@
 import ApexCharts from "react-apexcharts";
 
 const ChartContainer = ({ chartData, title, chartType, chartId, color }) => {
+    console.log(chartData);
     return (
         <ApexCharts
             options={{
