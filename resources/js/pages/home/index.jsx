@@ -375,13 +375,19 @@ const Dashboard = () => {
                                                 {jobadder.account_email}
                                             </p>
                                             <Row
-                                                gutter={32}
+                                                gutter={[32, 64]}
                                                 style={{
                                                     marginTop: "50px",
                                                     marginBottom: "32px",
                                                 }}
                                             >
-                                                <Col span={6}>
+                                                <Col
+                                                    xs={24}
+                                                    sm={24}
+                                                    md={12}
+                                                    lg={12}
+                                                    xl={6}
+                                                >
                                                     <Card>
                                                         <div className="job-card">
                                                             <div className="icon-box">
@@ -399,7 +405,13 @@ const Dashboard = () => {
                                                         </div>
                                                     </Card>
                                                 </Col>
-                                                <Col span={6}>
+                                                <Col
+                                                    xs={24}
+                                                    sm={24}
+                                                    md={12}
+                                                    lg={12}
+                                                    xl={6}
+                                                >
                                                     <Card>
                                                         <div className="job-card">
                                                             <div className="icon-box">
@@ -418,7 +430,13 @@ const Dashboard = () => {
                                                         </div>
                                                     </Card>
                                                 </Col>
-                                                <Col span={6}>
+                                                <Col
+                                                    xs={24}
+                                                    sm={24}
+                                                    md={12}
+                                                    lg={12}
+                                                    xl={6}
+                                                >
                                                     <Card>
                                                         <div className="job-card">
                                                             <div className="icon-box">
@@ -437,7 +455,13 @@ const Dashboard = () => {
                                                         </div>
                                                     </Card>
                                                 </Col>
-                                                <Col span={6}>
+                                                <Col
+                                                    xs={24}
+                                                    sm={24}
+                                                    md={12}
+                                                    lg={12}
+                                                    xl={6}
+                                                >
                                                     <Card>
                                                         <div className="job-card">
                                                             <div className="icon-box">
@@ -466,7 +490,13 @@ const Dashboard = () => {
                                                         marginTop: 10,
                                                     }}
                                                 >
-                                                    <Col span={12}>
+                                                    <Col
+                                                        xs={24}
+                                                        sm={24}
+                                                        md={24}
+                                                        lg={24}
+                                                        xl={12}
+                                                    >
                                                         <Card className="bar-chart">
                                                             <ApexCharts
                                                                 options={{
@@ -538,7 +568,13 @@ const Dashboard = () => {
                                                             />
                                                         </Card>
                                                     </Col>
-                                                    <Col span={12}>
+                                                    <Col
+                                                        xs={24}
+                                                        sm={24}
+                                                        md={24}
+                                                        lg={24}
+                                                        xl={12}
+                                                    >
                                                         <Card>
                                                             {/* Candidates Data Chart */}
                                                             <ChartContainer
@@ -553,7 +589,13 @@ const Dashboard = () => {
                                                         </Card>
                                                     </Col>
                                                     {/* Contacts Data Chart */}
-                                                    <Col span={12}>
+                                                    <Col
+                                                        xs={24}
+                                                        sm={24}
+                                                        md={24}
+                                                        lg={24}
+                                                        xl={12}
+                                                    >
                                                         <Card>
                                                             <ChartContainer
                                                                 chartData={formatData(
@@ -566,7 +608,13 @@ const Dashboard = () => {
                                                             />
                                                         </Card>
                                                     </Col>
-                                                    <Col span={12}>
+                                                    <Col
+                                                        xs={24}
+                                                        sm={24}
+                                                        md={24}
+                                                        lg={24}
+                                                        xl={12}
+                                                    >
                                                         {/* Interviews Data Chart */}
                                                         <Card>
                                                             <ChartContainer
@@ -652,8 +700,14 @@ const Dashboard = () => {
                                     <Paragraph>
                                         Organisation: {xero.organisationName}
                                     </Paragraph>
-                                    <Row gutter={32}>
-                                        <Col span={12}>
+                                    <Row gutter={[32, 32]}>
+                                        <Col
+                                            xs={24}
+                                            sm={24}
+                                            md={24}
+                                            lg={24}
+                                            xl={12}
+                                        >
                                             <Card
                                                 style={{ width: "100%" }}
                                                 title={
@@ -725,7 +779,13 @@ const Dashboard = () => {
                                                 />
                                             </Card>
                                         </Col>
-                                        <Col span={12}>
+                                        <Col
+                                            xs={24}
+                                            sm={24}
+                                            md={24}
+                                            lg={24}
+                                            xl={12}
+                                        >
                                             <Card
                                                 title={
                                                     <>
