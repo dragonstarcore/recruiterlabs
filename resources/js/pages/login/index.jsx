@@ -32,11 +32,14 @@ export default function Login() {
         if (isSuccess) {
             navigate("/home");
             toast.success("Login successful", {
-                position: "bottom-right",
+                position: "top-right",
             });
         }
 
-        if (error) toast.error(`Login failed`);
+        if (error)
+            toast.error(
+                `Login failed! \n Please check username or password again.`
+            );
     }, [isSuccess, error]);
 
     return (
