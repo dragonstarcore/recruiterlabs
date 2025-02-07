@@ -11,10 +11,17 @@
     padding:0px !important
  }
   .job-card{
+    height:80px;
    font-weight: bold;
+   position: relative;
+   display: flex;
+   justify-items: flex-end;
   }
+  
   .dashboard-info{
    color: grey;
+   font-size: 20px;
+   font-weight: 500;
   }
 .alert{
 
@@ -30,21 +37,25 @@ margin-bottom:7px;
    font-size:large;
    color:rgb(39, 145, 250);
  }
- 
+ .job-card-title{
+  margin-left: auto;
+ }
+
 .icon-box {
-   width: 48px;
-   height: 48px;
+   transform: translate(10px,-70%);
+   width: 88px;
+   height: 88px;
    text-align: center;
    background: #1890ff;
    color: #fff;
    border-radius: 0.5rem;
-   margin-left: auto;
    line-height: 55px;
  }
  
  .icon-box span {
+  margin-top:4px;
    color: #fff;
-   font-size: 24px;
+   font-size: 70px !important;
  }
  .custom-dates{
   display: flex;
@@ -66,4 +77,9 @@ margin-bottom:7px;
   box-shadow: 0px 4px 6px #0000001f;
 
   border-radius: 8px;
+}
+
+.job-card-number{
+  font-size: 40px !important;;
+  font-weight: 700 !important;
 }

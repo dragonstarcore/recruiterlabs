@@ -22,6 +22,7 @@ import Icon, {
     ProjectFilled,
     ContactsFilled,
     WechatWorkFilled,
+    TeamOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -373,102 +374,94 @@ const Dashboard = () => {
                                                 {jobadder.fullname} -{" "}
                                                 {jobadder.account_email}
                                             </p>
-                                            <Row gutter={16}>
+                                            <Row
+                                                gutter={32}
+                                                style={{
+                                                    marginTop: "50px",
+                                                    marginBottom: "32px",
+                                                }}
+                                            >
                                                 <Col span={6}>
-                                                    <Card className="job-card">
-                                                        <Row>
-                                                            <Col xs={18}>
-                                                                <div className="dashboard-info">
+                                                    <Card>
+                                                        <div className="job-card">
+                                                            <div className="icon-box">
+                                                                <ProjectFilled />
+                                                            </div>
+                                                            <div className="job-card-title">
+                                                                <span className="dashboard-info">
                                                                     Total Jobs
-                                                                </div>
-                                                                <Title
-                                                                    level={2}
-                                                                >
+                                                                </span>
+                                                                <Title className="job-card-number">
                                                                     {"+" +
                                                                         jobadder.jobs}
                                                                 </Title>
-                                                            </Col>
-                                                            <Col xs={6}>
-                                                                <div className="icon-box">
-                                                                    <ProjectFilled />
-                                                                </div>
-                                                            </Col>
-                                                        </Row>
+                                                            </div>
+                                                        </div>
                                                     </Card>
                                                 </Col>
                                                 <Col span={6}>
-                                                    <Card className="job-card">
-                                                        <Row>
-                                                            <Col xs={18}>
-                                                                <div className="dashboard-info">
+                                                    <Card>
+                                                        <div className="job-card">
+                                                            <div className="icon-box">
+                                                                <ContactsFilled />
+                                                            </div>
+                                                            <div className="job-card-title">
+                                                                <span className="dashboard-info">
                                                                     Total
                                                                     Contacts
-                                                                </div>
-                                                                <Title
-                                                                    level={2}
-                                                                >
+                                                                </span>
+                                                                <Title className="job-card-number">
                                                                     {"+" +
                                                                         jobadder.contacts}
                                                                 </Title>
-                                                            </Col>
-                                                            <Col xs={6}>
-                                                                <div className="icon-box">
-                                                                    <ContactsFilled />
-                                                                </div>
-                                                            </Col>
-                                                        </Row>
+                                                            </div>
+                                                        </div>
                                                     </Card>
                                                 </Col>
                                                 <Col span={6}>
-                                                    <Card className="job-card">
-                                                        <Row>
-                                                            <Col xs={18}>
-                                                                <div className="dashboard-info">
+                                                    <Card>
+                                                        <div className="job-card">
+                                                            <div className="icon-box">
+                                                                <WechatWorkFilled />
+                                                            </div>
+                                                            <div className="job-card-title">
+                                                                <span className="dashboard-info">
                                                                     Total
                                                                     Interviews
-                                                                </div>
-                                                                <Title
-                                                                    level={2}
-                                                                >
+                                                                </span>
+                                                                <Title className="job-card-number">
                                                                     {"+" +
                                                                         jobadder.interviews}
                                                                 </Title>
-                                                            </Col>
-                                                            <Col xs={6}>
-                                                                <div className="icon-box">
-                                                                    <WechatWorkFilled />
-                                                                </div>
-                                                            </Col>
-                                                        </Row>
+                                                            </div>
+                                                        </div>
                                                     </Card>
                                                 </Col>
                                                 <Col span={6}>
-                                                    <Card className="job-card">
-                                                        <Row>
-                                                            <Col xs={18}>
-                                                                <div className="dashboard-info">
+                                                    <Card>
+                                                        <div className="job-card">
+                                                            <div className="icon-box">
+                                                                <span>
+                                                                    <TeamOutlined />
+                                                                </span>
+                                                            </div>
+                                                            <div className="job-card-title">
+                                                                <span className="dashboard-info">
                                                                     Total
                                                                     Candidates
-                                                                </div>
-                                                                <Title
-                                                                    level={2}
-                                                                >
+                                                                </span>
+                                                                <Title className="job-card-number">
                                                                     {"+" +
                                                                         jobadder.candidates}
                                                                 </Title>
-                                                            </Col>
-                                                            <Col xs={6}>
-                                                                <div className="icon-box">
-                                                                    {profile}
-                                                                </div>
-                                                            </Col>
-                                                        </Row>
+                                                            </div>
+                                                        </div>
                                                     </Card>
                                                 </Col>
                                             </Row>
                                             {jobadder.jobs_graph && (
                                                 <Row
-                                                    gutter={[16, 16]}
+                                                    gutter={[32, 32]}
                                                     style={{
                                                         marginTop: 10,
                                                     }}
@@ -659,7 +652,7 @@ const Dashboard = () => {
                                     <Paragraph>
                                         Organisation: {xero.organisationName}
                                     </Paragraph>
-                                    <Row gutter={16}>
+                                    <Row gutter={32}>
                                         <Col span={12}>
                                             <Card
                                                 style={{ width: "100%" }}
@@ -755,6 +748,9 @@ const Dashboard = () => {
                                                         },
                                                         title: {
                                                             text: "Cash in and out Data",
+                                                        },
+                                                        stroke: {
+                                                            curve: "smooth",
                                                         },
                                                         subtitle: {
                                                             text: undefined,
