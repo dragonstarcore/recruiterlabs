@@ -30,4 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/home', [HomeController::class, 'index']);
     Route::post('/dashboard_jobadder', [JobadderController::class, 'dashboard_jobadder_data'])->name('dashboard_jobadder');
     Route::get('/communities', [CommunityController::class, 'index']);
+    Route::get('/my_business', [App\Http\Controllers\UserController::class, 'my_business'])->name('my_business');
+    Route::get('/documents', [App\Http\Controllers\UserController::class, 'documents']);
+    Route::post('/my_business_search', [App\Http\Controllers\UserController::class, 'my_business'])->name('my_business_search');
 });

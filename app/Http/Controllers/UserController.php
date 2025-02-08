@@ -295,7 +295,10 @@ class UserController extends Controller
             ], 500);
         }
     }
-
+    public function documents(Request $request){
+        $docs=doc_type();
+        return response()->json(['documents' => $docs ], 200);
+    }
     //  To update client profile
     public function my_business(Request $request)
     {
@@ -304,23 +307,22 @@ class UserController extends Controller
         if ($request->has('type_search') && $request->type_search != '') {
             $type_search = $request->type_search;
             // dd($type_search);
-            $user = User::where('id', Auth::user()->id)->with('user_details')
+            $user = User::where('id', Auth::user()->id)->with('user_details', 'user_documents', 'xero_details', 'jobadder_details')
                 ->with('user_documents', function ($q) use ($type_search) {
                     $q->where('type_id', '=', $type_search);
                 })
                 ->first();
-
-            return view('client.my_business', compact('user', 'type_search'));
+            return response()->json(['user' => $user, 'type_search' => $type_search,], 200);        
             // return $user->user_documents;
         } else if ($request->has('type_search')) {
-            $user = User::where('id', Auth::user()->id)->with('user_details', 'user_documents')->first();
-            return view('client.my_business', compact('user'));
+            $user = User::where('id', Auth::user()->id)->with('user_details', 'user_documents', 'xero_details', 'jobadder_details')->first();
+            return response()->json(['user' => $user ], 200);
             // return $user->user_documents;
         } else if ($request->has('on_upload_click')) { // If upload is clicked show all docs
             $user = User::where('id', Auth::user()->id)->with('user_details', 'user_documents')->first();
             return $user->user_documents;
         }
-        return view('client.my_business', compact('user'));
+        return response()->json(['user' => $user ], 200);
     }
 
     // public function update_client_business(Request $request, string $id)
