@@ -732,21 +732,20 @@ class XeroController extends Controller
             }
         // End: getInvoices
 
-
-            return view('client.xero', [
-                'connected'        => $xeroCredentials->exists() ?? null,
-                'error'            => $error ?? null,
-                'organisationName' => $organisationName ?? null,
-                'username'         => $username ?? null,
-                'message'          => $message ?? null,
-                'data'             => $data ?? null,
-                'my_data'          => $my_data ?? null,
-                'invoices_array'   => $invoices_array ?? null,
-                'bills_array'      => $bills_array ?? null,
-                'account_watchlist'=> $account_watchlist ?? null,
-                'balance'          => $balance ?? null,
-                'total_cash'       => $total_cash ?? null,
-            ]);
+        return response()->json([
+            'connected'        => $xeroCredentials->exists() ?? null,
+            'error'            => $error ?? null,
+            'organisationName' => $organisationName ?? null,
+            'username'         => $username ?? null,
+            'message'          => $message ?? null,
+            'data'             => $data ?? null,
+            'my_data'          => $my_data ?? null,
+            'invoices_array'   => $invoices_array ?? null,
+            'bills_array'      => $bills_array ?? null,
+            'account_watchlist'=> $account_watchlist ?? null,
+            'balance'          => $balance ?? null,
+            'total_cash'       => $total_cash ?? null,
+        ], 200); 
 
     }
 

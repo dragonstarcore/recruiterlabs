@@ -191,13 +191,11 @@ const JobContainer = ({ jobadder }) => {
                                 <Card>
                                     {/* Candidates Data Chart */}
                                     <ChartContainer
-                                        chartData={formatData(
-                                            jobadder.candidates_graph
-                                        )}
+                                        chartData={jobadder.candidates_graph}
                                         title="Candidates Data"
                                         chartType="line"
-                                        chartId="container6"
                                         color="#FF9655"
+                                        seriesName="Count"
                                     />
                                 </Card>
                             </Col>
@@ -205,13 +203,11 @@ const JobContainer = ({ jobadder }) => {
                             <Col xs={24} sm={24} md={24} lg={24} xl={12}>
                                 <Card>
                                     <ChartContainer
-                                        chartData={formatData(
-                                            jobadder.contacts_graph
-                                        )}
+                                        chartData={jobadder.contacts_graph}
                                         title="Contacts Data"
                                         chartType="line"
-                                        chartId="container7"
                                         color="#f35c86"
+                                        seriesName="Count"
                                     />
                                 </Card>
                             </Col>
@@ -219,13 +215,11 @@ const JobContainer = ({ jobadder }) => {
                                 {/* Interviews Data Chart */}
                                 <Card>
                                     <ChartContainer
-                                        chartData={formatData(
-                                            jobadder.interviews_graph
-                                        )}
+                                        chartData={jobadder.interviews_graph}
                                         title="Interviews Data"
                                         chartType="area"
-                                        chartId="container8"
                                         color="#26a69a"
+                                        seriesName="Count"
                                     />
                                 </Card>
                             </Col>

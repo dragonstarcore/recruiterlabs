@@ -7,7 +7,7 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobadderController;
-
+use App\Http\Controllers\XeroController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -33,4 +33,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my_business', [App\Http\Controllers\UserController::class, 'my_business'])->name('my_business');
     Route::get('/documents', [App\Http\Controllers\UserController::class, 'documents']);
     Route::post('/my_business_search', [App\Http\Controllers\UserController::class, 'my_business'])->name('my_business_search');
+    Route::get('/xero', [\App\Http\Controllers\XeroController::class, 'index'])->name('xero.auth.success');
 });

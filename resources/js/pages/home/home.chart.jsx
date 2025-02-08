@@ -1,7 +1,30 @@
 import ApexCharts from "react-apexcharts";
 
-const ChartContainer = ({ chartData, title, chartType, chartId, color }) => {
+const ChartContainer = ({
+    chartData,
+    title,
+    seriesName,
+    chartType,
+    YaxisTitle,
+    color,
+}) => {
     console.log(chartData);
+
+    const formatData = (data) => {
+        if (!data) return;
+        const names = [];
+        const values = [];
+
+        // Ensure data exists and contains 'name' and 'y'
+        data.forEach((item) => {
+            if (item && item.name && item.y !== undefined) {
+                names.push(item.name);
+                values.push(item.y);
+            }
+        });
+
+        return { names, values };
+    };
     return (
         <ApexCharts
             options={{
@@ -14,7 +37,12 @@ const ChartContainer = ({ chartData, title, chartType, chartId, color }) => {
                     text: title,
                 },
                 xaxis: {
-                    categories: chartData.names,
+                    categories: formatData(chartData).names,
+                },
+                yaxis: {
+                    title: {
+                        text: YaxisTitle,
+                    },
                 },
                 tooltip: {
                     stickOnContact: true,
@@ -25,8 +53,8 @@ const ChartContainer = ({ chartData, title, chartType, chartId, color }) => {
             }}
             series={[
                 {
-                    name: "Count",
-                    data: chartData.values,
+                    name: seriesName,
+                    data: formatData(chartData).values,
                 },
             ]}
             type={chartType}

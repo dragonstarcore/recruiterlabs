@@ -132,13 +132,11 @@ const XeroContainer = ({ xero }) => {
                                             }
                                         >
                                             <ChartContainer
-                                                chartData={formatData(
-                                                    xero.invoices_array
-                                                )}
+                                                chartData={xero.invoices_array}
                                                 title="Invoice Data"
                                                 chartType="line"
-                                                chartId="container"
                                                 color="#f35c86"
+                                                seriesName="Count"
                                             />
                                         </Card>
                                     </Col>
