@@ -304,7 +304,14 @@ class UserController extends Controller
     {
         $user = User::where('id', Auth::user()->id)->with('user_details', 'user_documents', 'xero_details', 'jobadder_details')->first();
         // CHecking type_search by ajax call
-        if ($request->has('type_search') && $request->type_search != '') {
+        if($request->has('search_doc')&&$request->search_doc!=''){
+            $search_doc=$request->search_doc;
+            $user=User::where('id',Auth::user()->id)->with('user_details', 'user_documents', 'xero_details', 'jobadder_details')
+            ->with('user_documents',function($q) use($search_doc){
+                $q->where('title','like',"%".$search_doc."%");
+            })->first();
+            return response()->json(['user' => $user ], 200);
+        }else if ($request->has('type_search') && $request->type_search != '') {
             $type_search = $request->type_search;
             // dd($type_search);
             $user = User::where('id', Auth::user()->id)->with('user_details', 'user_documents', 'xero_details', 'jobadder_details')

@@ -16,7 +16,7 @@ import {
     Collapse,
     Tabs,
 } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
 const { Header } = Layout;
 const { Option } = Select;
@@ -31,10 +31,12 @@ import {
 } from "./business.service";
 import { setBusiness, setDoc_types } from "./business.slice";
 import "./style.css";
+
 export default function Business() {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const [type_search, setType_search] = useState("");
+    const [search_title, setSearch_title] = useState("");
     const { data, isError, isSuccess, isLoading } = useFetchBusinessQuery();
     const {
         data: docData,
@@ -57,16 +59,6 @@ export default function Business() {
         { isLoading: isJobadderLoading, isSuccess: isJobadderSuccess, error },
     ] = useFetchBusinessSearchMutation();
 
-    const handleSubmit = async () => {
-        try {
-            const formValues = form.getFieldsValue();
-            const jobadder = await fetchBusinessSearch(formValues).unwrap();
-            console.log(jobadder);
-            dispatch(setBusiness(jobadder.user));
-        } catch (err) {
-            console.log(err);
-        }
-    };
     const user = useSelector((apps) => apps.business.businessData.user);
     const documents = useSelector(
         (apps) => apps.business.businessData.doc_types
@@ -78,7 +70,27 @@ export default function Business() {
         setCurrentPage(page); // Update current page
         setPageSize(pageSize); // Update page size if the user changes it
     };
-    if (isLoading || isDocLoading || isJobadderLoading)
+    const OnChangeSelect = async (value) => {
+        setType_search(value);
+        try {
+            const formValues = form.getFieldsValue();
+            const jobadder = await fetchBusinessSearch(formValues).unwrap();
+            dispatch(setBusiness(jobadder.user));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const OnChangeTitle = async (e) => {
+        setSearch_title(e.target.value);
+        try {
+            const search = { search_doc: e.target.value };
+            const jobadder = await fetchBusinessSearch(search).unwrap();
+            dispatch(setBusiness(jobadder.user));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    if (isLoading || isDocLoading)
         return (
             <div className="business-body">
                 <Spin size="large" />
@@ -188,20 +200,20 @@ export default function Business() {
                     </Col>
                 </Row>
 
-                <Form form={form}>
-                    {/* Company Documents Section */}
-                    <Row gutter={16}>
-                        <Col span={6}>
-                            <h5>
-                                <b>Company Documents</b>
-                            </h5>
-                        </Col>
-                        <Col span={8}>
+                {/* Company Documents Section */}
+                <Row gutter={16}>
+                    <Col span={4}>
+                        <h5>
+                            <b>Company Documents Filter:</b>
+                        </h5>
+                    </Col>
+                    <Col span={4}>
+                        <Form form={form}>
                             <Form.Item name="type_search">
                                 <Select
                                     placeholder="Filter By Document Type"
                                     allowClear
-                                    onChange={(value) => setType_search(value)}
+                                    onChange={(value) => OnChangeSelect(value)}
                                 >
                                     <Option value="">All</Option>
                                     {documents.map((doc) => (
@@ -211,20 +223,20 @@ export default function Business() {
                                     ))}
                                 </Select>
                             </Form.Item>
-                        </Col>
-                        <Col span={4}>
-                            <Form.Item>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    onClick={handleSubmit}
-                                >
-                                    Filter
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Form>
+                        </Form>
+                    </Col>
+                    <Col span={8}></Col>
+                    <Col span={6}>
+                        <Form.Item name="title_search">
+                            <Input
+                                value={search_title}
+                                onChange={(e) => OnChangeTitle(e)}
+                                placeholder="Search..."
+                                addonBefore={<SearchOutlined />}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
 
                 <Table
                     className="employee_list"
@@ -348,7 +360,7 @@ export default function Business() {
                                         size="small"
                                         href={`https://www.recstack.co/public/${file}`}
                                         target="_blank"
-                                        icon={<i className="ph-eye"></i>}
+                                        icon={<EyeOutlined />}
                                     >
                                         View
                                     </Button>
@@ -367,7 +379,7 @@ export default function Business() {
                     scroll={{ x: true }}
                 />
             </Card>
-            <div>
+            <div style={{ marginTop: "10px" }}>
                 <Collapse defaultActiveKey={["1"]}>
                     <Panel header="API Details" key="1">
                         <Card>
