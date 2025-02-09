@@ -39,7 +39,7 @@ class EmployeeController extends Controller
                     return $data->user_hr_documents;
                 }
                 //  dd($user->toArray());
-        return view('client.employees.show', compact('employees','events','data'));
+        return response()->json(['employees' => $employees,'events'=>$events,'data'=>$data ], 200);
 
     }
 

@@ -10,4 +10,8 @@ export default defineConfig({
         }),
         react(),
     ],
+    optimizeDeps: {
+        include: ['react-big-calendar']
+      }
+      
 });

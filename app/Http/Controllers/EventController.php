@@ -22,7 +22,7 @@ class EventController extends Controller
 
             return response()->json($data);
         }
-        return view('client.events.show');
+        return response()->json(['calendar'=>$data],200);
     }
 
     //for upcoming events
@@ -37,12 +37,10 @@ class EventController extends Controller
         $today = date('Y-m-d');
         
         // Date filter removed dor now
-        if($request->ajax()) {
+         
        
             $data = Event::where('user_id',$user_id)->get(['id', 'title', 'location', 'end','start']);
-            return response()->json($data);
-        }
-        return view('client.events.show');
+            return response()->json($data); 
     }
  
     public function add_update_delete(Request $request)

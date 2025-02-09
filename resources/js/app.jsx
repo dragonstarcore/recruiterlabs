@@ -26,7 +26,8 @@ import Staff from "./pages/staff";
 import Tickets from "./pages/tickets";
 import FinanceForecast from "./pages/forecast";
 import Profile from "./pages/profile";
-
+import Event from "./pages/event";
+import StaffEdit from "./pages/staff/staff.edit";
 import "antd/dist/reset.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -72,8 +73,16 @@ const App = () => {
                                                 element={<GoogleAnalytics />}
                                             />
                                             <Route
+                                                path="events"
+                                                element={<Event />}
+                                            />
+                                            <Route
                                                 path="staff"
                                                 element={<Staff />}
+                                            />
+                                            <Route
+                                                path="employee/:id?"
+                                                element={<StaffEdit />}
                                             />
                                             <Route
                                                 path="tickets"

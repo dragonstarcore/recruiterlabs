@@ -3,35 +3,36 @@ import { URI } from "./app.config";
 import { logout } from "./app.slice"; // Adjust path as necessary
 
 const getToken = () => {
-  return localStorage.getItem("token");
+    return localStorage.getItem("token");
 };
 
 const customFetchBaseQuery = async (args, api, extraOptions) => {
-  const baseResponse = await fetchBaseQuery({
-    baseUrl: URI,
-    prepareHeaders: (headers) => {
-      const token = getToken();
-      if (token) headers.set("Authorization", `Bearer ${token}`);
-      return headers;
-    },
-  })(args, api, extraOptions);
+    console.log("@@@", args, api);
+    const baseResponse = await fetchBaseQuery({
+        baseUrl: URI,
+        prepareHeaders: (headers) => {
+            const token = getToken();
+            if (token) headers.set("Authorization", `Bearer ${token}`);
+            return headers;
+        },
+    })(args, api, extraOptions);
 
-  if (baseResponse.error) {
-    const status = baseResponse.error.status;
+    if (baseResponse.error) {
+        const status = baseResponse.error.status;
 
-    if (status === 401) {
-      localStorage.removeItem("token");
-      api.dispatch(logout());
+        if (status === 401) {
+            localStorage.removeItem("token");
+            api.dispatch(logout());
+        }
     }
-  }
 
-  return baseResponse;
+    return baseResponse;
 };
 
 export const apiService = createApi({
-  reducerPath: "api",
-  baseQuery: customFetchBaseQuery,
-  endpoints: () => ({}),
+    reducerPath: "api",
+    baseQuery: customFetchBaseQuery,
+    endpoints: () => ({}),
 });
 
 export default apiService;
