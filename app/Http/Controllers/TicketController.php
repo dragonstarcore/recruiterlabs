@@ -17,11 +17,11 @@ class TicketController extends Controller
     public function index()
     {
         if (Auth::user()->role_type==1) {
-            $tickets = Ticket::all();
-            return view('admin.tickets.show', compact('tickets'));
+            $tickets = Ticket::all()->with('user');
+            return response()->json(['tickets'=>$tickets],200);
         } elseif (Auth::user()->role_type==2) {
             $tickets = Ticket::where('user_id',Auth::user()->id)->get();
-            return view('client.tickets.show', compact('tickets'));
+            return response()->json(['tickets'=>$tickets],200);
         }
     }
 
@@ -37,6 +37,41 @@ class TicketController extends Controller
         }
        
     }
+
+        public function search(Request $request)
+        {
+            // Get the search query from the request
+            $searchTitle = $request->search_title; // assuming 'title' is the search term you are sending from the frontend
+
+            // Check if the authenticated user's role is '1' (admin or superuser)
+            if (Auth::user()->role_type == 1) {
+                $query = Ticket::query();
+
+                // If there's a search query, filter tickets by title
+                if ($searchTitle) {
+                    $query->where('title', 'like', '%' . $searchTitle . '%');
+                }
+
+                $tickets = $query->with('user')->get();
+
+                return response()->json(['tickets' => $tickets], 200);
+            } 
+
+            // Check if the authenticated user's role is '2' (user)
+            elseif (Auth::user()->role_type == 2) {
+                $query = Ticket::where('user_id', Auth::user()->id);
+
+                // If there's a search query, filter tickets by title
+                if ($searchTitle) {
+                    $query->where('title', 'like', '%' . $searchTitle . '%');
+                }
+
+                $tickets = $query->get();
+
+                return response()->json(['tickets' => $tickets], 200);
+            }
+        }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -73,7 +108,7 @@ class TicketController extends Controller
                 }
                 $ticket->save();
 
-                return redirect('tickets')->with('success','Ticket created successfully');
+                return response()->json(['ticket'=>$ticket],200);
 
             } catch (\Exception $e) {
                 echo "$e"; exit;
@@ -103,7 +138,7 @@ class TicketController extends Controller
                 array_push($history,array('user' =>  ucfirst($user->name),'message'=>$message['message']));
             }
             // dd($history);
-            return view('admin.tickets.edit',compact('ticket','history'));
+            return response()->json(['ticket'=>$ticket,'history'=>$history]);
         } elseif (Auth::user()->role_type==2) {
             $ticket = Ticket::where('id',$id)->first();
             $history = [];
@@ -112,7 +147,7 @@ class TicketController extends Controller
                 $user = User::where('id',$message['user'])->first();
                 array_push($history,array('user' => ucfirst($user->name),'message'=>$message['message']));
             }
-            return view('client.tickets.edit',compact('ticket','history'));
+            return response()->json(['ticket'=>$ticket,'history'=>$history]);
         }
     }
 
@@ -158,12 +193,11 @@ class TicketController extends Controller
                 $ticket->message = json_encode($updated_messages);
             }
             $ticket->save();
-
-            return redirect('tickets')->with('success','Ticket updated successfully');
+            return response()->json(['ticket'=>$ticket],200);
 
         } catch (\Exception $e) {
             // echo "$e"; exit;
-            return redirect()->back()->withInput()->with('danger','Sorry could not process.');
+            return response()->json([],500);
         }
     }
 
@@ -174,7 +208,6 @@ class TicketController extends Controller
     {
         $user = Ticket::find($id);
         $user->delete();
-
-        return redirect('tickets')->with('success','Ticket deleted successfully');
+        return response()->json(['',200]);
     }
 }

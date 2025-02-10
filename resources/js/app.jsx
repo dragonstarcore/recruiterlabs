@@ -27,6 +27,7 @@ import Tickets from "./pages/tickets";
 import FinanceForecast from "./pages/forecast";
 import Profile from "./pages/profile";
 import Event from "./pages/event";
+import TicketEdit from "./pages/tickets/ticket.edit";
 import StaffEdit from "./pages/staff/staff.edit";
 import "antd/dist/reset.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -87,6 +88,10 @@ const App = () => {
                                             <Route
                                                 path="tickets"
                                                 element={<Tickets />}
+                                            />
+                                            <Route
+                                                path="tickets/:id?"
+                                                element={<TicketEdit />}
                                             />
                                             <Route
                                                 path="knowledgebase"

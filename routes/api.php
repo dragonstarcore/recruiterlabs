@@ -40,4 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('fullcalender/{client_id?}', [App\Http\Controllers\EventController::class, 'index']);
     Route::resource('/events', App\Http\Controllers\EventController::class);
     Route::post('fullcalenderAjax', [App\Http\Controllers\EventController::class, 'add_update_delete']);
+    Route::resource('/tickets', App\Http\Controllers\TicketController::class);
+    Route::post('/tickets/search', [App\Http\Controllers\TicketController::class, 'search'])->name('tickets.search');
+
 });
