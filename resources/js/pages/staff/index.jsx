@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Card,
     Row,
     Col,
     Table,
+    Input,
     Button,
     Switch,
     Avatar,
     Typography,
     Space,
     message,
+    Flex,
 } from "antd";
 import { useNavigate } from "react-router-dom";
-import { EyeOutlined, FileOutlined, FileAddOutlined } from "@ant-design/icons";
+import {
+    EyeOutlined,
+    FileOutlined,
+    SearchOutlined,
+    FileAddOutlined,
+} from "@ant-design/icons";
 import { Calendar, momentLocalizer } from "react-big-calendar"; // or fullcalendar-react
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // for react-big-calendar
@@ -83,15 +90,22 @@ const MyStaffPage = ({}) => {
                     style={{ width: "50%" }}
                     icon={<EyeOutlined />}
                     size="large"
-                    onClick={() => navigate(`/employee/${record.id}`)}
+                    onClick={() => navigate(`/staff/${record.id}`)}
                 />
             ),
         },
     ];
 
     // Transform employee data for the table
+    const [currentPage, setCurrentPage] = useState(1); // current page number
+    const [pageSize, setPageSize] = useState(5); // number of items per page
 
     if (isLoading) return <>Loading</>;
+    const totalCount = staffData.employees?.length || 0;
+    const onPageChange = (page, pageSize) => {
+        setCurrentPage(page); // Update current page
+        setPageSize(pageSize); // Update page size if the user changes it
+    };
     return (
         <div className="content">
             <Card
@@ -129,6 +143,14 @@ const MyStaffPage = ({}) => {
 
             {/* Staff List Table */}
             <Card style={{ marginTop: "20px" }} title="My Staff List">
+                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
+                    <Col span={6}>
+                        <Input
+                            placeholder="Search..."
+                            addonBefore={<SearchOutlined />}
+                        />
+                    </Col>
+                </Flex>
                 <Table
                     columns={columns}
                     dataSource={staffData.employees.map((employee) => ({
@@ -146,6 +168,14 @@ const MyStaffPage = ({}) => {
 
             {/* HR Documents Table */}
             <Card style={{ marginTop: "20px" }} title="General Documents">
+                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
+                    <Col span={6}>
+                        <Input
+                            placeholder="Search..."
+                            addonBefore={<SearchOutlined />}
+                        />
+                    </Col>
+                </Flex>
                 <Table
                     columns={[
                         {

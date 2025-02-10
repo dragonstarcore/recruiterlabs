@@ -181,6 +181,7 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
+
         //
     }
 
@@ -220,8 +221,9 @@ class EmployeeController extends Controller
 
             if(Auth::user()->role_type==1) {
                 return view('admin.employees.edit', compact('employee','employee_list','user'));
+                
             }else{
-                return view('client.employees.edit', compact('employee','employee_list'));
+                return response()->json(['employee'=>$employee, 'employee_list'=>$employee_list]);
             }
     }
 

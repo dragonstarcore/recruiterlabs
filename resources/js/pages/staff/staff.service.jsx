@@ -14,7 +14,7 @@ export const staffApi = apiService.injectEndpoints({
         }),
         fetchEmployee: builder.query({
             query: (data) => ({
-                url: `/employees/${data}`,
+                url: `/employees/${data}/edit`,
             }),
         }),
     }),

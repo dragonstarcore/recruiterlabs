@@ -82,7 +82,7 @@ const App = () => {
                                                 element={<Staff />}
                                             />
                                             <Route
-                                                path="employee/:id?"
+                                                path="staff/:id?"
                                                 element={<StaffEdit />}
                                             />
                                             <Route
