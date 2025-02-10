@@ -12,9 +12,11 @@ import {
     UserSwitchOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 
 function Sidenav({ color = "#555555" }) {
+    const userData = useSelector((apps) => apps.app.user);
     const { pathname } = useLocation();
     const page = pathname.replace("/", "");
 
@@ -34,6 +36,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "dash",
+            role: [1, 2],
         },
         {
             label: (
@@ -49,6 +52,7 @@ function Sidenav({ color = "#555555" }) {
                     <span className="label">My Business</span>
                 </NavLink>
             ),
+            role: [2],
             key: "business",
         },
         {
@@ -65,6 +69,7 @@ function Sidenav({ color = "#555555" }) {
                     <span className="label">Performance</span>
                 </NavLink>
             ),
+            role: [2],
             key: "performance",
         },
         {
@@ -82,6 +87,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "financeforecast",
+            role: [2],
         },
         {
             label: (
@@ -98,6 +104,24 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "googleanalytics",
+            role: [2],
+        },
+        {
+            label: (
+                <NavLink to="/clients">
+                    <span
+                        className="icon"
+                        style={{
+                            background: page === "clients" ? color : "",
+                        }}
+                    >
+                        {<DeploymentUnitOutlined />}
+                    </span>
+                    <span className="label"> Clients</span>
+                </NavLink>
+            ),
+            key: "clients",
+            role: [1],
         },
         {
             label: (
@@ -114,6 +138,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "staff",
+            role: [1, 2],
         },
         {
             label: (
@@ -130,6 +155,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "tickets",
+            role: [1, 2],
         },
         {
             label: (
@@ -146,6 +172,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "knowledgebase",
+            role: [1, 2],
         },
         {
             label: (
@@ -162,6 +189,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "community",
+            role: [1, 2],
         },
         {
             label: (
@@ -178,6 +206,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "profile",
+            role: [2],
         },
         {
             label: (
@@ -194,16 +223,19 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "apps",
+            role: [2],
         },
     ];
-
+    const filteredMenuItems = menuItems.filter(
+        (item) => item.role.includes(userData.role_type) // Show menu items if userRole matches the role defined in the item
+    );
     return (
         <>
             <div className="brand">
                 <span>Labs Dashboard</span>
             </div>
             <hr />
-            <Menu theme="light" mode="inline" items={menuItems}></Menu>
+            <Menu theme="light" mode="inline" items={filteredMenuItems}></Menu>
         </>
     );
 }
