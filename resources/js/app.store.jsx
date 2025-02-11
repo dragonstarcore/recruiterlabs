@@ -7,6 +7,7 @@ import xeroReducer from "./pages/forecast/forecast.slice";
 import staffReducer from "./pages/staff/staff.slice";
 import eventReducer from "./pages/event/event.slice";
 import ticketReducer from "./pages/tickets/tickets.slice";
+import clientReducer from "./pages/clients/clients.slice";
 
 import { apiService } from "./app.service";
 
@@ -20,6 +21,7 @@ export const store = configureStore({
         staff: staffReducer,
         event: eventReducer,
         ticket: ticketReducer,
+        client: clientReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(apiService.middleware),

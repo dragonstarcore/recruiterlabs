@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobadderController;
 use App\Http\Controllers\XeroController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,5 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('fullcalenderAjax', [App\Http\Controllers\EventController::class, 'add_update_delete']);
     Route::resource('/tickets', App\Http\Controllers\TicketController::class);
     Route::post('/tickets/search', [App\Http\Controllers\TicketController::class, 'search'])->name('tickets.search');
-
+    Route::resource('/users', App\Http\Controllers\UserController::class); 
+    Route::get('/client_doc_search/{client_id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('client_doc_search');
 });

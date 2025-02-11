@@ -5,3 +5,8 @@
     height: 100%;
     width: 100%;
 }
+
+.table-row-hover:hover {
+    background-color: #e6f7ff;
+  }
+  

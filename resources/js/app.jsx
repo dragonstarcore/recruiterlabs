@@ -27,6 +27,9 @@ import Tickets from "./pages/tickets";
 import FinanceForecast from "./pages/forecast";
 import Profile from "./pages/profile";
 import Event from "./pages/event";
+import Client from "./pages/clients";
+import ClientCreate from "./pages/clients/clients.create";
+import ClientEdit from "./pages/clients/clients.edit";
 import TicketEdit from "./pages/tickets/ticket.edit";
 import StaffEdit from "./pages/staff/staff.edit";
 import "antd/dist/reset.css";
@@ -80,6 +83,18 @@ const App = () => {
                                             <Route
                                                 path="staff"
                                                 element={<Staff />}
+                                            />
+                                            <Route
+                                                path="clients"
+                                                element={<Client />}
+                                            />
+                                            <Route
+                                                path="clients/create"
+                                                element={<ClientCreate />}
+                                            />
+                                            <Route
+                                                path="clients/edit/:id?"
+                                                element={<ClientEdit />}
                                             />
                                             <Route
                                                 path="staff/:id?"

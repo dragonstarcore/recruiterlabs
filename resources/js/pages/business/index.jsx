@@ -98,116 +98,174 @@ export default function Business() {
         );
     return (
         <>
-            <Card title="My Business Details">
-                {/* Company Details Section */}
-                <Row gutter={[0, 20]}>
-                    <Col span={24}>
-                        <Title level={5}>Company Details</Title>
-                    </Col>
+            <Card
+                title="My Business Details"
+                style={{
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Light shadow for depth
+                    borderRadius: "10px", // Rounded corners for the card
+                }}
+            >
+                <Row>
                     <Col span={6}>
-                        <Text strong>Company Name:</Text>
+                        <Row
+                            gutter={[0, 20]}
+                            style={{ marginTop: "20px", padding: "20px" }}
+                        >
+                            <Col span={24}>
+                                {user?.user_details?.logo ? (
+                                    <img
+                                        src={
+                                            "https://www.recstack.co/public/" +
+                                            `${user?.user_details?.logo}`
+                                        }
+                                        alt="Business Logo"
+                                        style={{
+                                            width: "100%",
+                                            height: "100%",
+                                            borderRadius: "10px", // Rounded corners for the logo
+                                            border: "2px solid #e0e0e0", // Light border around the logo
+                                        }}
+                                    />
+                                ) : (
+                                    <Text>No Logo Uploaded</Text>
+                                )}
+                            </Col>
+                        </Row>
                     </Col>
                     <Col span={18}>
-                        <Text>{user?.user_details?.company_name}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Company Number:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.company_number}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Registered Address:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.registered_address}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>VAT Number:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.vat_number}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Authentication Code:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.authentication_code}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Company UTR:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.company_utr}</Text>
+                        <Tabs defaultActiveKey="1">
+                            <TabPane tab="Company Details" key="1">
+                                <Row
+                                    gutter={[10, 20]}
+                                    style={{
+                                        borderRadius: "8px",
+                                    }}
+                                >
+                                    <Col span={6}>
+                                        <Text>Company Name:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.company_name}
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>Company Number:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.company_number}
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>Registered Address:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {
+                                                user?.user_details
+                                                    ?.registered_address
+                                            }
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>VAT Number:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.vat_number}
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>Authentication Code:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {
+                                                user?.user_details
+                                                    ?.authentication_code
+                                            }
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>Company UTR:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.company_utr}
+                                        </Text>
+                                    </Col>
+                                </Row>
+                            </TabPane>
+
+                            <TabPane tab="Bank Details" key="2">
+                                <Row
+                                    gutter={[10, 20]}
+                                    style={{
+                                        borderRadius: "8px",
+                                        marginTop: "20px",
+                                    }}
+                                >
+                                    <Col span={6}>
+                                        <Text>Bank Name:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.bank_name}
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>Sort Code:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.sort_code}
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>Account Number:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.account_number}
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>IBAN:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.iban}
+                                        </Text>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Text>Swift Code:</Text>
+                                    </Col>
+                                    <Col span={18}>
+                                        <Text strong>
+                                            {user?.user_details?.swift_code}
+                                        </Text>
+                                    </Col>
+                                </Row>{" "}
+                            </TabPane>
+                        </Tabs>
                     </Col>
                 </Row>
+
+                {/* Company Details Section */}
 
                 {/* Bank Details Section */}
-                <Row gutter={[0, 20]} style={{ marginTop: "20px" }}>
-                    <Col span={24}>
-                        <Title level={5}>Bank Details</Title>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Bank Name:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.bank_name}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Sort Code:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.sort_code}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Account Number:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.account_number}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>IBAN:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.iban}</Text>
-                    </Col>
-                    <Col span={6}>
-                        <Text strong>Swift Code:</Text>
-                    </Col>
-                    <Col span={18}>
-                        <Text>{user?.user_details?.swift_code}</Text>
-                    </Col>
-                </Row>
 
                 {/* Logo Section */}
-                <Row gutter={[0, 20]} style={{ marginTop: "20px" }}>
-                    <Col span={6}>
-                        <Text strong>Logo:</Text>
-                    </Col>
-                    <Col span={18}>
-                        {user?.user_details?.logo ? (
-                            <img
-                                src={
-                                    "https://www.recstack.co/public/" +
-                                    `${user?.user_details?.logo}`
-                                }
-                                alt="Business Logo"
-                                style={{ width: "100px", height: "100px" }}
-                            />
-                        ) : (
-                            <Text>No Logo Uploaded</Text>
-                        )}
-                    </Col>
-                </Row>
 
                 {/* Company Documents Section */}
-                <Row gutter={16}>
+                <Row gutter={16} style={{ marginTop: "20px", padding: "20px" }}>
                     <Col span={4}>
                         <h5>
                             <b>Company Documents Filter:</b>
                         </h5>
                     </Col>
-                    <Col span={4}>
+                    <Col span={5}>
                         <Form form={form}>
                             <Form.Item name="type_search">
                                 <Select
@@ -240,6 +298,12 @@ export default function Business() {
 
                 <Table
                     className="employee_list"
+                    style={{
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                    }}
+                    bordered
+                    rowClassName="table-row-hover"
                     columns={[
                         {
                             title: "#",

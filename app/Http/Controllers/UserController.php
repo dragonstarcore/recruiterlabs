@@ -32,7 +32,7 @@ class UserController extends Controller
     {
         if (Auth::user()->role_type == 1) {
             $users = User::where('role_type', 2)->get();
-            return view('admin.clients.show', compact('users'));
+            return response()->json(['users'=>$users],200); 
         } else {
             return redirect('/');
         }
@@ -43,11 +43,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->role_type == 1) {
-            return view('admin.clients.create');
-        } else {
-            return redirect('/');
-        }
+        
     }
 
     /**
@@ -55,6 +51,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //return response()->json(["user"=>"sf"],200);
+            
         // dd($request->toArray());
         try {
             $validator = \Validator::make($request->all(), [
@@ -66,7 +64,7 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return back()->withInput()->withErrors($validator);
             }
-
+            
             $client = new User;
             $client->name = $request->name;
             $client->email  = $request->email;
@@ -157,7 +155,7 @@ class UserController extends Controller
                     $file = $request->file('logo')->getClientOriginalName();
                     $image_input['imagename']  = time() . '-' . $file;
                     $destinationPath = public_path('community_user_logos/');
-                    $request->logo->move($destinationPath, $image_input['imagename']);
+                    copy($client_details->logo,$destinationPath. $image_input['imagename']);
                     $community_user->logo = 'community_user_logos/' . $image_input['imagename'];
                 }
                 $community_user->save();
@@ -181,29 +179,29 @@ class UserController extends Controller
             //End: Create entry in xero api table
 
             //send reset password link
-            if ($request->has('send_email')) {
-                $site_details = get_site_details();
-                $SITE_NAME = $site_details['SITE_NAME'];
-                $SITE_EMAIL = $site_details['SITE_EMAIL'];
+            // if ($request->has('send_email')) {
+            //     $site_details = get_site_details();
+            //     $SITE_NAME = $site_details['SITE_NAME'];
+            //     $SITE_EMAIL = $site_details['SITE_EMAIL'];
 
-                $email_array = array(
-                    'to_email' => $client->email,
-                    'to_name' =>  $client->name,
-                    'subject' => 'Recruiterlabs Activation Link',
-                    'from_email' => $SITE_EMAIL,
-                    'from_name' => $SITE_NAME,
-                    'web_access_token' => get_encrypt_value($client->remember_token)
-                );
+            //     $email_array = array(
+            //         'to_email' => $client->email,
+            //         'to_name' =>  $client->name,
+            //         'subject' => 'Recruiterlabs Activation Link',
+            //         'from_email' => $SITE_EMAIL,
+            //         'from_name' => $SITE_NAME,
+            //         'web_access_token' => get_encrypt_value($client->remember_token)
+            //     );
 
-                html_sent_email('email/activation_template', $email_array);
-            }
+            //     html_sent_email('email/activation_template', $email_array);
+            // }
 
             //send reset password link
 
-            return redirect('users')->with('success', 'Client created successfully');
+            return response()->json(["user"=>$client],200);
         } catch (\Exception $e) {
             //  echo "$e"; exit;
-            return redirect()->back()->withInput()->with('danger', 'Sorry could not process.');
+            return response()->json($e->getmessage(),500);
         }
     }
 
@@ -222,7 +220,7 @@ class UserController extends Controller
     {
         // dd($request->toArray(),$id);
         if (Auth::user()->role_type == 1) {
-            $user = User::where('id', $id)->with('user_details', 'user_documents')->first();
+            $user = User::where('id', $id)->with('xero_details','user_details', 'user_documents','jobadder_details')->first();
             if ($request->has('type_search') && $request->type_search != '') {
                 $type_search = $request->type_search;
                 // dd($type_search);
@@ -233,13 +231,13 @@ class UserController extends Controller
                     ->first();
                 return $user->user_documents;
             } elseif ($request->has('type_search')) {
-                $user = User::where('id', $id)->with('user_details', 'user_documents')->first();
+                $user = User::where('id', $id)->with('xero_details','user_details', 'user_documents')->first();
                 return $user->user_documents;
             } elseif ($request->has('on_upload_click')) { // If upload is clicked show all docs
-                $user = User::where('id', $id)->with('user_details', 'user_documents')->first();
-                return $user->user_documents;
+                $user = User::where('id', $id)->with('xero_details','user_details', 'user_documents')->first();
+                return response()->json(['user'=>$user_documents],200);
             }
-            return view('admin.clients.edit', compact('user'));
+            return response()->json(['user'=>$user],200);
         }
     }
 
@@ -867,7 +865,7 @@ class UserController extends Controller
 
         User::destroy($id);
 
-        return redirect('users')->with('success', 'Client deleted successfully');
+        return  response()->json([],200);
     }
 
     //check token for reset password and first time login
