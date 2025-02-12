@@ -1,30 +1,17 @@
 import React, { useState, useEffect } from "react";
 import ApexCharts from "react-apexcharts";
-import { Card, Row, Image, Col, Select, Alert, Typography } from "antd";
+import { Card, Row, Image, Col, Alert, Typography } from "antd";
+
 import ChartContainer from "./home.chart";
 import apps from "./home.const";
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
-const formatData = (data) => {
-    if (!data) return;
-    const names = [];
-    const values = [];
-
-    // Ensure data exists and contains 'name' and 'y'
-    data.forEach((item) => {
-        if (item && item.name && item.y !== undefined) {
-            names.push(item.name);
-            values.push(item.y);
-        }
-    });
-
-    return { names, values };
-};
 const XeroContainer = ({ xero }) => {
     const [cashIn, setCashIn] = useState([]);
     const [cashOut, setCashOut] = useState([]);
     const [categories, setCategories] = useState([]);
+
     useEffect(() => {
         if (!xero) return;
         const totalCash = xero["total_cash"];
@@ -45,7 +32,6 @@ const XeroContainer = ({ xero }) => {
                 outData.push(Math.round(totalCash["y"]["Out"][i] * 100) / 100);
             }
 
-            // Set the data to state variables
             setCashIn(inData);
             setCashOut(outData);
             setCategories(totalCash["name"]);
@@ -53,16 +39,10 @@ const XeroContainer = ({ xero }) => {
             console.error("Error fetching or processing data:", error);
         }
     }, [xero]);
+
     return (
         <div>
-            <Card
-                style={{ marginTop: 10 }}
-                title="Xero Data"
-                headStyle={{
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                }}
-            >
+            <Card style={{ marginTop: 10 }} title={<h2>Xero Data</h2>}>
                 <Card.Meta
                     description={
                         xero.organisationName ? (
@@ -236,37 +216,29 @@ const XeroContainer = ({ xero }) => {
                     }
                 />
             </Card>
-            <Card
-                title="My Apps"
-                style={{ marginTop: 20 }}
-                headStyle={{
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                }}
-                className="app_card_body"
-            >
-                <Row gutter={[16, 16]}>
+
+            <Card title={<h2>My Apps</h2>} style={{ marginTop: 20 }}>
+                <div className="app_card_body">
                     {apps.map((app, index) => (
-                        <Col key={index} className="app_card">
-                            <a
-                                href={app.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <div className="card-img-body">
-                                    <div className="card-img-actions mx-1 mt-1">
-                                        <Image
-                                            className="card-img img-fluid"
-                                            src={`./assets/images/${app.imgSrc}`}
-                                            alt=""
-                                            preview={false}
-                                        />
-                                    </div>
+                        <a
+                            href={app.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            key={index}
+                        >
+                            <div className="card-img-body">
+                                <div className="card-img-actions mx-1 mt-1">
+                                    <Image
+                                        className="card-img img-fluid"
+                                        src={`./assets/images/${app.imgSrc}`}
+                                        alt=""
+                                        preview={false}
+                                    />
                                 </div>
-                            </a>
-                        </Col>
+                            </div>
+                        </a>
                     ))}
-                </Row>
+                </div>
             </Card>
         </div>
     );

@@ -13,44 +13,55 @@ import {
     Typography,
     Spin,
 } from "antd";
+
 import moment from "moment";
 import JobContainer from "./home.job";
 import GoogleAnalytics from "./home.google";
 import XeroContainer from "./home.xero";
+
+import { setJobadder, setDashboard } from "./home.slice";
+
 import {
     useFetchDataQuery,
     useFetchJobadderDataMutation,
 } from "./home.service";
-import { setJobadder, setDashboard } from "./home.slice";
+
 import "./style.css";
 
+const { RangePicker } = DatePicker;
 const { Option } = Select;
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 const Dashboard = () => {
     const dispatch = useDispatch();
+
     const { data, isError, isSuccess, isLoading } = useFetchDataQuery();
+
     useEffect(() => {
         console.log(data);
         if (isSuccess) {
             //dispatch(setDashboard(data));
         }
     }, [isSuccess, data]);
+
     const [
         fetchJobadderData,
         { isLoading: isJobadderLoading, isSuccess: isJobadderSuccess, error },
     ] = useFetchJobadderDataMutation();
 
     const [form] = Form.useForm();
+
     const handleSubmit = async () => {
         try {
             const formValues = form.getFieldsValue();
+            console.log("@@@@@@@@@@@@@", formValues);
             const jobadder = await fetchJobadderData(formValues).unwrap();
             dispatch(setJobadder(jobadder));
         } catch (err) {
             console.log(err);
         }
     };
+
     useEffect(() => {
         if (error) toast.error(`Get Job data failed`);
     }, [isJobadderSuccess, error]);
@@ -83,133 +94,84 @@ const Dashboard = () => {
             }
         }
     };
-    if (isLoading) {
+
+    if (isLoading)
         return (
             <div className="jobadder-body">
                 <Spin size="large" />
             </div>
         );
-    }
+
     if (userData.role_type == 2)
         return (
-            <div className="content">
+            <div className="dash">
                 <Card
-                    title="Jobadder"
-                    headStyle={{
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                    }}
-                >
-                    <div className="card-header">
-                        <Form
-                            form={form}
-                            id="filter_data"
-                            action="/search_jobadder"
-                            method="post"
-                            initialValues={{
-                                startDate: startDate ? moment(startDate) : null,
-                                endDate: endDate ? moment(endDate) : null,
-                                date_option: dateOption || "year",
-                            }}
-                        >
-                            <Row>
+                    title={
+                        <div className="dash-jobadder-header">
+                            <div className="jobadder-header-title">
+                                <h2>Jobadder</h2>
+                                <span>{jobadder.fullname}</span>
+                                <span>{jobadder.account_email}</span>
+                            </div>
+
+                            <Form
+                                form={form}
+                                initialValues={{
+                                    startDate: startDate
+                                        ? moment(startDate)
+                                        : null,
+                                    endDate: endDate ? moment(endDate) : null,
+                                    date_option: dateOption || "year",
+                                }}
+                                style={{ display: "flex" }}
+                            >
                                 {jobadder?.fullname && (
                                     <>
-                                        <Col span={16}>
-                                            {customDateVisible && (
-                                                <Row className="custom-dates">
-                                                    <Col span={5} offset={1}>
-                                                        <Form.Item
-                                                            name="startDate"
-                                                            label="Start Date"
-                                                        >
-                                                            <DatePicker
-                                                                style={{
-                                                                    width: "100%",
-                                                                }}
-                                                                placeholder="Start Date"
-                                                                format="YYYY-MM-DD"
-                                                            />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={5} offset={1}>
-                                                        <Form.Item
-                                                            name="endDate"
-                                                            label="End Date"
-                                                        >
-                                                            <DatePicker
-                                                                style={{
-                                                                    width: "100%",
-                                                                }}
-                                                                placeholder="End Date"
-                                                                format="YYYY-MM-DD"
-                                                            />
-                                                        </Form.Item>
-                                                    </Col>
-
-                                                    <Col span={5} offset={1}>
-                                                        <Form.Item>
-                                                            <Button
-                                                                type="primary"
-                                                                size="small"
-                                                                style={{
-                                                                    width: "100%",
-                                                                    height: "30px",
-                                                                    padding: 0,
-                                                                    fontSize:
-                                                                        "large",
-                                                                }}
-                                                                onClick={
-                                                                    handleSubmit
-                                                                }
-                                                            >
-                                                                <span
-                                                                    style={{
-                                                                        color: "white",
-                                                                    }}
-                                                                >
-                                                                    Filter
-                                                                </span>
-                                                            </Button>
-                                                        </Form.Item>
-                                                    </Col>
-                                                </Row>
-                                            )}
-                                        </Col>
-                                        <Col span={5} offset={1}>
-                                            <Form.Item
-                                                name="date_option"
-                                                label="Filter By"
-                                            >
-                                                <Select
-                                                    placeholder="Filter By"
-                                                    onChange={
-                                                        handleDateOptionChange
-                                                    }
-                                                    style={{
-                                                        width: "100%",
-                                                    }}
+                                        {customDateVisible && (
+                                            <>
+                                                <Form.Item
+                                                    name="startDate"
+                                                    className="jobadder-header-datapicker"
                                                 >
-                                                    <Option value="year">
-                                                        This Year
-                                                    </Option>
-                                                    <Option value="month">
-                                                        This Month
-                                                    </Option>
-                                                    <Option value="week">
-                                                        This Week
-                                                    </Option>
-                                                    <Option value="custom">
-                                                        Custom
-                                                    </Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
+                                                    <RangePicker />
+                                                </Form.Item>
+                                            </>
+                                        )}
+
+                                        <Form.Item
+                                            name="date_option"
+                                            label="Filter By"
+                                            className="jobadder-header-filter"
+                                        >
+                                            <Select
+                                                placeholder="Filter By"
+                                                onChange={
+                                                    handleDateOptionChange
+                                                }
+                                                style={{
+                                                    width: "100%",
+                                                }}
+                                            >
+                                                <Option value="year">
+                                                    This Year
+                                                </Option>
+                                                <Option value="month">
+                                                    This Month
+                                                </Option>
+                                                <Option value="week">
+                                                    This Week
+                                                </Option>
+                                                <Option value="custom">
+                                                    Custom
+                                                </Option>
+                                            </Select>
+                                        </Form.Item>
                                     </>
                                 )}
-                            </Row>
-                        </Form>
-                    </div>
+                            </Form>
+                        </div>
+                    }
+                >
                     <div>
                         {isJobadderLoading ? (
                             <Spin size="large" fullscreen />
@@ -236,6 +198,7 @@ const Dashboard = () => {
                 <XeroContainer xero={xero} />
             </div>
         );
+
     return (
         <Card title="Dashboard" bordered={false}>
             <Typography>

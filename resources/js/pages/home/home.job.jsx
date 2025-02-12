@@ -3,18 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import ApexCharts from "react-apexcharts";
 import { toast } from "react-toastify";
-import { Card, Row, Col, Select, Typography } from "antd";
+import { Card, Row, Col, Select, Typography, Statistic } from "antd";
 import Icon, {
     ProjectFilled,
     ContactsFilled,
     WechatWorkFilled,
     TeamOutlined,
 } from "@ant-design/icons";
+import CountUp from "react-countup";
 
 import ChartContainer from "./home.chart";
 
-const { Option } = Select;
+const formatter = (value) => <CountUp end={value} separator="," />;
+
 const { Title, Paragraph } = Typography;
+
 const formatData = (data) => {
     if (!data) return;
     const names = [];
@@ -35,84 +38,77 @@ const JobContainer = ({ jobadder }) => {
         <Card.Meta
             description={
                 <>
-                    <p>
-                        {jobadder.fullname} - {jobadder.account_email}
-                    </p>
-                    <Row
-                        gutter={[32, 64]}
-                        style={{
-                            marginTop: "50px",
-                            marginBottom: "32px",
-                        }}
-                    >
+                    <Row gutter={[32, 64]}>
                         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-                            <Card>
-                                <div className="job-card">
-                                    <div className="icon-box">
-                                        <ProjectFilled />
-                                    </div>
-                                    <div className="job-card-title">
-                                        <span className="dashboard-info">
+                            <Card className="stastic-card" variant="borderless">
+                                <Statistic
+                                    formatter={formatter}
+                                    title={
+                                        <h4 className="stastic-title">
                                             Total Jobs
-                                        </span>
-                                        <Title className="job-card-number">
-                                            {"+" + jobadder.jobs}
-                                        </Title>
-                                    </div>
-                                </div>
+                                        </h4>
+                                    }
+                                    value={jobadder.jobs}
+                                    valueStyle={{
+                                        color: "#ffffff",
+                                        fontSize: "2rem",
+                                    }}
+                                    prefix={<ProjectFilled />}
+                                />
                             </Card>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-                            <Card>
-                                <div className="job-card">
-                                    <div className="icon-box">
-                                        <ContactsFilled />
-                                    </div>
-                                    <div className="job-card-title">
-                                        <span className="dashboard-info">
+                            <Card className="stastic-card" variant="borderless">
+                                <Statistic
+                                    formatter={formatter}
+                                    title={
+                                        <h4 className="stastic-title">
                                             Total Contacts
-                                        </span>
-                                        <Title className="job-card-number">
-                                            {"+" + jobadder.contacts}
-                                        </Title>
-                                    </div>
-                                </div>
+                                        </h4>
+                                    }
+                                    value={jobadder.contacts}
+                                    valueStyle={{
+                                        color: "#ffffff",
+                                        fontSize: "2rem",
+                                    }}
+                                    prefix={<ContactsFilled />}
+                                />
                             </Card>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-                            <Card>
-                                <div className="job-card">
-                                    <div className="icon-box">
-                                        <WechatWorkFilled />
-                                    </div>
-                                    <div className="job-card-title">
-                                        <span className="dashboard-info">
+                            <Card className="stastic-card" variant="borderless">
+                                <Statistic
+                                    formatter={formatter}
+                                    title={
+                                        <h4 className="stastic-title">
                                             Total Interviews
-                                        </span>
-                                        <Title className="job-card-number">
-                                            {"+" + jobadder.interviews}
-                                        </Title>
-                                    </div>
-                                </div>
+                                        </h4>
+                                    }
+                                    value={jobadder.interviews}
+                                    valueStyle={{
+                                        color: "#ffffff",
+                                        fontSize: "2rem",
+                                    }}
+                                    prefix={<WechatWorkFilled />}
+                                />
                             </Card>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-                            <Card>
-                                <div className="job-card">
-                                    <div className="icon-box">
-                                        <span>
-                                            <TeamOutlined />
-                                        </span>
-                                    </div>
-                                    <div className="job-card-title">
-                                        <span className="dashboard-info">
+                            <Card className="stastic-card" variant="borderless">
+                                <Statistic
+                                    formatter={formatter}
+                                    title={
+                                        <h4 className="stastic-title">
                                             Total Candidates
-                                        </span>
-                                        <Title className="job-card-number">
-                                            {"+" + jobadder.candidates}
-                                        </Title>
-                                    </div>
-                                </div>
+                                        </h4>
+                                    }
+                                    value={jobadder.candidates}
+                                    valueStyle={{
+                                        color: "#ffffff",
+                                        fontSize: "2rem",
+                                    }}
+                                    prefix={<TeamOutlined />}
+                                />
                             </Card>
                         </Col>
                     </Row>

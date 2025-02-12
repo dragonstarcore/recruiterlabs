@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     dashboardData: {
         jobadder: {
-            fullname: "asdf",
-            account_email: "asdf",
+            fullname: "Kamino Consulting",
+            account_email: "harmeet@apexfinancerecruitment.com",
             jobs: 50,
             contacts: 200,
             interviews: 30,
