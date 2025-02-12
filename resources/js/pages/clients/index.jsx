@@ -53,9 +53,13 @@ const MyClientPage = ({}) => {
             title: "Logo",
             dataIndex: "logo",
             key: "logo",
-            render: (logo) => (
+            render: (text, record) => (
                 <img
-                    src={logo || "path/to/default_user.jpg"}
+                    src={
+                        record.user_details.logo
+                            ? "/" + record.user_details.logo
+                            : "/assets/images/default_user.jpg"
+                    }
                     alt="Logo"
                     className="rounded-pill"
                     width="36"
