@@ -1,0 +1,5 @@
+.image_box_data{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}

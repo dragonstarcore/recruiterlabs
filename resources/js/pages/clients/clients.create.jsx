@@ -38,7 +38,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 import { useCreateClientMutation } from "./clients.service";
-
+import "./style.css";
 const MyStaffPage = ({}) => {
     const clients = useSelector((apps) => apps.client.clients);
     const dispatch = useDispatch();
@@ -387,30 +387,34 @@ const MyStaffPage = ({}) => {
             {fileList.map((file, index) => (
                 <Row gutter={8} key={file.id} className="image_box_data">
                     <Col span={4}>
-                        <Image
-                            src={
-                                file.url ||
-                                URL.createObjectURL(file.originFileObj)
-                            }
-                            className="rounded-pill"
-                            width={70}
-                            height={50}
-                            alt="File Thumbnail"
-                        />
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item name={`image_title_${file.uid}`}>
-                            <Input
-                                placeholder="Enter title"
-                                required
-                                defaultValue={file.name}
+                        <Flex justify="center">
+                            <Image
+                                src={URL.createObjectURL(file.originFileObj)}
+                                className="rounded-pill"
+                                width={70}
+                                height={50}
+                                alt="File Thumbnail"
                             />
-                        </Form.Item>
+                        </Flex>
+                    </Col>
+                    <Col span={2}>{file.name}</Col>
+                    <Col span={6}>
+                        <Flex justify="center" align="center">
+                            <Form.Item
+                                name={`image_title_${file.uid}`}
+                                style={{ margin: 0 }}
+                            >
+                                <Input placeholder="Enter title" required />
+                            </Form.Item>
+                        </Flex>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name={`document_type_${file.uid}`}>
+                        <Form.Item
+                            name={`document_type_${file.uid}`}
+                            style={{ margin: 0 }}
+                        >
                             <Select
-                                style={{ width: "100%" }}
+                                style={{ width: "100%", margin: 0 }}
                                 placeholder="Select Document Type"
                             >
                                 <Option value="4">Marketing & brand</Option>

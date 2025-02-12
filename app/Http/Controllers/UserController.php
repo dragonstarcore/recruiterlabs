@@ -527,21 +527,28 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
+    { 
+        dd($request->all());
+        exit;
         // dd($request->toArray());
         try {
-            $validator = \Validator::make($request->all(), [
-                'name' => ['required'],
-                'email' => 'unique:users,email,' . $id . ',id,deleted_at,NULL',
-                'status' => ['required']
-            ]);
+            // $validator = \Validator::make($request->all(), [
+            //     'name' => ['required'],
+            //     'email' => 'unique:users,email,' . $id . ',id,deleted_at,NULL',
+            //     'status' => ['required']
+            // ]);  
+            // if ($validator->fails()) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Validation failed',
+            //         'errors' => $validator->errors()
+            //     ], 422); // 422 is the HTTP status code for validation errors 
+            // }
 
-            if ($validator->fails()) {
-                return back()->withInput()->withErrors($validator);
-            }
-
+            // return response()->json(['user'=>'123'],200);
             $client = User::where('id', $id)->first();
             get_lastvalued_logged("users", $client);
+            
             $client->name = $request->name;
             $client->email  = $request->email;
             $client->status = $request->status;
@@ -551,7 +558,6 @@ class UserController extends Controller
                 $client->password = Hash::make($request->password);
             }
             $client->save();
-
             $client_details = UserDetail::where('user_id', $id)->first();
             get_lastvalued_logged("user_details", $client_details);
             $client_details->company_name = $request->company_name;
@@ -723,10 +729,10 @@ class UserController extends Controller
             }
             //End   : Update entry in jobadder table
 
-            return redirect()->back()->with('success', 'Client updated successfully');
+            return response()->json(['user'=>$client],200);
         } catch (\Exception $e) {
             //    echo "$e"; exit;
-            return redirect()->back()->withInput()->with('danger', 'Sorry could not process.');
+            return response()->json(["msg"=>$e->getmessage()],500);
         }
     }
 

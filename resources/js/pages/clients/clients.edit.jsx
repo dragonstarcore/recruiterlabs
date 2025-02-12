@@ -33,18 +33,29 @@ import {
     DeleteOutlined,
 } from "@ant-design/icons";
 
-import { useFetchClientQuery, useFetchDocQuery } from "./clients.service";
+import {
+    useFetchClientQuery,
+    useUpdateClientMutation,
+} from "./clients.service";
+import "./style.css";
 const { Option } = Select;
 const { Title } = Typography;
 const { TabPane } = Tabs;
 const MyStaffPage = ({}) => {
     const { id } = useParams();
-    const { data, isLoading } = useFetchClientQuery(id, {
+    const { data, isLoading, isSuccess } = useFetchClientQuery(id, {
         refetchOnMountOrArgChange: true,
     });
     const user = data?.user;
     const [isCommunityChecked, setIsCommunityChecked] = useState(false);
 
+    const [
+        updateClient,
+        { isLoading: isLoadingUpdate, isSuccess: isUpdatingSuccess },
+    ] = useUpdateClientMutation();
+    const [form] = Form.useForm();
+    const [file, setFile] = useState(null);
+    const [docFile, setDocFile] = useState([]);
     const handleCommunityChange = (e) => {
         setIsCommunityChecked(e.target.checked);
     };
@@ -80,34 +91,143 @@ const MyStaffPage = ({}) => {
     const handleDocumentChange = ({ fileList: newFileList, file, event }) => {
         // You can control when to remove the files here
         // For example, removing files after upload completion
-        if (file.status === "done") {
-            // Successfully uploaded, remove it from the list
-            //setFileList([]);
-            message.success(`${file.name} file uploaded successfully.`);
-        } else if (file.status === "error") {
-            // Error while uploading, you may want to handle it
-            message.error(`${file.name} file upload failed.`);
-        } else {
-            // Keep the files in the list for further operations
-            setFileList(newFileList);
-        }
-        console.log(fileList);
+        const updatedList = newFileList.map((file) => ({
+            ...file,
+            uid: file.uid || `new-${Date.now()}`, // Ensure unique UID
+        }));
+        setFileList(updatedList);
     };
-    const handleDeleteDocument = (uid) => {
-        console.log(uid);
-        setFileList((fileList) => fileList.filter((f) => f.uid !== uid));
+
+    const handleDeleteDocument = (file) => {
+        setFileList(
+            fileList.filter((f) => {
+                const deleteIdentifier = file.id || file.uid;
+                const fileIdentifier = f.id || f.uid;
+                return fileIdentifier !== deleteIdentifier;
+            })
+        );
     };
     const [fileList, setFileList] = useState([]);
     const [initialValue, setInitialValue] = useState({});
     useEffect(() => {
-        setFileList(data?.user?.user_documents);
-    }, [data]);
+        if (isSuccess) {
+            setFileList(data?.user?.user_documents);
+            console.log(data?.user?.user_documents);
+        }
+    }, [isSuccess, data]);
+    const onFinish = async (values, id) => {
+        try {
+            const formData = new FormData();
+            for (const key in values) {
+                formData.append(key, values[key]);
+            }
+            formData.append("logo", file);
+            console.log(fileList);
+            console.log(values);
 
+            fileList.map((file, index) => {
+                if (file.id) {
+                    formData.append("old_images[]", file.id);
+                    formData.append(
+                        "old_document[]",
+                        values[`document_type_${file.id}`]
+                    );
+                    formData.append(
+                        "old_title[]",
+                        values[`image_title_${file.id}`]
+                    );
+                }
+                if (file.uid) {
+                    formData.append("images[]", file.id);
+                    formData.append(
+                        "document[]",
+                        values[`document_type_${file.id}`]
+                    );
+                    formData.append(
+                        "title[]",
+                        values[`image_title_${file.id}`]
+                    );
+                }
+            });
+            formData.append("id", id);
+            const result = await updateClient(formData);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const showIcon = (file) => {
+        console.log("file", file);
+        if (file.file_ext == "pdf" || file.file_ext == "doc")
+            return (
+                <>
+                    <Image
+                        src={"/assets/images/" + file.file_ext + ".png"}
+                        className="rounded-pill"
+                        width={70}
+                        height={50}
+                        alt="File Thumbnail"
+                    />
+                    <>{file.file}</>
+                </>
+            );
+        if (file?.type == "application/pdf") {
+            return (
+                <>
+                    <Image
+                        src={"/assets/images/pdf.png"}
+                        className="rounded-pill"
+                        width={70}
+                        height={50}
+                        alt="File Thumbnail"
+                    />
+                    <>{file.file}</>
+                </>
+            );
+        }
+        if (file?.type == "application/doc") {
+            return (
+                <>
+                    <Image
+                        src={"/assets/images/doc.png"}
+                        className="rounded-pill"
+                        width={70}
+                        height={50}
+                        alt="File Thumbnail"
+                    />
+                    <>{file.file}</>
+                </>
+            );
+        }
+        if (file?.id)
+            return (
+                <Image
+                    src={
+                        "/" + file?.file ||
+                        URL.createObjectURL(file?.originFileObj)
+                    }
+                    className="rounded-pill"
+                    width={70}
+                    height={50}
+                    alt="File Thumbnail"
+                />
+            );
+        if (file?.uid)
+            return (
+                <Image
+                    src={URL.createObjectURL(file?.originFileObj)}
+                    className="rounded-pill"
+                    width={70}
+                    height={50}
+                    alt="File Thumbnail"
+                />
+            );
+    };
     if (isLoading) return <Spin />;
     return (
         <Card title="Staff Details">
             <Form
                 layout="vertical"
+                form={form}
                 initialValues={{
                     ...user,
                     ...user.user_details,
@@ -115,6 +235,7 @@ const MyStaffPage = ({}) => {
                     xero_client_secret: user.xero_details.client_secret,
                     analytics_view_id: user?.jobadder_details.analytics_view_id,
                 }}
+                onFinish={(values) => onFinish(values, id)}
             >
                 <Row gutter={16}>
                     <Col span={12}>
@@ -151,6 +272,21 @@ const MyStaffPage = ({}) => {
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item
+                            label="Password"
+                            name="password"
+                            rules={[
+                                {
+                                    required: true,
+                                    type: "password",
+                                    message: "Please input a password!",
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
                             label="Status"
                             name="status"
                             rules={[
@@ -161,8 +297,8 @@ const MyStaffPage = ({}) => {
                             ]}
                         >
                             <Select placeholder="Select Status">
-                                <Option value="1">Active</Option>
-                                <Option value="0">Inactive</Option>
+                                <Option value={1}>Active</Option>
+                                <Option value={0}>Inactive</Option>
                             </Select>
                         </Form.Item>
                     </Col>
@@ -257,7 +393,18 @@ const MyStaffPage = ({}) => {
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item label="Logo" name="logo">
-                            <Upload listType="picture-card" maxCount={1}>
+                            <Upload
+                                listType="picture-card"
+                                maxCount={1}
+                                defaultFileList={[
+                                    {
+                                        status: "done",
+                                        url: "/" + user?.user_details.logo, // URL of the default logo
+                                    },
+                                ]}
+                                customRequest={handleupload}
+                                onChange={handleFileChange}
+                            >
                                 <div>
                                     <UploadOutlined />
                                     <div>Upload</div>
@@ -364,54 +511,55 @@ const MyStaffPage = ({}) => {
                     </Col>
                 </Row>
                 {fileList &&
-                    fileList.map((file, index) => (
+                    fileList.map((file) => (
                         <Row
-                            gutter={8}
+                            gutter={[16, 16]}
                             key={file.id}
                             className="image_box_data"
                         >
-                            <Col span={4}>
-                                <Image
-                                    src={file.url}
-                                    className="rounded-pill"
-                                    width={70}
-                                    height={50}
-                                    alt="File Thumbnail"
-                                />
-                            </Col>
+                            <Col span={4}>{showIcon(file)}</Col>
                             <Col span={6}>
-                                <Form.Item name={`image_title_${file.uid}`}>
-                                    <Input
-                                        placeholder="Enter title"
-                                        required
-                                        defaultValue={file.name}
-                                    />
+                                <Form.Item
+                                    style={{ margin: 0 }}
+                                    name={`image_title_${file?.id || file.uid}`}
+                                    initialValue={file.id ? file.title : null}
+                                >
+                                    <Input placeholder="Enter title" required />
                                 </Form.Item>
                             </Col>
                             <Col span={6}>
-                                <Form.Item name={`document_type_${file.uid}`}>
+                                <Form.Item
+                                    style={{ margin: 0 }}
+                                    name={`document_type_${
+                                        file.id || file.uid
+                                    }`}
+                                    initialValue={file.id ? file.type_id : null}
+                                >
                                     <Select
                                         style={{ width: "100%" }}
                                         placeholder="Select Document Type"
                                     >
-                                        <Option value="4">
+                                        <Option value={4}>
                                             Marketing & brand
                                         </Option>
-                                        <Option value="5">
+                                        <Option value={5}>
                                             Legal business documentation
                                         </Option>
-                                        <Option value="6">Templates</Option>
+                                        <Option value={6}>Templates</Option>
                                     </Select>
                                 </Form.Item>
                             </Col>
 
-                            <Col span={4}>
+                            <Col span={2}>
+                                <Button type="primary" icon={<EyeOutlined />}>
+                                    View
+                                </Button>
+                            </Col>
+                            <Col span={2}>
                                 <Button
                                     type="default"
                                     icon={<DeleteOutlined />}
-                                    onClick={() =>
-                                        handleDeleteDocument(file.uid)
-                                    }
+                                    onClick={() => handleDeleteDocument(file)}
                                     color="danger"
                                     variant="solid"
                                     className="upload__img-close3"
