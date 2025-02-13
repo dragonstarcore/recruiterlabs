@@ -23,15 +23,21 @@ import GoogleAnalytics from "./pages/google";
 import KnowledgeBase from "./pages/knowledge";
 import Performance from "./pages/performance";
 import Staff from "./pages/staff";
+import StaffCreate from "./pages/staff/staff.create";
 import Tickets from "./pages/tickets";
 import FinanceForecast from "./pages/forecast";
 import Profile from "./pages/profile";
 import Event from "./pages/event";
 import Client from "./pages/clients";
+import ClientList from "./pages/clients/clients.list";
 import ClientCreate from "./pages/clients/clients.create";
 import ClientEdit from "./pages/clients/clients.edit";
-import TicketEdit from "./pages/tickets/ticket.edit";
+
+import TicketEdit from "./pages/staff/staff.detail";
 import StaffEdit from "./pages/staff/staff.edit";
+import StaffDetail from "./pages/staff/staff.detail";
+
+import EmployeeList from "./pages/staff/employee_list";
 import "antd/dist/reset.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -85,11 +91,19 @@ const App = () => {
                                                 element={<Staff />}
                                             />
                                             <Route
+                                                path="/staff/create/:user_id?"
+                                                element={<StaffCreate />}
+                                            />
+                                            <Route
+                                                path="client_list"
+                                                element={<ClientList />}
+                                            />
+                                            <Route
                                                 path="clients"
                                                 element={<Client />}
                                             />
                                             <Route
-                                                path="clients/create"
+                                                path="clients/create/"
                                                 element={<ClientCreate />}
                                             />
                                             <Route
@@ -98,7 +112,15 @@ const App = () => {
                                             />
                                             <Route
                                                 path="staff/:id?"
+                                                element={<StaffDetail />}
+                                            />
+                                            <Route
+                                                path="employee/:employee_id/edit/:user_id"
                                                 element={<StaffEdit />}
+                                            />
+                                            <Route
+                                                path="employee_list/:id?"
+                                                element={<EmployeeList />}
                                             />
                                             <Route
                                                 path="tickets"

@@ -38,6 +38,7 @@ import {
     useUpdateClientMutation,
 } from "./clients.service";
 import "./style.css";
+import ShowIcon from "../staff/showIcon";
 const { Option } = Select;
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -53,6 +54,7 @@ const MyStaffPage = ({}) => {
         updateClient,
         { isLoading: isLoadingUpdate, isSuccess: isUpdatingSuccess },
     ] = useUpdateClientMutation();
+
     const [form] = Form.useForm();
     const [file, setFile] = useState(null);
     const [docFile, setDocFile] = useState([]);
@@ -136,16 +138,17 @@ const MyStaffPage = ({}) => {
                         "old_title[]",
                         values[`image_title_${file.id}`]
                     );
+                    return;
                 }
                 if (file.uid) {
-                    formData.append("images[]", file.id);
+                    formData.append("images[]", file.originFileObj);
                     formData.append(
                         "document[]",
-                        values[`document_type_${file.id}`]
+                        values[`document_type_${file.uid}`]
                     );
                     formData.append(
                         "title[]",
-                        values[`image_title_${file.id}`]
+                        values[`image_title_${file.uid}`]
                     );
                 }
             });
@@ -517,7 +520,7 @@ const MyStaffPage = ({}) => {
                             key={file.id}
                             className="image_box_data"
                         >
-                            <Col span={4}>{showIcon(file)}</Col>
+                            <Col span={4}>{ShowIcon(file)}</Col>
                             <Col span={6}>
                                 <Form.Item
                                     style={{ margin: 0 }}

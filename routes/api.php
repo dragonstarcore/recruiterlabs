@@ -46,4 +46,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tickets/search', [App\Http\Controllers\TicketController::class, 'search'])->name('tickets.search');
     Route::resource('/users', App\Http\Controllers\UserController::class);
     Route::get('/client_doc_search/{client_id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('client_doc_search');
+ 
+    Route::get('/get_employee', [App\Http\Controllers\EmployeeController::class, 'getEmployee'])->name('getEmployee');
+    Route::get('/client_list', [App\Http\Controllers\EmployeeController::class, 'client_list'])->name('client_list');
+    Route::get('/employee_list/{client_id}', [App\Http\Controllers\EmployeeController::class, 'employee_list'])->name('employee_list');
+
+    Route::post('hr_docs', [App\Http\Controllers\UserController::class, 'hr_documents'])->name('hr_docs');
+
+    Route::post('/client_hrdoc_search/{client_id}', [App\Http\Controllers\EmployeeController::class, 'employee_list'])->name('client_hrdoc_search');
 });
