@@ -56,8 +56,8 @@ const MyStaffPage = ({}) => {
                 <Avatar
                     src={
                         emp_picture
-                            ? `https://www.recstack.co/public/${emp_picture}`
-                            : "public/assets/images/default_user.jpg"
+                            ? `/${emp_picture}`
+                            : "/assets/images/default_user.jpg"
                     }
                     size={36}
                     shape="circle"
@@ -186,17 +186,27 @@ const MyStaffPage = ({}) => {
                         {
                             title: "Image",
                             dataIndex: "image",
-                            render: (image) => (
-                                <Avatar
-                                    src={
-                                        image
-                                            ? `public/${image}`
-                                            : "public/assets/images/default_user.jpg"
-                                    }
-                                    size={36}
-                                    shape="circle"
-                                />
-                            ),
+                            render: (text, record) => {
+                                const fileExtension = record.file
+                                    ? record.file.split(".").pop()
+                                    : "";
+                                const image =
+                                    fileExtension === "pdf"
+                                        ? "/assets/images/pdf.png"
+                                        : fileExtension === "doc" ||
+                                          fileExtension === "docx"
+                                        ? "/assets/images/doc.jpg"
+                                        : `/${record.file}`;
+                                return (
+                                    <img
+                                        src={image}
+                                        alt="document"
+                                        className="rounded-pill"
+                                        width="36"
+                                        height="36"
+                                    />
+                                );
+                            },
                         },
                         {
                             title: "Title",
@@ -213,7 +223,7 @@ const MyStaffPage = ({}) => {
                                     type="link"
                                     icon={<EyeOutlined />}
                                     size="small"
-                                    href={`public/${record.file}`}
+                                    href={`/${record.file}`}
                                     target="_blank"
                                 >
                                     View
