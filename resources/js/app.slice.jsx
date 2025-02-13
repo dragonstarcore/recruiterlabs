@@ -25,9 +25,9 @@ export const appSlice = createSlice({
             state.isAuth = true;
             localStorage.setItem("token", action.payload.token);
         },
-        logout: (state) => {
-            state.isAuth = false;
+        logout: () => {
             localStorage.removeItem("token");
+            location.reload();
         },
         storeMe: (state, action) => {
             state.user = action.payload;
