@@ -24,7 +24,13 @@ function Header({ name, subName, onPress }) {
 
     const userData = useSelector((apps) => apps.app.user);
 
-    const { data: user, isError, isSuccess } = useFetchMeQuery();
+    const {
+        data: user,
+        isError,
+        isSuccess,
+    } = useFetchMeQuery(undefined, {
+        refetchOnMountOrArgChange: true,
+    });
 
     useEffect(() => {
         if (isSuccess) dispatch(storeMe(user));

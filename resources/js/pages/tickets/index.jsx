@@ -35,7 +35,7 @@ import {
     useAddTicketMutation,
 } from "./tickets.service";
 import { setTicket, removeTicket } from "./tickets.slice";
-import TicketEdit from "./ticket.edit";
+
 export default function Tickets() {
     const navigate = useNavigate();
     const dispatch = useDispatch();

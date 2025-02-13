@@ -3,3 +3,9 @@
     justify-content: center;
     align-items: center;
 }
+  .ant-card-hoverable:hover {
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+    cursor: pointer;
+    background: #f0faff;
+    border-color: #91d5ff;
+  }

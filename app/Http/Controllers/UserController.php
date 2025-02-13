@@ -528,22 +528,21 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     { 
-        dd($request->all());
-        exit;
+       
         // dd($request->toArray());
         try {
-            // $validator = \Validator::make($request->all(), [
-            //     'name' => ['required'],
-            //     'email' => 'unique:users,email,' . $id . ',id,deleted_at,NULL',
-            //     'status' => ['required']
-            // ]);  
-            // if ($validator->fails()) {
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => 'Validation failed',
-            //         'errors' => $validator->errors()
-            //     ], 422); // 422 is the HTTP status code for validation errors 
-            // }
+            $validator = \Validator::make($request->all(), [
+                'name' => ['required'],
+                'email' => 'unique:users,email,' . $id . ',id,deleted_at,NULL',
+                'status' => ['required']
+            ]);  
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422); // 422 is the HTTP status code for validation errors 
+            }
 
             // return response()->json(['user'=>'123'],200);
             $client = User::where('id', $id)->first();
@@ -1019,9 +1018,9 @@ class UserController extends Controller
         }
 
         if (Auth::user()->role_type == 1) {
-            return redirect('employee_list/' . $user_id)->with('success', 'HR documents updated successfully');
+            return response()->json([],200);
         } else {
-            return redirect('employees')->with('success', 'HR documents updated successfully');
+            return response()->json([],200);
         }
         // End: add new documnents to user documents table
     }

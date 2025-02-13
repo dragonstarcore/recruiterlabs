@@ -18,7 +18,7 @@ export const store = configureStore({
         home: homeReducer,
         business: businessReducer,
         xero: xeroReducer,
-        staff: staffReducer,
+        employee: staffReducer,
         event: eventReducer,
         ticket: ticketReducer,
         client: clientReducer,

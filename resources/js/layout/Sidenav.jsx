@@ -138,7 +138,24 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             key: "staff",
-            role: [1, 2],
+            role: [2],
+        },
+        {
+            label: (
+                <NavLink to="/client_list">
+                    <span
+                        className="icon"
+                        style={{
+                            background: page === "staff" ? color : "",
+                        }}
+                    >
+                        {<UserSwitchOutlined />}
+                    </span>
+                    <span className="label">My Staff</span>
+                </NavLink>
+            ),
+            key: "client_list",
+            role: [1],
         },
         {
             label: (

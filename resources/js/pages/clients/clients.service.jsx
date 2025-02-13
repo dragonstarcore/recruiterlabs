@@ -37,6 +37,11 @@ export const clientApi = apiService.injectEndpoints({
                 method: "DELETE",
             }),
         }),
+        fetchClientList: builder.query({
+            query: () => ({
+                url: "/client_list",
+            }),
+        }),
     }),
 });
 
@@ -45,6 +50,7 @@ export const {
     useFetchDocQuery,
     useFetchClientQuery,
     useUpdateClientMutation,
+    useFetchClientListQuery,
     useCreateClientMutation,
     useDeleteMutation,
 } = clientApi;

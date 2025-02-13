@@ -52,7 +52,21 @@ class EmployeeController extends Controller
             // dd($request->toArray());
             $user = User::where('id',$request->user_id)->first();
             $employees = Employee::where('user_id',$request->user_id)->get();
-            return view('admin.employees.create',compact('employees','user'));
+            return response()->json(['employees'=>$employees,'user'=>$user],200);
+        }else{
+            // $employees = Employee::where('user_id',Auth::user()->id)->get();
+            // return view('client.employees.create',compact('employees'));
+            return redirect('/home');
+        }
+
+    }
+    public function getEmployee(Request $request)
+    {
+        if(Auth::user()->role_type==1){
+            // dd($request->toArray());
+            $user = User::where('id',$request->query('user_id'))->first();
+            $employees = Employee::where('user_id',$request->query('user_id'))->get();
+            return response()->json(['employees'=>$employees,'user'=>$user],200);
         }else{
             // $employees = Employee::where('user_id',Auth::user()->id)->get();
             // return view('client.employees.create',compact('employees'));
@@ -163,16 +177,10 @@ class EmployeeController extends Controller
 
                 }
             }
-
-            if(Auth::user()->role_type==1) {
-                return redirect('employee_list/'.$user_id)->with('success','Employee created successfully');
-            }else{
-                return redirect('employees')->with('success','Employee created successfully');
-            }
-
+            return response()->json([],200);
         } catch (\Exception $e) {
             //  echo "$e"; exit;
-            return redirect()->back()->withInput()->with('danger','Sorry could not process.');
+            return response()->json(['e'=>$e->getmessage()],500);
         }
     }
 
@@ -192,7 +200,7 @@ class EmployeeController extends Controller
     {
 
         if(Auth::user()->role_type==1) {
-            $user_id = $request->user_id;
+            $user_id = $request->query('user_id');
         }else{
             $user_id = Auth::user()->id;
         }
@@ -220,8 +228,8 @@ class EmployeeController extends Controller
                 }
 
             if(Auth::user()->role_type==1) {
-                return view('admin.employees.edit', compact('employee','employee_list','user'));
-                
+                 
+                return response()->json(['employee'=>$employee, 'employee_list'=>$employee_list,'user'=>$user],200);
             }else{
                 return response()->json(['employee'=>$employee, 'employee_list'=>$employee_list]);
             }
@@ -246,9 +254,13 @@ class EmployeeController extends Controller
             ]);
 
             if($validator->fails()){
-                return back()->withInput()->withErrors($validator);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422); // 422 is the HTTP status code for validation errors 
             }
-
+           
             if(Auth::user()->role_type==1) {
                 $user_id = $request->user_id;
             }else{
@@ -374,14 +386,14 @@ class EmployeeController extends Controller
             }
 
             if(Auth::user()->role_type==1) {
-                return redirect('employee_list/'.$user_id)->with('success','Employee updated successfully');
+                return response()->json([],200);
             }else{
-                return redirect('employees')->with('success','Employee updated successfully');
+                return response()->json([],200);
             }
 
         } catch (\Exception $e) {
-            echo "$e"; exit;
-            return redirect()->back()->withInput()->with('danger','Sorry could not process.');
+        
+            return   response()->json(['msg'=>$e->getmessage()],500);
         }
     }
 
@@ -426,9 +438,9 @@ class EmployeeController extends Controller
                 if($employee) {
                     $employee->delete();
                 }
-
+                return response()->json(['employee'=>$employee],200);
                 // if(Auth::user()->role_type==1) {
-                    return redirect('employee_list/'.$user_id)->with('success','Employee deleted successfully');
+                    // return redirect('employee_list/'.$user_id)->with('success','Employee deleted successfully');
                 // }else{
                 //     return redirect('employees')->with('success','Employee deleted successfully');
         }
@@ -439,14 +451,14 @@ class EmployeeController extends Controller
     {
         if(Auth::user()->role_type==1) {
             $users = User::where('role_type', 2)->with('user_details', 'user_people')->get();
-            return view('admin.employees.client_list', compact('users'));
+            return response()->json(["users"=>$users],200);
         }
     }
 
     public function employee_list(Request $request,$id)
     {
         if(Auth::user()->role_type==1) {
-            $employee_list = Employee::where('user_id', $id)->get();
+            $employee_list = Employee::where('user_id', $id)->with('employee_details')->get();
             $user = User::with('user_hr_documents')->where('id', $id)->first();
             $value = null;
             if($request->has('str_search') && $request->str_search != '') {
@@ -470,7 +482,7 @@ class EmployeeController extends Controller
                 return $user->user_hr_documents;
             }
             // dd($user->toArray());
-            return view('admin.employees.show', compact('employee_list', 'user', 'value'));
+            return response()->json(['employee_list'=>$employee_list,'user'=>$user,'value'=>$value],200);
         }
     }
 

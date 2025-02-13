@@ -38,6 +38,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 import { useCreateClientMutation } from "./clients.service";
+import ShowIcon from "../staff/showIcon";
 import "./style.css";
 const MyStaffPage = ({}) => {
     const clients = useSelector((apps) => apps.client.clients);
@@ -49,7 +50,6 @@ const MyStaffPage = ({}) => {
     const [createClient, { isLoading: isUploading }] =
         useCreateClientMutation();
     const [file, setFile] = useState(null);
-    const [docFile, setDocFile] = useState([]);
 
     const onFinish = async (values) => {
         const formData = new FormData();
@@ -73,11 +73,11 @@ const MyStaffPage = ({}) => {
 
             const result = await createClient(formData);
             dispatch(setClient([...clients, result.user]));
+            message.success(`Client added successfully`);
         } catch (err) {
             console.log(err);
         }
-        message.success(`Client added successfully`);
-        //navigate("/clients");
+        navigate("/clients");
     };
     const [isCommunityChecked, setIsCommunityChecked] = useState(false);
 
@@ -107,7 +107,6 @@ const MyStaffPage = ({}) => {
         onError,
     }) => {
         try {
-            setDocFile([...docFile, file]);
             onSuccess();
         } catch (err) {
             console.log(err);
@@ -385,17 +384,9 @@ const MyStaffPage = ({}) => {
                 </Col>
             </Row>
             {fileList.map((file, index) => (
-                <Row gutter={8} key={file.id} className="image_box_data">
+                <Row gutter={8} key={file.id} style={{ margin: 10 }}>
                     <Col span={4}>
-                        <Flex justify="center">
-                            <Image
-                                src={URL.createObjectURL(file.originFileObj)}
-                                className="rounded-pill"
-                                width={70}
-                                height={50}
-                                alt="File Thumbnail"
-                            />
-                        </Flex>
+                        <Flex justify="center">{ShowIcon(file)}</Flex>
                     </Col>
                     <Col span={2}>{file.name}</Col>
                     <Col span={6}>
@@ -444,7 +435,7 @@ const MyStaffPage = ({}) => {
                 <Button
                     type="default"
                     style={{ marginRight: "10px" }}
-                    onClick={() => window.history.back()}
+                    onClick={() => navigate("./employee_list/" + id)}
                 >
                     Discard
                 </Button>
