@@ -62,4 +62,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/jobs/apply', [App\Http\Controllers\JobController::class, 'apply'])->name('job.apply');
     Route::get('/client_events_list/{user_id?}', [App\Http\Controllers\EventController::class, 'client_events_list'])->name('client_events_list');  
     Route::post('/employee_search', [App\Http\Controllers\EmployeeController::class, 'employee_search'])->name('employee_search');
+    Route::get('/ga', [HomeController::class, 'getAnalyticsData']);
 });

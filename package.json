@@ -18,6 +18,8 @@
     "vite": "^6.0.7"
   },
   "dependencies": {
+    "@amcharts/amcharts4": "^4.10.39",
+    "@amcharts/amcharts4-geodata": "^4.1.30",
     "@ant-design/icons": "^5.5.2",
     "@reduxjs/toolkit": "^2.5.0",
     "@vitejs/plugin-react": "^4.3.4",
