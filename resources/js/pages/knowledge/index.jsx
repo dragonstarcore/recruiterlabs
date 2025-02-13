@@ -37,11 +37,16 @@ export default function KnowledgeBase() {
         setKeyword(e.target.value);
     };
 
-    const operations = <Input onChange={onChange} placeholder="Search" />;
+    const operations = (
+        <Input value={keyword} onChange={onChange} placeholder="Search" />
+    );
 
     return (
         <Card loading={isLoading}>
             <Tabs
+                onChange={() => {
+                    setKeyword("");
+                }}
                 defaultActiveKey="1"
                 items={items}
                 tabBarExtraContent={operations}

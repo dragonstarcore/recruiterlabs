@@ -3,7 +3,7 @@ import { Card, Tooltip } from "antd";
 import { NavLink } from "react-router-dom";
 
 const truncateTitle = (title) => {
-    return title.length > 20 ? `${title.substring(0, 24)}...` : title;
+    return title.length > 24 ? `${title.substring(0, 24)}...` : title;
 };
 
 // Function to extract the video ID from the embedded link
