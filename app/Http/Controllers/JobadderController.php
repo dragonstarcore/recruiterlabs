@@ -21,7 +21,7 @@ class JobadderController extends Controller
 
                         // $user = User::where('id',Auth::user()->id)->with('jobadder_details')->first();
                         // $str = '-------Start---------';
-                        // dd(1);
+                         dd(1);
                         // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
                         $provider = new \RolandSaven\OAuth2\Client\Provider\JobAdder([
                             //For local
@@ -293,8 +293,10 @@ class JobadderController extends Controller
     // //To display on dashboard
     public static function dashboard_jobadder_data(Request $request)
     {
+        dd(Session::all());
         // dd($request->toArray());
         $new_token = Session::get('token');
+        dd($new_token);
         $user = User::where('id', Auth::user()->id)->with('jobadder_details')->first();
 
             if((!isset($new_token) || $new_token==null) && $user->jobadder_details['token']!=null){

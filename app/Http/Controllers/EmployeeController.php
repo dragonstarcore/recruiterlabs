@@ -454,7 +454,22 @@ class EmployeeController extends Controller
             return response()->json(["users"=>$users],200);
         }
     }
-
+    
+    public function employee_search(Request $request)
+    {
+        if(Auth::user()->role_type==1) {
+            
+           $title=$request->title;
+            $employee = Employee::where('user_id', $request->id)
+                        ->whereHas('employee_details', function ($query) use ($title) {
+                            $query->where('title', 'LIKE', '%'.$title.'%');
+                        })
+                        ->with('employee_details')
+                        ->get();
+            
+            return response()->json(['employee_list'=>$employee, ],200);
+        }
+    }
     public function employee_list(Request $request,$id)
     {
         if(Auth::user()->role_type==1) {

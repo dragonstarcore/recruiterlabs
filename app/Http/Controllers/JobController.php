@@ -62,11 +62,11 @@ class JobController extends Controller
         // Check if the authenticated user's role is '1' (admin or superuser)
         
             $query = Job::query();
-            if ($request->has('isShared') && $request->isShared) {
+            
                 if ($request->has('user_id') && $request->user_id) {
                     $query->where('user_id',$request->isShared?"!=":"=",$request->user_id);
                 }
-            }
+            
             
             // If there's a search query, filter jobs by title
             if ($request->has('job_title') && $request->job_title) {

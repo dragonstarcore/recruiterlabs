@@ -38,73 +38,74 @@ class HomeController extends Controller
         if(\Auth::user()->role_type==2){
             // dd('1');
             //Start : Xero data
-                try {
-                    $xero_result =  \App::call([\App\Http\Controllers\XeroController::class, 'dashboard_data']);
-                    // Process the fetched analytics data
-                } catch (\Exception $e) {
-                    // Handle any exceptions that might occur during the data retrieval
-                    // You can log the error, display an error message, or take appropriate action
-                    \Log::error('An error occurred while fetching analytics data: ' . $e->getMessage());
-                }
-                $xero['data'] =$xero_result[1]?? null;
-                $xero['invoices_array'] =$xero_result[0]?? null;
-                $xero['total_cash'] = $xero_result[2]?? null;
-                $xero['balance']  = $xero_result[3]?? null;
-                $xero['organisationName'] = $xero_result[4]?? null;
-                $xero['username'] = $xero_result[5] ?? null;
-            //end : Xero data
+            //     try {
+            //         $xero_result =  \App::call([\App\Http\Controllers\XeroController::class, 'dashboard_data']);
+            //         // Process the fetched analytics data
+            //     } catch (\Exception $e) {
+            //         // Handle any exceptions that might occur during the data retrieval
+            //         // You can log the error, display an error message, or take appropriate action
+            //         \Log::error('An error occurred while fetching analytics data: ' . $e->getMessage());
+            //     }
+            //     $xero['data'] =$xero_result[1]?? null;
+            //     $xero['invoices_array'] =$xero_result[0]?? null;
+            //     $xero['total_cash'] = $xero_result[2]?? null;
+            //     $xero['balance']  = $xero_result[3]?? null;
+            //     $xero['organisationName'] = $xero_result[4]?? null;
+            //     $xero['username'] = $xero_result[5] ?? null;
+            // //end : Xero data
 
-            //Start : Analytics data
-                if(isset($analytics_view_id) && $analytics_view_id!=null){
-                    $GA_error = null;
+            // //Start : Analytics data
+            //     if(isset($analytics_view_id) && $analytics_view_id!=null){
+            //         $GA_error = null;
 
-                        if (preg_match('/^\d{7,}$/', $analytics_view_id)) {
-                            // It's a valid Google Analytics View ID (without 'ga:')
-                                $page_views = 0;
-                                $total_visitors = 0;
-                                try {
-                                    $analyticsData = Analytics::fetchVisitorsAndPageViews(Period::days(7));
-                                    //  dd($analyticsData);
-                                    if(isset($analyticsData)) {
-                                        foreach($analyticsData as $analytic_data) {
-                                            $total_visitors += $analytic_data['activeUsers'];
-                                            $page_views += $analytic_data['screenPageViews'];
-                                        }
-                                    }
-                                    // Process the fetched analytics data
-                                } catch (\Exception $e) {
-                                    // Handle any exceptions that might occur during the data retrieval
-                                    // You can log the error, display an error message, or take appropriate action
-                                    \Log::error('An error occurred while fetching analytics data: ' . $e->getMessage());
-                                }
+            //             if (preg_match('/^\d{7,}$/', $analytics_view_id)) {
+            //                 // It's a valid Google Analytics View ID (without 'ga:')
+            //                     $page_views = 0;
+            //                     $total_visitors = 0;
+            //                     try {
+            //                         $analyticsData = Analytics::fetchVisitorsAndPageViews(Period::days(7));
+            //                         //  dd($analyticsData);
+            //                         if(isset($analyticsData)) {
+            //                             foreach($analyticsData as $analytic_data) {
+            //                                 $total_visitors += $analytic_data['activeUsers'];
+            //                                 $page_views += $analytic_data['screenPageViews'];
+            //                             }
+            //                         }
+            //                         // Process the fetched analytics data
+            //                     } catch (\Exception $e) {
+            //                         // Handle any exceptions that might occur during the data retrieval
+            //                         // You can log the error, display an error message, or take appropriate action
+            //                         \Log::error('An error occurred while fetching analytics data: ' . $e->getMessage());
+            //                     }
 
 
-                            // Now, $ga_Property_id contains the Property ID with 'ga:' attached
-                        } else {
-                            // It's not a valid Google Analytics Property ID
-                            $page_views = null;
-                            $total_visitors = null;
-                            $GA_error = 'Please enter valid Google Analytics Property ID';
-                        }
-                    // dd($page_views);
-                }else{
+            //                 // Now, $ga_Property_id contains the Property ID with 'ga:' attached
+            //             } else {
+            //                 // It's not a valid Google Analytics Property ID
+            //                 $page_views = null;
+            //                 $total_visitors = null;
+            //                 $GA_error = 'Please enter valid Google Analytics Property ID';
+            //             }
+            //         // dd($page_views);
+            //     }else{
 
-                    $page_views = null;
-                    $total_visitors = null;
-                    $GA_error = null;
-                }
+            //         $page_views = null;
+            //         $total_visitors = null;
+            //         $GA_error = null;
+            //     }
             //End: Analytics data
 
             //Start : JObadder data
                 try {
                     $result =  \App::call([\App\Http\Controllers\JobadderController::class, 'dashboard_jobadder_data']);
+                    //dd($result);
                     // Process the fetched analytics data
                 } catch (\Exception $e) {
                     // Handle any exceptions that might occur during the data retrieval
                     // You can log the error, display an error message, or take appropriate action
                     \Log::error('An error occurred while fetching analytics data: ' . $e->getMessage());
                 }
-                    //  dd($result);
+                     
                 $jobadder['jobs'] = isset($result[0]) ? $result[0] : 0;
                 $jobadder['interviews'] = isset($result[1]) ? $result[1] : 0;
                 $jobadder['contacts'] = isset($result[2]) ? $result[2] : 0;
@@ -117,7 +118,7 @@ class HomeController extends Controller
                 $jobadder['candidates_graph'] = isset($result['candidates_graph']) ? $result['candidates_graph'] : null;
 
             //End: JObadder data
-            // dd($jobadder);
+            //dd($jobadder);
         }else{
                 // dd('hi');
                 $xero['data'] = null;
@@ -132,7 +133,7 @@ class HomeController extends Controller
                 $GA_error = null;
         }
 
-        return response()->json(['xero' => $xero, 'page_views' => $page_views, 'total_visitors' => $total_visitors,'jobadder' => $jobadder, 'GA_error' => $GA_error,], 200);
+        //return response()->json(['xero' => $xero, 'page_views' => $page_views, 'total_visitors' => $total_visitors,'jobadder' => $jobadder, 'GA_error' => $GA_error,], 200);
     }
 
     public function check_analytics_view_id(){

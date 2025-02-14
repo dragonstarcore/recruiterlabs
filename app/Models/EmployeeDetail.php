@@ -18,4 +18,8 @@ class EmployeeDetail extends Model
     {
         return $this->belongsTo(Employee::class, 'id');
     }
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

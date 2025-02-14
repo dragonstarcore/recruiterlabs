@@ -92,7 +92,7 @@ class EventController extends Controller
         $user = User::where('id',$user_id)->first();
         $events = Event::where('user_id',$user_id)->get();
 
-        return view('admin.events.show',compact('events','user'));
+        return response()->json(["user"=>$user,"events"=>$events],200);
     }
 
     /**
