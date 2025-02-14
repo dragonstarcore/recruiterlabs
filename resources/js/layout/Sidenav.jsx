@@ -57,6 +57,40 @@ function Sidenav({ color = "#555555" }) {
         },
         {
             label: (
+                <NavLink to="/jobs">
+                    <span
+                        className="icon"
+                        style={{
+                            background: page === "jobs" ? color : "",
+                        }}
+                    >
+                        {<ApartmentOutlined />}
+                    </span>
+                    <span className="label">My Job </span>
+                </NavLink>
+            ),
+            role: [2],
+            key: "jobs",
+        },
+        {
+            label: (
+                <NavLink to="/jobshared">
+                    <span
+                        className="icon"
+                        style={{
+                            background: page === "jobshared" ? color : "",
+                        }}
+                    >
+                        {<ApartmentOutlined />}
+                    </span>
+                    <span className="label">Job sharing</span>
+                </NavLink>
+            ),
+            role: [2],
+            key: "jobshared",
+        },
+        {
+            label: (
                 <NavLink to="/performance">
                     <span
                         className="icon"

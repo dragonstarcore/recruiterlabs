@@ -1,0 +1,27 @@
+.job-container{
+    height:80vh;
+    overflow-y: auto;
+}
+
+.job-description {
+  
+  height:70px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  line-clamp: 3; /* Fallback for non-Webkit browsers */
+  box-orient: vertical; /* Fallback for non-Webkit browsers */
+  }
+  
+.table-job-description {
+  width:70px;
+  height:70px;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  }
+   
+  

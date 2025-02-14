@@ -10,7 +10,7 @@ use App\Http\Controllers\JobadderController;
 use App\Http\Controllers\XeroController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileUploadController;
-
+use App\Http\Controllers\JobController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -54,4 +54,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('hr_docs', [App\Http\Controllers\UserController::class, 'hr_documents'])->name('hr_docs');
 
     Route::post('/client_hrdoc_search/{client_id}', [App\Http\Controllers\EmployeeController::class, 'employee_list'])->name('client_hrdoc_search');
+    Route::resource('jobs', App\Http\Controllers\JobController::class);
+    Route::post('/jobs/search', [App\Http\Controllers\JobController::class, 'search'])->name('job.search');
+    Route::get('/jobshared', [App\Http\Controllers\JobController::class, 'jobshared_list'])->name('job.shared');
+    Route::post('/jobs/apply', [App\Http\Controllers\JobController::class, 'apply'])->name('job.apply');
+      
+
 });

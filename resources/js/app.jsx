@@ -33,9 +33,12 @@ import ClientList from "./pages/clients/clients.list";
 import ClientCreate from "./pages/clients/clients.create";
 import ClientEdit from "./pages/clients/clients.edit";
 
-import TicketEdit from "./pages/staff/staff.detail";
+import TicketEdit from "./pages/tickets/ticket.edit";
 import StaffEdit from "./pages/staff/staff.edit";
 import StaffDetail from "./pages/staff/staff.detail";
+import Jobs from "./pages/jobs/index";
+import Jobsharepage from "./pages/jobs/job.shared";
+import JobEdit from "./pages/jobs/job.edit";
 
 import EmployeeList from "./pages/staff/employee_list";
 import "antd/dist/reset.css";
@@ -125,6 +128,18 @@ const App = () => {
                                             <Route
                                                 path="tickets"
                                                 element={<Tickets />}
+                                            />
+                                            <Route
+                                                path="jobs"
+                                                element={<Jobs />}
+                                            />
+                                            <Route
+                                                path="jobshared"
+                                                element={<Jobsharepage />}
+                                            />
+                                            <Route
+                                                path="jobs/:id"
+                                                element={<JobEdit />}
                                             />
                                             <Route
                                                 path="tickets/:id?"

@@ -80,7 +80,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Employee::class, 'user_id');
     }
-
+    public function user_jobs()
+    {
+        return $this->hasMany(Job::class, 'user_id');
+    }
     public function user_hr_documents()
     {
         return $this->hasMany(HRDocument::class, 'user_id');

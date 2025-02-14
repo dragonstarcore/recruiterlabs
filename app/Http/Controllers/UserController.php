@@ -179,22 +179,22 @@ class UserController extends Controller
             //End: Create entry in xero api table
 
             //send reset password link
-            // if ($request->has('send_email')) {
-            //     $site_details = get_site_details();
-            //     $SITE_NAME = $site_details['SITE_NAME'];
-            //     $SITE_EMAIL = $site_details['SITE_EMAIL'];
+            if ($request->has('send_email')) {
+                $site_details = get_site_details();
+                $SITE_NAME = $site_details['SITE_NAME'];
+                $SITE_EMAIL = $site_details['SITE_EMAIL'];
 
-            //     $email_array = array(
-            //         'to_email' => $client->email,
-            //         'to_name' =>  $client->name,
-            //         'subject' => 'Recruiterlabs Activation Link',
-            //         'from_email' => $SITE_EMAIL,
-            //         'from_name' => $SITE_NAME,
-            //         'web_access_token' => get_encrypt_value($client->remember_token)
-            //     );
+                $email_array = array(
+                    'to_email' => $client->email,
+                    'to_name' =>  $client->name,
+                    'subject' => 'Recruiterlabs Activation Link',
+                    'from_email' => $SITE_EMAIL,
+                    'from_name' => $SITE_NAME,
+                    'web_access_token' => get_encrypt_value($client->remember_token)
+                );
 
-            //     html_sent_email('email/activation_template', $email_array);
-            // }
+                html_sent_email('email/activation_template', $email_array);
+            }
 
             //send reset password link
 
