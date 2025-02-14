@@ -247,8 +247,8 @@ export default function Jobs() {
                                     style={{ width: "100%" }}
                                 >
                                     <Option value={null}>Select Status</Option>
-                                    <Option value={0}>inactive</Option>
-                                    <Option value={1}>active</Option>
+                                    <Option value={1}>inactive</Option>
+                                    <Option value={2}>active</Option>
                                 </Select>
                             </Col>
                             <Col span={24}>

@@ -16,11 +16,11 @@ const ShowIcon = (file) => {
                 />
             </>
         );
-    if (file.file_ext == "doc")
+    if (file.file_ext == "doc" || file.file_ext == "docx")
         return (
             <>
                 <Image
-                    src={"/assets/images/" + file.file_ext + ".jpg"}
+                    src={"/assets/images/doc.jpg"}
                     className="rounded-pill"
                     width={70}
                     height={50}

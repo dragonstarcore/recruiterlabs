@@ -68,6 +68,13 @@ export const staffApi = apiService.injectEndpoints({
                 body: data,
             }),
         }),
+        searchEmployee: builder.mutation({
+            query: (data) => ({
+                url: "/employee_search/",
+                method: "POST",
+                body: data,
+            }),
+        }),
     }),
 });
 
@@ -83,4 +90,5 @@ export const {
     useFetchEmployeeQuery,
     useAddDocumentMutation,
     useSearchDocumentMutation,
+    useSearchEmployeeMutation,
 } = staffApi;

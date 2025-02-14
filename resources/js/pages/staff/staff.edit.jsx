@@ -30,12 +30,11 @@ import {
     DeleteOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-
 const { Title } = Typography;
 
 import { useFetchEmployeeQuery, useUpdateStaffMutation } from "./staff.service";
 import ShowIcon from "./showIcon";
-
+import dayjs from "dayjs";
 const MyStaffPage = ({}) => {
     const [form] = Form.useForm();
     const { employee_id, user_id } = useParams();
@@ -168,7 +167,7 @@ const MyStaffPage = ({}) => {
                 initialValues={{
                     ...employee,
                     ...employee_details,
-                    date_of_birth: moment(employee_details?.date_of_birth),
+                    date_of_birth: dayjs(employee?.date_of_birth, "YYYY-MM-DD"),
                     date_of_joining: moment(employee_details?.date_of_joining),
                 }}
                 onFinish={(values) => onFinish(values, user_id, employee_id)}
@@ -252,13 +251,7 @@ const MyStaffPage = ({}) => {
                                 },
                             ]}
                         >
-                            <DatePicker
-                                value={
-                                    employee.date_of_birth
-                                        ? moment(employee.date_of_birth)
-                                        : null
-                                }
-                            />
+                            <DatePicker />
                         </Form.Item>
                     </Col>
 
@@ -391,6 +384,11 @@ const MyStaffPage = ({}) => {
                                         style={{ marginTop: "10px" }}
                                     >
                                         <Col span={3}>{ShowIcon(file)}</Col>
+                                        <Col span={2}>
+                                            {file?.file
+                                                ? file?.file.split("/")[2]
+                                                : file?.name}
+                                        </Col>
                                         <Col span={6}>
                                             <Form.Item
                                                 style={{ margin: 0 }}

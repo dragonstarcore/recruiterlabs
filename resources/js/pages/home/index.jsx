@@ -54,7 +54,6 @@ const Dashboard = () => {
     const handleSubmit = async () => {
         try {
             const formValues = form.getFieldsValue();
-            console.log("@@@@@@@@@@@@@", formValues);
             const jobadder = await fetchJobadderData(formValues).unwrap();
             dispatch(setJobadder(jobadder));
         } catch (err) {

@@ -25,6 +25,8 @@ import {
     DeleteOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
+import dayjs from "dayjs";
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 const { TextArea } = Input;
@@ -62,11 +64,13 @@ export default function Jobs({}) {
             const { data } = await editJob({
                 ...jobValue,
                 id,
-                start_date: moment(jobValue.start_date).format("YYYY-MM-DD"),
+                start_date: jobValue.start_date.format("YYYY-MM-DD"),
             });
             // console.log(data?.job);
             dispatch(
-                setJob(jobs.map((e) => (e.id != id ? e : { ...e, jobValue })))
+                setJob(
+                    jobs.map((e) => (e.id != id ? e : { ...e, ...data.job }))
+                )
             );
             form.resetFields();
             navigate("/jobs");
@@ -76,7 +80,10 @@ export default function Jobs({}) {
             console.log(err);
         }
     };
-
+    const handleDateChange = (date, dateString) => {
+        console.log("Selected Date:", date);
+        console.log("Formatted Date:", dateString);
+    };
     if (isLoading)
         return (
             <Flex justify="center" align="center">
@@ -89,7 +96,7 @@ export default function Jobs({}) {
                 form={form}
                 initialValues={{
                     ...data.job,
-                    start_date: moment(data.job.start_date),
+                    start_date: dayjs(data.job.start_date, "YYYY-MM-DD"),
                 }}
                 layout="vertical"
                 onFinish={handleFormSubmit}
@@ -259,8 +266,8 @@ export default function Jobs({}) {
                     ]}
                 >
                     <Select placeholder="Select status">
-                        <Option value={0}>active</Option>
                         <Option value={1}>inactive</Option>
+                        <Option value={2}>active</Option>
                     </Select>
                 </Form.Item>
 

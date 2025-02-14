@@ -22,7 +22,7 @@ import {
 } from "antd";
 import { UploadOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
-
+import dayjs from "dayjs";
 const { Title } = Typography;
 
 import { useFetchEmployeeQuery } from "./staff.service";
@@ -118,7 +118,7 @@ const MyStaffPage = ({}) => {
                 initialValues={{
                     ...employee,
                     ...employee_details,
-                    date_of_birth: moment(employee_details.date_of_birth),
+                    date_of_birth: moment(employee.date_of_birth),
                     date_of_joining: moment(employee_details.date_of_joining),
                 }}
                 onFinish={() => {}}
@@ -159,7 +159,10 @@ const MyStaffPage = ({}) => {
                                 disabled
                                 value={
                                     employee.date_of_birth
-                                        ? moment(employee.date_of_birth)
+                                        ? dayjs(
+                                              employee.date_of_birth,
+                                              "YYYY-MM-DD"
+                                          )
                                         : null
                                 }
                             />

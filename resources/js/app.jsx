@@ -40,6 +40,7 @@ import Jobs from "./pages/jobs/index";
 import Jobsharepage from "./pages/jobs/job.shared";
 import JobEdit from "./pages/jobs/job.edit";
 
+import EventList from "./pages/event/event.list";
 import EmployeeList from "./pages/staff/employee_list";
 import "antd/dist/reset.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -124,6 +125,10 @@ const App = () => {
                                             <Route
                                                 path="employee_list/:id?"
                                                 element={<EmployeeList />}
+                                            />
+                                            <Route
+                                                path="client_events_list/:user_id"
+                                                element={<EventList />}
                                             />
                                             <Route
                                                 path="tickets"

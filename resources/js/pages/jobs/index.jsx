@@ -18,6 +18,7 @@ import {
     Select,
     InputNumber,
     DatePicker,
+    ConfigProvider,
 } from "antd";
 import {
     SearchOutlined,
@@ -30,6 +31,7 @@ import {
     BankOutlined,
     FileTextOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 import { useDispatch, useSelector } from "react-redux";
 const { TextArea } = Input;
@@ -76,15 +78,14 @@ export default function Jobs() {
 
     const handleFormSubmit = async () => {
         const jobValue = form.getFieldsValue();
-        const formattedStartDate = moment(jobValue.start_date).format(
-            "YYYY-MM-DD"
-        ); // Format the date
+        console.log(jobValue.start_date.format("YYYY-MM-DD"));
+
         const jobData = {
             ...jobValue,
             user_id,
-            start_date: formattedStartDate, // Replace the date with the formatted value
+            start_date: jobValue.start_date.format("YYYY-MM-DD"), // Replace the date with the formatted value
         };
-        console.log(jobData);
+
         setIsDrawer(false);
         try {
             const { data } = await addJob(jobData);
@@ -349,6 +350,9 @@ export default function Jobs() {
                                         style={{ width: "100%" }}
                                         placeholder="Select recruitment type"
                                     >
+                                        <Option value={null}>
+                                            Select recruitment type
+                                        </Option>
                                         <Option value="Contingent">
                                             Contingent
                                         </Option>
@@ -381,8 +385,8 @@ export default function Jobs() {
                                         <Option value={null}>
                                             Select status
                                         </Option>
-                                        <Option value={0}>inactive</Option>
-                                        <Option value={1}>active</Option>
+                                        <Option value={1}>inactive</Option>
+                                        <Option value={2}>active</Option>
                                     </Select>
                                 </Col>
                                 <Col span={24}>
@@ -454,6 +458,7 @@ export default function Jobs() {
                             ]}
                         >
                             <Select placeholder="Select job type">
+                                <Option value={null}>Select job type</Option>
                                 <Option value="Permanent">Permanent</Option>
                                 <Option value="Contract">Contract</Option>
                             </Select>
@@ -471,6 +476,9 @@ export default function Jobs() {
                             ]}
                         >
                             <Select placeholder="Select recruitment type">
+                                <Option value={null}>
+                                    Select recruitment type
+                                </Option>
                                 <Option value="Contingent">Contingent</Option>
                                 <Option value="Retained">Retained</Option>
                             </Select>
@@ -611,8 +619,8 @@ export default function Jobs() {
                         >
                             <Select placeholder="Select status">
                                 <Option value={null}>select status</Option>
-                                <Option value={0}>inactive</Option>
-                                <Option value={1}>active</Option>
+                                <Option value={1}>inactive</Option>
+                                <Option value={2}>active</Option>
                             </Select>
                         </Form.Item>
 

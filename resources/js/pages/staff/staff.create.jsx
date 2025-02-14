@@ -117,10 +117,7 @@ const MyStaffPage = ({}) => {
             <Form
                 form={form}
                 onFinish={(values) => onFinish(values, user_id)}
-                initialValues={{
-                    date_of_birth: moment(),
-                    date_of_joining: moment(),
-                }}
+                initialValues={{}}
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 18 }}
                 layout="horizontal"
@@ -310,6 +307,11 @@ const MyStaffPage = ({}) => {
                                 style={{ marginTop: "10px" }}
                             >
                                 <Col span={3}>{ShowIcon(file)}</Col>
+                                <Col span={2}>
+                                    {file?.file
+                                        ? file?.file.split("/")[2]
+                                        : file?.name}
+                                </Col>
                                 <Col span={6}>
                                     <Form.Item
                                         style={{ margin: 0 }}

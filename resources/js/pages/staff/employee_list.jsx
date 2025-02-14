@@ -37,6 +37,7 @@ import {
     useAddDocumentMutation,
     useSearchDocumentMutation,
     useDeleteStaffMutation,
+    useSearchEmployeeMutation,
 } from "./staff.service";
 import { setEmployee } from "./staff.slice";
 const localizer = momentLocalizer(moment);
@@ -66,9 +67,11 @@ const Employee_listPage = ({}) => {
     ] = useAddDocumentMutation();
     const [deleteStaff] = useDeleteStaffMutation();
 
+    const [searchEmployee] = useSearchEmployeeMutation();
     const [searchDocument] = useSearchDocumentMutation();
     const [fileList, setFileList] = useState([]);
     const [str_search, setStr_search] = useState("");
+    const [employee_search, setEmployee_search] = useState("");
     const OnSearchStr = async (e) => {
         setStr_search(e.target.value);
         const { data } = await searchDocument({
@@ -76,6 +79,14 @@ const Employee_listPage = ({}) => {
             id: user_id,
         });
         setFileList(data);
+    };
+    const OnSearchEmployee = async (e) => {
+        setEmployee_search(e.target.value);
+        const { data } = await searchEmployee({
+            title: e.target.value,
+            id: user_id,
+        });
+        dispatch(setEmployee(data?.employee_list));
     };
     const handleSwitchChange = (checked) => {
         message.info(
@@ -250,10 +261,10 @@ const Employee_listPage = ({}) => {
                         <Col>
                             <Button
                                 type="primary"
-                                href="/events"
+                                href={"/client_events_list/" + user_id}
                                 icon={<FileAddOutlined />}
                             >
-                                Create Event
+                                Event list
                             </Button>
                         </Col>
                     </Row>
@@ -289,8 +300,8 @@ const Employee_listPage = ({}) => {
                         <Input
                             placeholder="Search..."
                             addonBefore={<SearchOutlined />}
-                            value={str_search}
-                            onChange={(e) => OnSearchStr(e)}
+                            value={employee_search}
+                            onChange={(e) => OnSearchEmployee(e)}
                         />
                     </Col>
                 </Flex>
@@ -347,6 +358,11 @@ const Employee_listPage = ({}) => {
                                 style={{ marginTop: "10px" }}
                             >
                                 <Col span={3}>{ShowIcon(file)}</Col>
+                                <Col span={2}>
+                                    {file?.file
+                                        ? file?.file.split("/")[2]
+                                        : file?.name}
+                                </Col>
                                 <Col span={6}>
                                     <Form.Item
                                         style={{ margin: 0 }}

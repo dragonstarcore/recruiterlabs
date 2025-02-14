@@ -7,7 +7,6 @@ const getToken = () => {
 };
 
 const customFetchBaseQuery = async (args, api, extraOptions) => {
-    console.log("@@@", args, api);
     const baseResponse = await fetchBaseQuery({
         baseUrl: URI,
         prepareHeaders: (headers) => {
