@@ -521,6 +521,11 @@ const MyStaffPage = ({}) => {
                             className="image_box_data"
                         >
                             <Col span={4}>{ShowIcon(file)}</Col>
+                            <Col span={2}>
+                                {file?.file
+                                    ? file?.file.split("/")[2]
+                                    : file?.name}
+                            </Col>
                             <Col span={6}>
                                 <Form.Item
                                     style={{ margin: 0 }}

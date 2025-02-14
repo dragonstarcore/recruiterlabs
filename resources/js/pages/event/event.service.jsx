@@ -14,7 +14,16 @@ export const eventApi = apiService.injectEndpoints({
                 body: data,
             }),
         }),
+        fetchEvents: builder.query({
+            query: (data) => ({
+                url: "/client_events_list/" + data,
+            }),
+        }),
     }),
 });
 
-export const { useFetchCalendarQuery, useManageEventsMutation } = eventApi;
+export const {
+    useFetchCalendarQuery,
+    useManageEventsMutation,
+    useFetchEventsQuery,
+} = eventApi;
