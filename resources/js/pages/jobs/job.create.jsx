@@ -74,6 +74,14 @@ export default function Tickets({}) {
             console.log(err);
         }
     };
+    useEffect(() => {
+        if (isSuccess) {
+            form.setFieldsValue({
+                ...data.ticket,
+                message: "",
+            });
+        }
+    }, [isSuccess, form, data]);
 
     if (isLoading)
         return (
@@ -83,12 +91,7 @@ export default function Tickets({}) {
         );
     return (
         <div>
-            <Form
-                form={form}
-                initialValues={{ ...data.ticket, message: "" }}
-                layout="vertical"
-                onFinish={handleFormSubmit}
-            >
+            <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
                 <Form.Item
                     label="Team"
                     name="team"

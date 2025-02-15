@@ -57,20 +57,16 @@ const MyStaffPage = ({}) => {
 
     const [form] = Form.useForm();
     const [file, setFile] = useState(null);
+    const [logofileList, setLogofileList] = useState([]);
     const [docFile, setDocFile] = useState([]);
     const handleCommunityChange = (e) => {
         setIsCommunityChecked(e.target.checked);
     };
-    const handleFileChange = async (info) => {
-        if (info.file.status === "done") {
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === "error") {
-            message.error(`${info.file.name} file upload failed.`);
-        }
+    const handleFileChange = async ({ fileList }) => {
+        setLogofileList(fileList);
     };
     const handleupload = async ({ file, onSuccess, onError }) => {
         try {
-            setFile(file);
             onSuccess(); // Call onSuccess if the upload succeeds
         } catch (err) {
             console.log(err);
@@ -114,18 +110,33 @@ const MyStaffPage = ({}) => {
     useEffect(() => {
         if (isSuccess) {
             setFileList(data?.user?.user_documents);
+            setLogofileList([
+                {
+                    uid: "-1", // Unique ID for the file
+                    name: "logo", // File name
+                    status: "done", // File status
+                    url: "/" + data?.user?.user_details.logo, // Full URL of the image
+                },
+            ]);
             console.log(data?.user?.user_documents);
+            form.setFieldsValue({
+                ...data?.user,
+                ...data?.user.user_details,
+                xero_client_id: data?.user.xero_details.client_id,
+                xero_client_secret: data?.user.xero_details.client_secret,
+                analytics_view_id:
+                    data?.user?.jobadder_details.analytics_view_id,
+            });
         }
-    }, [isSuccess, data]);
+    }, [isSuccess, form, data]);
     const onFinish = async (values, id) => {
         try {
             const formData = new FormData();
             for (const key in values) {
                 formData.append(key, values[key]);
             }
-            formData.append("logo", file);
-            console.log(fileList);
-            console.log(values);
+            if (logofileList.length >= 1)
+                formData.append("logo", logofileList[0].originFileObj);
 
             fileList.map((file, index) => {
                 if (file.id) {
@@ -147,13 +158,14 @@ const MyStaffPage = ({}) => {
                         values[`document_type_${file.uid}`]
                     );
                     formData.append(
-                        "title[]",
+                        "image_title[]",
                         values[`image_title_${file.uid}`]
                     );
                 }
             });
             formData.append("id", id);
             const result = await updateClient(formData);
+            message.success(`Client updated successfully`);
         } catch (err) {
             console.log(err);
         }
@@ -231,13 +243,6 @@ const MyStaffPage = ({}) => {
             <Form
                 layout="vertical"
                 form={form}
-                initialValues={{
-                    ...user,
-                    ...user.user_details,
-                    xero_client_id: user.xero_details.client_id,
-                    xero_client_secret: user.xero_details.client_secret,
-                    analytics_view_id: user?.jobadder_details.analytics_view_id,
-                }}
                 onFinish={(values) => onFinish(values, id)}
             >
                 <Row gutter={16}>
@@ -395,16 +400,11 @@ const MyStaffPage = ({}) => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Logo" name="logo">
+                        <Form.Item label="Logo">
                             <Upload
                                 listType="picture-card"
                                 maxCount={1}
-                                defaultFileList={[
-                                    {
-                                        status: "done",
-                                        url: "/" + user?.user_details.logo, // URL of the default logo
-                                    },
-                                ]}
+                                fileList={logofileList}
                                 customRequest={handleupload}
                                 onChange={handleFileChange}
                             >

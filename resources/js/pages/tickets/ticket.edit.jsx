@@ -67,13 +67,21 @@ export default function Tickets({}) {
                 )
             );
             form.resetFields();
+            message.success("Ticket updated successfully!");
             navigate("/tickets");
-            //OnCloseEdit();
-            // message.success("Ticket added successfully!");
         } catch (err) {
             console.log(err);
         }
     };
+
+    useEffect(() => {
+        if (isSuccess) {
+            form.setFieldsValue({
+                ...data.ticket,
+                message: "",
+            });
+        }
+    }, [isSuccess, form, data]);
 
     if (isLoading)
         return (
@@ -83,12 +91,7 @@ export default function Tickets({}) {
         );
     return (
         <div>
-            <Form
-                form={form}
-                initialValues={{ ...data.ticket, message: "" }}
-                layout="vertical"
-                onFinish={handleFormSubmit}
-            >
+            <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
                 <Form.Item
                     label="Team"
                     name="team"

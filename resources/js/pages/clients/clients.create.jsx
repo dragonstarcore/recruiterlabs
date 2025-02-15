@@ -126,13 +126,17 @@ const MyStaffPage = ({}) => {
             // Keep the files in the list for further operations
             setFileList(newFileList);
         }
-        console.log(fileList);
     };
     const handleDeleteDocument = (uid) => {
         console.log(uid);
         setFileList((fileList) => fileList.filter((f) => f.uid !== uid));
     };
-
+    if (isUploading)
+        return (
+            <Flex justify="center">
+                <Spin />
+            </Flex>
+        );
     return (
         <Form form={form} layout="vertical" onFinish={onFinish}>
             <Row gutter={16}>

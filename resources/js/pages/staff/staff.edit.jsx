@@ -57,21 +57,17 @@ const MyStaffPage = ({}) => {
     const employee_details = data?.employee?.employee_details;
     const employeeDocuments = data?.employee?.employee_documents;
 
-    const [file, setFile] = useState();
+    const [logofilelist, setLogofilelist] = useState([]);
     const onPageChange = (page, pageSize) => {
         setCurrentPage(page); // Update current page
         setPageSize(pageSize); // Update page size if the user changes it
     };
-    const handleFileChange = async (info) => {
-        if (info.file.status === "done") {
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === "error") {
-            message.error(`${info.file.name} file upload failed.`);
-        }
+    const handleFileChange = async ({ fileList }) => {
+        setLogofilelist(fileList);
+        console.log(fileList);
     };
     const handleupload = async ({ file, onSuccess, onError }) => {
         try {
-            setFile(file);
             onSuccess(); // Call onSuccess if the upload succeeds
         } catch (err) {
             console.log(err);
@@ -111,14 +107,52 @@ const MyStaffPage = ({}) => {
     useEffect(() => {
         if (isSuccess) {
             setFileList(data?.employee.employee_documents);
+            setLogofilelist([
+                {
+                    uid: "-1", // Unique ID for the file
+                    name: "logo", // File name
+                    status: "done", // File status
+                    url: "/" + data?.employee?.employee_details?.emp_picture, // Full URL of the image
+                },
+            ]);
+            form.setFieldsValue({
+                ...data?.employee,
+                ...data?.employee.employee_details,
+                date_of_birth: dayjs(
+                    data?.employee?.date_of_birth,
+                    "YYYY-MM-DD"
+                ),
+                date_of_joining: dayjs(
+                    data?.employee.employee_details?.date_of_joining,
+                    "YYYY-MM-DD"
+                ),
+            });
         }
-    }, [isSuccess, data]);
+    }, [isSuccess, form, data]);
 
     const onFinish = async (values, user_id, employee_id) => {
         // Handle the form submission logic here
         const formData = new FormData();
 
-        formData.append("emp_picture", file);
+        for (const key in values) {
+            if (key == "date_of_joining") {
+                formData.append(key, values[key].format("YYYY-MM-DD"));
+                continue;
+            }
+            if (key == "date_of_birth") {
+                formData.append(key, values[key].format("YYYY-MM-DD"));
+                continue;
+            }
+            formData.append(key, values[key]);
+        }
+        if (logofilelist[0]?.originFileObj)
+            formData.append(
+                "emp_picture",
+                logofilelist[0]?.originFileObj || null
+            );
+
+        formData.append("employee_id", employee_id);
+        formData.append("user_id", user_id);
         fileList.map((file, index) => {
             if (file.id) {
                 formData.append("old_images[]", file.id);
@@ -140,18 +174,18 @@ const MyStaffPage = ({}) => {
         });
 
         try {
-            const { error } = await updateStaff({
-                ...values,
-                employee_id,
-                user_id,
-                emp_picture: file,
-            });
-            if (error) {
-                message.error(`employee failed successfully`);
-                return;
-            }
+            //const { error } = await updateStaff({
+            //     ...values,
+            //     employee_id,
+            //     user_id,
+            // });
+            const { aserror } = await updateStaff(formData);
+            // if (error) {
+            //     message.error(`employee failed successfully`);
+            //     return;
+            // }
             message.success(`employee updated successfully`);
-            //navigate("/employee_list/" + user_id);
+            // navigate("/employee_list/" + user_id);
         } catch (err) {
             message.error(`employee update failed`);
         }
@@ -164,12 +198,7 @@ const MyStaffPage = ({}) => {
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 18 }}
                 layout="horizontal"
-                initialValues={{
-                    ...employee,
-                    ...employee_details,
-                    date_of_birth: dayjs(employee?.date_of_birth, "YYYY-MM-DD"),
-                    date_of_joining: moment(employee_details?.date_of_joining),
-                }}
+                form={form}
                 onFinish={(values) => onFinish(values, user_id, employee_id)}
             >
                 {/* Name */}
@@ -185,7 +214,7 @@ const MyStaffPage = ({}) => {
                                 },
                             ]}
                         >
-                            <Input value={employee.name} />
+                            <Input />
                         </Form.Item>
                     </Col>
 
@@ -202,7 +231,7 @@ const MyStaffPage = ({}) => {
                                 },
                             ]}
                         >
-                            <Input value={employee.email} />
+                            <Input />
                         </Form.Item>
                     </Col>
 
@@ -263,12 +292,7 @@ const MyStaffPage = ({}) => {
                                 customRequest={handleupload}
                                 listType="picture-card"
                                 onChange={handleFileChange}
-                                defaultFileList={[
-                                    {
-                                        status: "done",
-                                        url: `/${employee?.employee_details?.emp_picture}`, // URL of the default logo
-                                    },
-                                ]}
+                                fileList={logofilelist}
                             >
                                 <div>
                                     <UploadOutlined />
@@ -348,16 +372,7 @@ const MyStaffPage = ({}) => {
                             label="Date of Joining"
                             name="date_of_joining"
                         >
-                            <DatePicker
-                                value={
-                                    employee.employee_details?.date_of_joining
-                                        ? moment(
-                                              employee.employee_details
-                                                  .date_of_joining
-                                          )
-                                        : null
-                                }
-                            />
+                            <DatePicker />
                         </Form.Item>
                     </Col>
                     <Col span={24}>

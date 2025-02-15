@@ -27,7 +27,7 @@ export const clientApi = apiService.injectEndpoints({
         updateClient: builder.mutation({
             query: (data) => ({
                 url: "/users/" + data.get("id"),
-                method: "PUT",
+                method: "POST",
                 body: data,
             }),
         }),

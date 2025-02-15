@@ -23,9 +23,9 @@ export const staffApi = apiService.injectEndpoints({
         }),
         updateStaff: builder.mutation({
             query: (data) => ({
-                url: "/employees/" + data?.employee_id || null,
-                //  url: "/employees/" + data?.get("employee_id") || null,
-                method: "PUT",
+                //url: "/employees/" + data?.employee_id || null,
+                url: "/employees/" + data?.get("employee_id") || null,
+                method: "POST",
                 body: data,
             }),
         }),

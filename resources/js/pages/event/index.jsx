@@ -142,6 +142,13 @@ const MyEventPage = ({}) => {
         handleCancel();
     };
     // Transform employee data for the table
+    useEffect(() => {
+        if (isSuccess) {
+            form.setFieldsValue({
+                start: dayjs(eventData.start, "YYYY-MM-DD"),
+            });
+        }
+    }, [isSuccess, form, eventData]);
 
     if (isLoading) return <>Loading</>;
     return (
@@ -178,9 +185,6 @@ const MyEventPage = ({}) => {
             >
                 <Form
                     form={form}
-                    initialValues={{
-                        start: dayjs(eventData.start, "YYYY-MM-DD"),
-                    }}
                     layout="horizontal"
                     onFinish={handleSaveNewEvent}
                     labelCol={{ span: 6 }}

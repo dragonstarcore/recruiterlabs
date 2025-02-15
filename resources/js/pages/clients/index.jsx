@@ -82,15 +82,7 @@ const MyClientPage = ({}) => {
             title: "Status",
             dataIndex: "status",
             key: "status",
-            render: (status) => (
-                <span
-                    className={`badge ${
-                        status === 1 ? "bg-success" : "bg-danger"
-                    }`}
-                >
-                    {status === 1 ? "Active" : "Inactive"}
-                </span>
-            ),
+            render: (status) => <Switch checked={status} />,
         },
         {
             title: "Action",

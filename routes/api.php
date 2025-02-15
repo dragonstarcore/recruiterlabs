@@ -39,12 +39,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my_business_search', [App\Http\Controllers\UserController::class, 'my_business'])->name('my_business_search');
     Route::get('/xero', [\App\Http\Controllers\XeroController::class, 'index'])->name('xero.auth.success');
     Route::resource('/employees', App\Http\Controllers\EmployeeController::class);
+    Route::post('/employees/{employee}', [App\Http\Controllers\EmployeeController::class, 'update']);
     Route::get('fullcalender/{client_id?}', [App\Http\Controllers\EventController::class, 'index']);
     Route::resource('/events', App\Http\Controllers\EventController::class);
     Route::post('fullcalenderAjax', [App\Http\Controllers\EventController::class, 'add_update_delete']);
     Route::resource('/tickets', App\Http\Controllers\TicketController::class);
     Route::post('/tickets/search', [App\Http\Controllers\TicketController::class, 'search'])->name('tickets.search');
     Route::resource('/users', App\Http\Controllers\UserController::class);
+    Route::post('/users/{users}', [App\Http\Controllers\UserController::class, 'update']);
     Route::get('/client_doc_search/{client_id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('client_doc_search');
  
     Route::get('/get_employee', [App\Http\Controllers\EmployeeController::class, 'getEmployee'])->name('getEmployee');

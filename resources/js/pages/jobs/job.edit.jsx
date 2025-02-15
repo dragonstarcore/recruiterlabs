@@ -72,10 +72,10 @@ export default function Jobs({}) {
                     jobs.map((e) => (e.id != id ? e : { ...e, ...data.job }))
                 )
             );
-            form.resetFields();
-            navigate("/jobs");
+
+            //navigate("/jobs");
             //OnCloseEdit();
-            // message.success("Job added successfully!");
+            message.success("Job updated successfully!");
         } catch (err) {
             console.log(err);
         }
@@ -84,6 +84,16 @@ export default function Jobs({}) {
         console.log("Selected Date:", date);
         console.log("Formatted Date:", dateString);
     };
+
+    useEffect(() => {
+        if (isSuccess) {
+            form.setFieldsValue({
+                ...data?.job,
+                start_date: dayjs(data?.job.start_date, "YYYY-MM-DD"),
+            });
+        }
+    }, [isSuccess, form, data]);
+
     if (isLoading)
         return (
             <Flex justify="center" align="center">
@@ -92,15 +102,7 @@ export default function Jobs({}) {
         );
     return (
         <div>
-            <Form
-                form={form}
-                initialValues={{
-                    ...data.job,
-                    start_date: dayjs(data.job.start_date, "YYYY-MM-DD"),
-                }}
-                layout="vertical"
-                onFinish={handleFormSubmit}
-            >
+            <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
                 <Form.Item
                     name="job_title"
                     label="Job Title"

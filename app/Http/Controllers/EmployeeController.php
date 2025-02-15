@@ -240,7 +240,7 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // dd($request->toArray());
+      
         try {
             $validator = \Validator::make($request->all(), [
                 'name' => ['required'],
@@ -386,7 +386,7 @@ class EmployeeController extends Controller
             }
 
             if(Auth::user()->role_type==1) {
-                return response()->json([],200);
+                return response()->json(['employee'=>$employee,'employee_details'=>$employee_details],200);
             }else{
                 return response()->json([],200);
             }
