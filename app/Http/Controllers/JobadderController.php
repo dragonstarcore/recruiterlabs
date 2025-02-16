@@ -21,7 +21,7 @@ class JobadderController extends Controller
 
                         // $user = User::where('id',Auth::user()->id)->with('jobadder_details')->first();
                         // $str = '-------Start---------';
-                         dd(1);
+                        //  dd(1);
                         // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
                         $provider = new \RolandSaven\OAuth2\Client\Provider\JobAdder([
                             //For local
@@ -38,7 +38,7 @@ class JobadderController extends Controller
 
                         //save to jobadder
                         $JobadderDetail = JobadderDetail::where('user_id',Auth::user()->id)->first();
-
+                        
                         if(isset($JobadderDetail['code']) && $JobadderDetail['code']!=null){
                             // $str = '!1';
                             // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
@@ -57,7 +57,7 @@ class JobadderController extends Controller
                             $JobadderDetail->save();
                             Session::put('oauth2state', $_GET['state']);
                         }
-
+                        
                         if (!isset($_GET['code'])) {
                             $str = '--!no code';
                             file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
@@ -67,7 +67,7 @@ class JobadderController extends Controller
                             // $oauth2state = Session::get('oauth2state') ? Session::get('oauth2state') : null;
                             header('Location: '.$authUrl);
                             exit;
-
+                            
                             // Check given state against previously stored one to mitigate CSRF attack
                         } elseif (empty($_GET['state']) || ($_GET['state'] !== Session::get('oauth2state') )) {
                             // unset($_SESSION['oauth2state']);
@@ -75,11 +75,11 @@ class JobadderController extends Controller
                             // $str = '--!Invalid state';
                             // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
                             exit('Invalid state');
-
+                            
                         } else {
-                                // dd('1');
-                                // $str = '!3';
-                                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+                            // dd('1');
+                            // $str = '!3';
+                            // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
                             if(isset($_GET['refresh_token']) && $_GET['refresh_token'] == 'yes')
                             {
                                 // $str = '!4';
@@ -89,6 +89,7 @@ class JobadderController extends Controller
                                     'refresh_token' => $JobadderDetail['refresh_token']
                                 ]);
                                 $JobadderDetail['refresh_token_response'] = json_encode($token);
+                                dd(1);
                             }
                             else{
                                 // $str = '!5';
@@ -99,13 +100,14 @@ class JobadderController extends Controller
                                 ]);
                                 $JobadderDetail['auth_response'] = json_encode($token);
                             }
-                                // $str = '!6';
-                                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                                // file_put_contents("token.txt",json_encode($token));
-                                $JobadderDetail['refresh_token'] = $token->getRefreshToken();
-                                // $JobadderDetail['auth_response'] = json_encode($token);
-                                $JobadderDetail->save();
-                                // Optional: Now you have a token you can look up a users profile data
+                            // $str = '!6';
+                            // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+                            // file_put_contents("token.txt",json_encode($token));
+                            
+                            $JobadderDetail['refresh_token'] = $token->getRefreshToken();
+                            // $JobadderDetail['auth_response'] = json_encode($token);
+                            $JobadderDetail->save();
+                            // Optional: Now you have a token you can look up a users profile data
                             try {
                                 // $str = '!7';
                                 // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
@@ -129,14 +131,72 @@ class JobadderController extends Controller
                             $JobadderDetail->save();
                             // $str = '!10';
                             // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                            return redirect('/jobadder_data');
+                            return response()->json(['message' => 'Authorization successful', 'redirect' => '/jobadder_data']);
                         }
 
         } catch (\throwable $e) {
-            // dd($e);
+            dd($e);
             // This can happen if the credentials have been revoked or there is an error with the organisation (e.g. it's expired)
-            return redirect('/client_error_page');
+            return response()->json(['error' => 'Authorization failed', 'redirect' => '/client_error_page'], 500);
         }
+    }
+
+    public static function jobadder(Request $request)
+    {
+        $JobadderDetail = JobadderDetail::where('user_id',Auth::user()->id)->first();
+
+        $client = new \GuzzleHttp\Client();
+
+        if(isset($JobadderDetail['refresh_token']) && $JobadderDetail['refresh_token']!=null) {
+            try {
+                $response = $client->post('https://id.jobadder.com/connect/token', [
+                    'form_params' => [
+                        'client_id'          => Config::get('app.jobadder_details.clientId'),
+                        'client_secret'      => Config::get('app.jobadder_details.clientSecret'),
+                        'grant_type'         => "refresh_token",
+                        'refresh_token'      => $JobadderDetail['refresh_token'],
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                    ],
+                ]);
+    
+                $responseBody = json_decode($response->getBody(), true);
+                $JobadderDetail['token'] = $responseBody["access_token"];
+                $JobadderDetail['refresh_token'] = $responseBody["refresh_token"];
+                $JobadderDetail->save();
+            } catch (\Throwable $e) {
+                $JobadderDetail['refresh_token'] = null;
+                $JobadderDetail->save();
+                return response()->json(['err' => "Redirecting..."], 302);
+            }
+        } else {
+            try {
+                $response = $client->post('https://id.jobadder.com/connect/token', [
+                    'form_params' => [
+                        'client_id'          => Config::get('app.jobadder_details.clientId'),
+                        'client_secret'      => Config::get('app.jobadder_details.clientSecret'),
+                        'grant_type'         => "authorization_code",
+                        'redirect_uri'       => Config::get('app.jobadder_details.redirectUri'),
+                        'code'               => $request->input('code'),
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                    ],
+                ]);
+    
+                $responseBody = json_decode($response->getBody(), true);
+                $JobadderDetail['token'] = $responseBody["access_token"];
+                $JobadderDetail['refresh_token'] = $responseBody["refresh_token"];
+                $JobadderDetail->save();
+            } catch (\Throwable $e) {
+                return response()->json(['err' => "Bad request."], 400);
+            }
+        }
+
+        $data = JobadderController::jobadder_data();
+
+        return response()->json(['ok' => "ok", 'data' => $data]);
     }
 
     //Main page
@@ -146,9 +206,9 @@ class JobadderController extends Controller
         $dateOption = $request->input('date_option');
         $user = User::where('id',Auth::user()->id)->with('jobadder_details')->first();
         $new_token = Session::get('token');
-        // dd($new_token);
-        if(!isset($new_token)){
-            return redirect('/jobadder');
+        // dd($user);
+        if (!isset($new_token)) {
+            return response()->json(['error' => 'Token not found']);
         }
         $fullname = Session::get('FullName');
         $account_email = Session::get('Email');
@@ -170,6 +230,7 @@ class JobadderController extends Controller
             return redirect()->route('client_error_page');
         }else if($request->has('startDate') && $request->has('date_option')){
             $dateOption = $request->input('date_option');
+            $dateOption = 'week';
             // dd($request->startDate);
             if($request->startDate==null && $request->endDate==null){
                 //  dd($request->startDate);
@@ -231,7 +292,7 @@ class JobadderController extends Controller
             $graph_data['candidates'] = JobadderController::dates_data($jobadder['candidates'], 'year') ?? null;
 
             // dd( $graph_data['interviews']);
-            return view('client.jobadder',compact('graph_data','jobs','contacts','candidates','fullname','account_email','interviews','placements','new_token'));
+            return response()->json(compact('graph_data', 'jobs', 'contacts', 'candidates', 'fullname', 'account_email', 'interviews', 'placements', 'new_token'));
 
         }
 
@@ -478,8 +539,10 @@ class JobadderController extends Controller
     }
 
     public static function jobadder_data(){
+            $JobadderDetail = JobadderDetail::where('user_id',Auth::user()->id)->first();
 
-            $new_token = Session::get('token');
+            $new_token = $JobadderDetail['token'];
+
             $curl = curl_init();
             $api = ['jobs','contacts','candidates','interviews','placements',];
             //jobs

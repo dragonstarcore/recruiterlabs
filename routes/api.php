@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/users', App\Http\Controllers\UserController::class);
     Route::post('/users/{users}', [App\Http\Controllers\UserController::class, 'update']);
     Route::get('/client_doc_search/{client_id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('client_doc_search');
- 
+
     Route::get('/get_employee', [App\Http\Controllers\EmployeeController::class, 'getEmployee'])->name('getEmployee');
     Route::get('/client_list', [App\Http\Controllers\EmployeeController::class, 'client_list'])->name('client_list');
     Route::get('/employee_list/{client_id}', [App\Http\Controllers\EmployeeController::class, 'employee_list'])->name('employee_list');
@@ -63,4 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/client_events_list/{user_id?}', [App\Http\Controllers\EventController::class, 'client_events_list'])->name('client_events_list');  
     Route::post('/employee_search', [App\Http\Controllers\EmployeeController::class, 'employee_search'])->name('employee_search');
     Route::get('/ga', [HomeController::class, 'getAnalyticsData']);
+    Route::get('/jobadder', [\App\Http\Controllers\JobadderController::class, 'jobadder'])->name('jobadder');
+    Route::get('/jobadder_data', [\App\Http\Controllers\JobadderController::class, 'get_jobs'])->name('get_jobs');
 });

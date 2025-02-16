@@ -75,7 +75,8 @@ const App = () => {
                                                 element={<Business />}
                                             />
                                             <Route
-                                                path="performance"
+                                                path="recruiterlabs/jobadder"
+                                                // path="performance"
                                                 element={<Performance />}
                                             />
                                             <Route

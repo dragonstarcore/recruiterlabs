@@ -92,10 +92,12 @@ function Sidenav({ color = "#555555" }) {
         {
             label: (
                 <NavLink to="/performance">
+                {/* <NavLink to="/recruiterlabs/jobadder"> */}
                     <span
                         className="icon"
                         style={{
-                            background: page === "performance" ? color : "",
+                            background: page === "recruiterlabs/jobadder" ? color : "",
+                            // background: page === "performance" ? color : "",
                         }}
                     >
                         {<BarChartOutlined />}
@@ -104,7 +106,8 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             role: [2],
-            key: "performance",
+            // key: "performance",
+            key: "recruiterlabs/jobadder",
         },
         {
             label: (
