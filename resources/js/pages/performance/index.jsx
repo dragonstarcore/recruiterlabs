@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-const CLIENT_ID = "lhytzr73qs5ublobvwumnd5vnu";
-const REDIRECT_URI = "http://localhost/recruiterlabs/jobadder";
-const AUTHORIZATION_ENDPOINT = "https://id.jobadder.com/connect/authorize";
-const SCOPE = "read offline_access";
+import { Alert, Card, Spin } from "antd";
+import { toast } from "react-toastify";
+import PerformanceContainer from "./performance.container";
 
 export default function Performance() {
-    const [token, setToken] = useState(null);
+    const [data, setData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -17,14 +17,14 @@ export default function Performance() {
         } else getAccessToken();
     }, []);
 
-    const authorize = () => {
-        window.location.href = `${AUTHORIZATION_ENDPOINT}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
-            REDIRECT_URI
-        )}&scope=${SCOPE}`;
+    const authorize = (uri) => {
+        window.location.href = `${uri}`;
     };
 
     const getAccessToken = async (authorizationCode) => {
         try {
+            setIsLoading(true);
+
             const res = await fetch(`/api/jobadder?code=${authorizationCode}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -33,19 +33,28 @@ export default function Performance() {
 
             const data = await res.json();
 
-            if (data.ok === "ok") setToken("ok");
-            else authorize();
+            if (data.err === "redirect") authorize(data.uri);
 
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@", data);
+            setIsLoading(false);
+            setData(data.data);
         } catch (error) {
-            console.error("Failed to get access token", error);
+            toast.error("Failed to get access token");
+            setIsLoading(false);
         }
     };
 
-    return (
-        <div>
-            <h1>JobAdder API Integration</h1>
-            {!token && <button onClick={authorize}>Authorize</button>}
-        </div>
+    return isLoading ? (
+        <Spin size="large" fullscreen />
+    ) : data?.name ? (
+        <PerformanceContainer data={data} />
+    ) : (
+        <Card.Meta
+            description={
+                <Alert
+                    message="You have not connected any account yet, please connect your Jobadder account."
+                    type="error"
+                />
+            }
+        />
     );
 }

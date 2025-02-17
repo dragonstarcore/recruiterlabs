@@ -62,15 +62,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/jobs/search', [App\Http\Controllers\JobController::class, 'search'])->name('job.search');
     Route::get('/jobshared', [App\Http\Controllers\JobController::class, 'jobshared_list'])->name('job.shared');
     Route::post('/jobs/apply', [App\Http\Controllers\JobController::class, 'apply'])->name('job.apply');
-    Route::get('/client_events_list/{user_id?}', [App\Http\Controllers\EventController::class, 'client_events_list'])->name('client_events_list');  
+    Route::get('/client_events_list/{user_id?}', [App\Http\Controllers\EventController::class, 'client_events_list'])->name('client_events_list');
     Route::post('/employee_search', [App\Http\Controllers\EmployeeController::class, 'employee_search'])->name('employee_search');
     Route::get('/ga', [HomeController::class, 'getAnalyticsData']);
     Route::get('/jobadder', [\App\Http\Controllers\JobadderController::class, 'jobadder'])->name('jobadder');
     Route::get('/jobadder_data', [\App\Http\Controllers\JobadderController::class, 'get_jobs'])->name('get_jobs');
- 
     Route::get('/xero/auth/authorize', AuthorizationController::class)->name('xero.auth.authorize');
     Route::get('/xero/auth/callback', AuthorizationCallbackController::class)->name('xero.auth.callback');
-
-
-
+    Route::get('/get_cv', [\App\Http\Controllers\JobadderController::class, 'get_CV_Attachment'])->name('get_cv');
 });
