@@ -91,12 +91,13 @@ function Sidenav({ color = "#555555" }) {
         },
         {
             label: (
-                <NavLink to="/performance">
-                {/* <NavLink to="/recruiterlabs/jobadder"> */}
+                // <NavLink to="/performance">
+                <NavLink to="/recruiterlabs/jobadder">
                     <span
                         className="icon"
                         style={{
-                            background: page === "recruiterlabs/jobadder" ? color : "",
+                            background:
+                                page === "recruiterlabs/jobadder" ? color : "",
                             // background: page === "performance" ? color : "",
                         }}
                     >
