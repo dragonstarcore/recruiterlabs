@@ -7,7 +7,12 @@ export const forecastApi = apiService.injectEndpoints({
                 url: "/xero",
             }),
         }),
+        fetchXeroredirect: builder.mutation({
+            query: () => ({
+                url: "/xero/auth/authorize",
+            }),
+        }),
     }),
 });
 
-export const { useFetchXeroQuery } = forecastApi;
+export const { useFetchXeroQuery, useFetchXeroredirectMutation } = forecastApi;

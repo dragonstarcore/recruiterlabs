@@ -1,67 +1,80 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Row, Col, Button, Alert, Typography } from "antd";
-import { Link } from "react-router-dom"; // If you're using react-router
+import { Card, Row, Col, Button, Alert, Typography, Spin, Flex } from "antd";
+import { Link, useNavigate } from "react-router-dom"; // If you're using react-router
 import ApexCharts from "react-apexcharts";
 const { Title, Paragraph } = Typography;
 
 import { useFetchMeQuery } from "../home/home.service";
-import { useFetchXeroQuery } from "./forecast.service";
+import {
+    useFetchXeroQuery,
+    useFetchXeroredirectMutation,
+} from "./forecast.service";
 import ChartContainer from "../home/home.chart";
 const XeroConnection = () => {
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const authorizationCode = urlParams.get("code");
+        console.log(authorizationCode);
+        if (authorizationCode) {
+            getAccessToken(urlParams);
+        }
+    }, []);
+    const getAccessToken = async (urlParams) => {
+        try {
+            const res = await fetch(`/api/xero/auth/callback?${urlParams}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
+
+            // if (data.ok === "ok") setToken("ok");
+            // else authorize();
+        } catch (error) {
+            console.error("Failed to get access token", error);
+        }
+    };
+
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const userData = useSelector((apps) => apps.app.user);
 
-    const { data: xeroData } = useFetchXeroQuery();
+    const { data: xeroData, isLoading } = useFetchXeroQuery();
+    const [fetchXeroredirect, {}] = useFetchXeroredirectMutation();
+    const getXeroUrl = async () => {
+        const { data } = await fetchXeroredirect();
+        console.log(data.url);
+        // Open a new tab and navigate to the desired URL
 
-    const error = null; // No error for this case
-    const connected = true; // Assume the user is connected
-    const organisationName = "ABC Corporation";
-    const username = "john_doe";
-    const accountWatchlist = [
-        ["Account A", "$1,000", "$5,000"],
-        ["Account B", "$2,000", "$10,000"],
-        ["Account C", "$500", "$2,500"],
-    ];
-    const balance = ["Business Bank Account", "$15,000"];
-    const data = {
-        draft_count: 2,
-        draft_amount: "$1,000",
-        aw_count: 3,
-        aw_amount: "$5,500",
-        overdue_count: 1,
-        overdue_amount: "$2,000",
-    };
-    const myData = {
-        draft_count: 1,
-        draft_amount: "$500",
-        aw_count: 4,
-        aw_amount: "$7,000",
-        overdue_count: 0,
-        overdue_amount: "$0",
-    };
-    let invoices_array = [
-        { name: "Invoice 1", y: 150 },
-        { name: "Invoice 2", y: 200 },
-        { name: "Invoice 3", y: 50 },
-        { name: "Invoice 4", y: 300 },
-    ];
-
-    let bills_array = [
-        { name: "Bill 1", y: 120 },
-        { name: "Bill 2", y: 180 },
-        { name: "Bill 3", y: 75 },
-        { name: "Bill 4", y: 250 },
-    ];
-
-    let total_cash = {
-        name: ["Week 1", "Week 2", "Week 3", "Week 4"],
-        y: {
-            In: [500, 300, 450, 700],
-            Out: [200, 250, 300, 150],
-        },
+        window.location.assign(data.url);
+        //window.history.go(data.redirectUrl);
     };
 
+    const error = xeroData?.error; // No error for this case
+    const connected = xeroData?.connected; // Assume the user is connected
+    const organisationName = xeroData?.organisationName;
+    const username = xeroData?.username;
+    // const accountWatchlist = [
+    //     ["Account A", "$1,000", "$5,000"],
+    //     ["Account B", "$2,000", "$10,000"],
+    //     ["Account C", "$500", "$2,500"],
+    // ];
+    const accountWatchlist = xeroData?.account_watchlist || [];
+    //const balance = ["Business Bank Account", "$15,000"];
+    const balance = xeroData?.balance || [];
+    const data = xeroData?.data || {};
+    const myData = xeroData?.my_data || {};
+    let invoices_array = xeroData?.invoices_array || [];
+
+    let bills_array = xeroData?.bills_array || [];
+
+    let total_cash = xeroData?.total_cash || [];
+    if (isLoading)
+        return (
+            <Flex justify="center">
+                <Spin />
+            </Flex>
+        );
     return (
         <div className="content">
             <Row gutter={[16, 16]}>
@@ -71,38 +84,9 @@ const XeroConnection = () => {
                             <Title level={4}>Xero</Title>
                         </div>
                         <div className="card-body">
-                            {error ? (
-                                !connected ? (
-                                    <Alert
-                                        message="You have not connected any account yet, please connect your Xero account."
-                                        type="error"
-                                        showIcon
-                                        action={
-                                            <Link to="my_business#visit_link">
-                                                <Button type="link">
-                                                    Visit here
-                                                </Button>
-                                            </Link>
-                                        }
-                                    />
-                                ) : (
-                                    <>
-                                        <Typography.Title level={6}>
-                                            Your connection to Xero failed
-                                        </Typography.Title>
-                                        <Paragraph>{error}</Paragraph>
-                                        <Button
-                                            type="primary"
-                                            size="large"
-                                            href="/xero/auth/authorize"
-                                        >
-                                            Connect to Xero
-                                        </Button>
-                                    </>
-                                )
-                            ) : connected ? (
+                            {connected ? (
                                 <>
-                                    <Typography.Title level={6}>
+                                    <Typography.Title level={3}>
                                         You are connected to Xero
                                     </Typography.Title>
                                     <Paragraph>
@@ -111,20 +95,18 @@ const XeroConnection = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Typography.Title level={5}>
-                                        You are not connected to Xero
-                                    </Typography.Title>
                                     {!connected && !organisationName && (
                                         <Alert
                                             message="You have not connected any account yet, please connect your Xero account."
                                             type="error"
                                             showIcon
+                                            style={{ marginBottom: "10px" }}
                                         />
                                     )}
                                     <Button
                                         type="primary"
                                         size="large"
-                                        href="/xero/auth/authorize"
+                                        onClick={() => getXeroUrl()}
                                     >
                                         Connect to Xero
                                     </Button>
@@ -202,25 +184,103 @@ const XeroConnection = () => {
                                     <Col span={12}>
                                         <Card title="Invoices Owed to You">
                                             {data && (
-                                                <>
-                                                    <Typography.Text>
-                                                        {data.draft_count} Draft
-                                                        invoices:{" "}
-                                                        {data.draft_amount}
-                                                    </Typography.Text>
-                                                    <br />
-                                                    <Typography.Text>
-                                                        {data.aw_count} Awaiting
-                                                        payment:{" "}
-                                                        {data.aw_amount}
-                                                    </Typography.Text>
-                                                    <br />
-                                                    <Typography.Text>
-                                                        {data.overdue_count}{" "}
-                                                        Overdue:{" "}
-                                                        {data.overdue_amount}
-                                                    </Typography.Text>
-                                                </>
+                                                <Flex
+                                                    justify="flex-end"
+                                                    style={{ color: "#0078c8" }}
+                                                >
+                                                    <Row>
+                                                        <Col span={24}>
+                                                            <Row>
+                                                                <Col span={10}>
+                                                                    <strong
+                                                                        style={{
+                                                                            margin: 5,
+                                                                        }}
+                                                                    >
+                                                                        {data.draft_count
+                                                                            ? myData.draft_count
+                                                                            : ""}
+                                                                        Draft
+                                                                        payment:
+                                                                    </strong>
+                                                                </Col>
+
+                                                                <Col
+                                                                    span={6}
+                                                                    style={{
+                                                                        textAlign:
+                                                                            "end",
+                                                                    }}
+                                                                >
+                                                                    <Typography.Text>
+                                                                        {data.draft_amount.toFixed(
+                                                                            2
+                                                                        )}
+                                                                    </Typography.Text>
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                        <Col span={24}>
+                                                            <Row>
+                                                                <Col span={10}>
+                                                                    <strong
+                                                                        style={{
+                                                                            margin: 5,
+                                                                        }}
+                                                                    >
+                                                                        {data.aw_count
+                                                                            ? myData.aw_count
+                                                                            : ""}
+                                                                        Awaiting
+                                                                        payment:
+                                                                    </strong>
+                                                                </Col>
+                                                                <Col
+                                                                    span={6}
+                                                                    style={{
+                                                                        textAlign:
+                                                                            "end",
+                                                                    }}
+                                                                >
+                                                                    <Typography.Text>
+                                                                        {data.aw_amount.toFixed(
+                                                                            2
+                                                                        )}
+                                                                    </Typography.Text>{" "}
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                        <Col span={24}>
+                                                            <Row>
+                                                                <Col span={10}>
+                                                                    <strong
+                                                                        style={{
+                                                                            margin: 5,
+                                                                        }}
+                                                                    >
+                                                                        {data.overdue_count
+                                                                            ? data.overdue_count
+                                                                            : ""}
+                                                                        Overdue:
+                                                                    </strong>
+                                                                </Col>
+                                                                <Col
+                                                                    span={6}
+                                                                    style={{
+                                                                        textAlign:
+                                                                            "end",
+                                                                    }}
+                                                                >
+                                                                    <Typography.Text>
+                                                                        {data.overdue_amount.toFixed(
+                                                                            2
+                                                                        )}
+                                                                    </Typography.Text>
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                    </Row>
+                                                </Flex>
                                             )}
                                             <ChartContainer
                                                 chartData={invoices_array}
@@ -237,31 +297,109 @@ const XeroConnection = () => {
                                     <Col span={12}>
                                         <Card title="Bills You Need to Pay">
                                             {myData && (
-                                                <>
-                                                    <Typography.Text>
-                                                        {myData.draft_count}{" "}
-                                                        Draft bills:{" "}
-                                                        {myData.draft_amount}
-                                                    </Typography.Text>
-                                                    <br />
-                                                    <Typography.Text>
-                                                        {myData.aw_count}{" "}
-                                                        Awaiting payment:{" "}
-                                                        {myData.aw_amount}
-                                                    </Typography.Text>
-                                                    <br />
-                                                    <Typography.Text>
-                                                        {myData.overdue_count}{" "}
-                                                        Overdue:{" "}
-                                                        {myData.overdue_amount}
-                                                    </Typography.Text>
-                                                </>
+                                                <Flex
+                                                    justify="flex-end"
+                                                    style={{ color: "#0078c8" }}
+                                                >
+                                                    <Row>
+                                                        <Col span={24}>
+                                                            <Row>
+                                                                <Col span={10}>
+                                                                    <strong
+                                                                        style={{
+                                                                            margin: 5,
+                                                                        }}
+                                                                    >
+                                                                        {myData.draft_count
+                                                                            ? myData.draft_count
+                                                                            : ""}
+                                                                        Draft
+                                                                        bills:
+                                                                    </strong>
+                                                                </Col>
+
+                                                                <Col
+                                                                    span={6}
+                                                                    style={{
+                                                                        textAlign:
+                                                                            "end",
+                                                                    }}
+                                                                >
+                                                                    <Typography.Text>
+                                                                        {myData.draft_amount.toFixed(
+                                                                            2
+                                                                        )}
+                                                                    </Typography.Text>
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                        <Col span={24}>
+                                                            <Row>
+                                                                <Col span={10}>
+                                                                    <strong
+                                                                        style={{
+                                                                            margin: 5,
+                                                                        }}
+                                                                    >
+                                                                        {myData.aw_count
+                                                                            ? myData.aw_count
+                                                                            : ""}
+                                                                        Awaiting
+                                                                        payment:
+                                                                    </strong>
+                                                                </Col>
+                                                                <Col
+                                                                    span={6}
+                                                                    style={{
+                                                                        textAlign:
+                                                                            "end",
+                                                                    }}
+                                                                >
+                                                                    <Typography.Text>
+                                                                        {myData.aw_amount.toFixed(
+                                                                            2
+                                                                        )}
+                                                                    </Typography.Text>{" "}
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                        <Col span={24}>
+                                                            <Row>
+                                                                <Col span={10}>
+                                                                    <strong
+                                                                        style={{
+                                                                            margin: 5,
+                                                                        }}
+                                                                    >
+                                                                        {myData.overdue_count
+                                                                            ? myData.overdue_count
+                                                                            : ""}
+                                                                        Overdue:
+                                                                    </strong>
+                                                                </Col>
+                                                                <Col
+                                                                    span={6}
+                                                                    style={{
+                                                                        textAlign:
+                                                                            "end",
+                                                                    }}
+                                                                >
+                                                                    <Typography.Text>
+                                                                        {myData.overdue_amount.toFixed(
+                                                                            2
+                                                                        )}
+                                                                    </Typography.Text>
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                    </Row>
+                                                </Flex>
                                             )}
                                             <ChartContainer
                                                 chartData={bills_array}
                                                 title="Bills to Pay"
-                                                chartType="line"
-                                                color="#f35c86"
+                                                chartType="bar"
+                                                color="#0078c8"
                                                 seriesName="Amount Due"
                                                 YaxisTitle="Amount (£)"
                                             />

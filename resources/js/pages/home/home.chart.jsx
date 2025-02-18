@@ -10,16 +10,17 @@ const ChartContainer = ({
 }) => {
     console.log(chartData);
 
-    const formatData = (data) => {
+    const formatData = (data = []) => {
         if (!data) return;
         const names = [];
         const values = [];
-
+        console.log(data);
         // Ensure data exists and contains 'name' and 'y'
-        data.forEach((item) => {
+        Object.values(data).forEach((item) => {
             if (item && item.name && item.y !== undefined) {
                 names.push(item.name);
-                values.push(item.y);
+                if (typeof item.y == "number") values.push(item.y.toFixed(2));
+                else values.push(item.y);
             }
         });
 
@@ -37,7 +38,7 @@ const ChartContainer = ({
                     text: title,
                 },
                 xaxis: {
-                    categories: formatData(chartData).names,
+                    categories: formatData(chartData)?.names,
                 },
                 yaxis: {
                     title: {

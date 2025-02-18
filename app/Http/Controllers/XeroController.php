@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use XeroAPI\XeroPHP\Models\Accounting\Invoice;
+use XeroAPI\XeroPHP\Models\Accounting\LineItem;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -9,6 +10,11 @@ use Webfox\Xero\OauthCredentialManager;
 use Auth;
 use Carbon\Carbon;
 use Artisan;
+use XeroAPI\XeroPHP\Api\OAuth2Api;
+use XeroAPI\XeroPHP\Api\AccountingApi;
+use XeroAPI\XeroPHP\Configuration;
+use GuzzleHttp\Client;
+
 // use XeroAPI\XeroPHP\Models\Accounting\User;
 class XeroController extends Controller
 {
@@ -46,15 +52,15 @@ class XeroController extends Controller
             $created_by_my_app = null; // bool | When set to true you'll only retrieve Invoices created by your app
             $unitdp = null; // int | e.g. unitdp=4 – You can opt in to use four decimal places for unit amounts
 
-                $data['draft_count'] = $data['draft_amount'] = $data['overdue_count'] = $data['overdue_amount'] = $data['aw_count'] = $data['aw_amount'] = $data['lastweek_count'] = $data['lastweek_amount'] = $data['nextweek_count'] = 0;
-                $data['nextweek_amount'] = $data['currentweek_count'] = $data['currentweek_amount'] = $data['oldweek_count'] = $data['oldweek_amount'] = $data['futureweek_count'] = $data['futureweek_amount'] = 0;
-                $my_data['draft_count'] = 0;
-                $my_data['draft_amount'] = $my_data['overdue_count'] = $my_data['overdue_amount'] = $my_data['aw_count'] = $my_data['aw_amount'] = $my_data['lastweek_count'] = $my_data['lastweek_amount'] = $my_data['nextweek_count'] = 0;
-                $my_data['nextweek_amount'] = $my_data['currentweek_count'] = $my_data['currentweek_amount'] = $my_data['oldweek_count'] = $my_data['oldweek_amount'] = $my_data['futureweek_count'] = $my_data['futureweek_amount'] = 0;
+            $data['draft_count'] = $data['draft_amount'] = $data['overdue_count'] = $data['overdue_amount'] = $data['aw_count'] = $data['aw_amount'] = $data['lastweek_count'] = $data['lastweek_amount'] = $data['nextweek_count'] = 0;
+            $data['nextweek_amount'] = $data['currentweek_count'] = $data['currentweek_amount'] = $data['oldweek_count'] = $data['oldweek_amount'] = $data['futureweek_count'] = $data['futureweek_amount'] = 0;
+            $my_data['draft_count'] = 0;
+            $my_data['draft_amount'] = $my_data['overdue_count'] = $my_data['overdue_amount'] = $my_data['aw_count'] = $my_data['aw_amount'] = $my_data['lastweek_count'] = $my_data['lastweek_amount'] = $my_data['nextweek_count'] = 0;
+            $my_data['nextweek_amount'] = $my_data['currentweek_count'] = $my_data['currentweek_amount'] = $my_data['oldweek_count'] = $my_data['oldweek_amount'] = $my_data['futureweek_count'] = $my_data['futureweek_amount'] = 0;
 
-                if(isset($organisationName)){
-                    $invoice_apiResponse = $xero->getInvoices($xeroCredentials->getTenantId(), $if_modified_since, $where, $order, $ids, $invoice_numbers, $contact_ids, $statuses, $page, $include_archived, $created_by_my_app, $unitdp);
-                }
+            if(isset($organisationName)){
+                $invoice_apiResponse = $xero->getInvoices($xeroCredentials->getTenantId(), $if_modified_since, $where, $order, $ids, $invoice_numbers, $contact_ids, $statuses, $page, $include_archived, $created_by_my_app, $unitdp);
+            }
             $weeks = XeroController::getWeeks();
             $invoice_data = [];
             $item = 0;
@@ -323,7 +329,6 @@ class XeroController extends Controller
     public function index(Request $request, OauthCredentialManager $xeroCredentials)
     {
         // dd($xeroCredentials);
-
         //Start: Xero Connection
             try {
                 // Check if we've got any stored credentials
@@ -352,8 +357,7 @@ class XeroController extends Controller
                 $error = $e->getMessage();
             }
         //End: Xero Connection
-
-        // Start: Start and end date of last 6 month
+         
             $month = $this->getMonth();
         // End: Start and end date of last 6 month
 
@@ -566,31 +570,31 @@ class XeroController extends Controller
             $created_by_my_app = null; // bool | When set to true you'll only retrieve Invoices created by your app
             $unitdp = null; // int | e.g. unitdp=4 – You can opt in to use four decimal places for unit amounts
 
-                $data['draft_count'] = $data['draft_amount'] = $data['overdue_count'] = $data['overdue_amount'] = $data['aw_count'] = $data['aw_amount'] = $data['lastweek_count'] = $data['lastweek_amount'] = $data['nextweek_count'] = 0;
-                $data['nextweek_amount'] = $data['currentweek_count'] = $data['currentweek_amount'] = $data['oldweek_count'] = $data['oldweek_amount'] = $data['futureweek_count'] = $data['futureweek_amount'] = 0;
-                $my_data['draft_count'] = 0;
-                $my_data['draft_amount'] = $my_data['overdue_count'] = $my_data['overdue_amount'] = $my_data['aw_count'] = $my_data['aw_amount'] = $my_data['lastweek_count'] = $my_data['lastweek_amount'] = $my_data['nextweek_count'] = 0;
-                $my_data['nextweek_amount'] = $my_data['currentweek_count'] = $my_data['currentweek_amount'] = $my_data['oldweek_count'] = $my_data['oldweek_amount'] = $my_data['futureweek_count'] = $my_data['futureweek_amount'] = 0;
+            $data['draft_count'] = $data['draft_amount'] = $data['overdue_count'] = $data['overdue_amount'] = $data['aw_count'] = $data['aw_amount'] = $data['lastweek_count'] = $data['lastweek_amount'] = $data['nextweek_count'] = 0;
+            $data['nextweek_amount'] = $data['currentweek_count'] = $data['currentweek_amount'] = $data['oldweek_count'] = $data['oldweek_amount'] = $data['futureweek_count'] = $data['futureweek_amount'] = 0;
+            $my_data['draft_count'] = 0;
+            $my_data['draft_amount'] = $my_data['overdue_count'] = $my_data['overdue_amount'] = $my_data['aw_count'] = $my_data['aw_amount'] = $my_data['lastweek_count'] = $my_data['lastweek_amount'] = $my_data['nextweek_count'] = 0;
+            $my_data['nextweek_amount'] = $my_data['currentweek_count'] = $my_data['currentweek_amount'] = $my_data['oldweek_count'] = $my_data['oldweek_amount'] = $my_data['futureweek_count'] = $my_data['futureweek_amount'] = 0;
 
-                if(isset($organisationName)){
-                    try {
-                        $invoice_apiResponse = $xero->getInvoices($xeroCredentials->getTenantId(), $if_modified_since, $where, $order, $ids, $invoice_numbers, $contact_ids, $statuses, $page, $include_archived, $created_by_my_app, $unitdp);
-                    } catch (\throwable $e) {
-                        // This can happen if the credentials have been revoked or there is an error with the organisation (e.g. it's expired)
-                        return redirect('/client_error_page');
-                    }
+            if(isset($organisationName)){
+                try {
+                    $invoice_apiResponse = $xero->getInvoices($xeroCredentials->getTenantId(), $if_modified_since, $where, $order, $ids, $invoice_numbers, $contact_ids, $statuses, $page, $include_archived, $created_by_my_app, $unitdp);
+                } catch (\throwable $e) {
+                    // This can happen if the credentials have been revoked or there is an error with the organisation (e.g. it's expired)
+                    return redirect('/client_error_page');
                 }
+            }
 
-                $weeks = $this->getWeeks();
-                $invoice_data = [];
-                $item = 0;
+            $weeks = $this->getWeeks();
+            $invoice_data = [];
+            $item = 0;
 
             foreach ($weeks as $key => $week) {
                 $invoice_data[$key]['name'] = $week;
                 $invoice_data[$key]['y'] = 0;
                 $invoice_data[$key]['item'] = $item++;
             }
-
+            //dd($invoice_data);
             $bills_data = [];
             foreach ($weeks as $key => $week) {
                 $bills_data[$key]['name'] = $week;
@@ -598,6 +602,7 @@ class XeroController extends Controller
                 $bills_data[$key]['item'] = $item++;
             }
 
+            // dd($invoice_apiResponse->getInvoices());
             if(isset($invoice_apiResponse)) {
                 foreach ($invoice_apiResponse->getInvoices() as $key => $value) {
 
@@ -612,7 +617,7 @@ class XeroController extends Controller
                         $parts1 = explode('+', $date1);
                         $value['due_date'] = $due_date = date("Y-m-d", $parts1[0] / 1000);
                     }
-
+                    
                     if(substr($value['invoice_number'], 0, 3)=='INV') {
 
                         if($value['status']!="DRAFT" && $value['status']!="PAID") {
@@ -651,6 +656,7 @@ class XeroController extends Controller
                             $data['aw_amount'] += $value['amount_due'];
                         }
                     } else { //Bill to pay
+                        //dd($value['status']);
                         if($value['status']!="DRAFT" && $value['status']!="PAID") {
                             foreach($bills_data as $key => $week) {
                                 $arun=explode(',', $key);
@@ -688,6 +694,7 @@ class XeroController extends Controller
                         }
                     }
                 }
+                //dd($invoice_data);
                 //Creating data according to chart
                 $item = 4;
                 $invoices_array = [];
@@ -720,9 +727,7 @@ class XeroController extends Controller
                         $item1--;
                     }
 
-                }
-                krsort($invoices_array);
-                krsort($bills_array);
+                } 
 
                 if (count($invoice_apiResponse->getInvoices()) > 0) {
                     $message = 'Total invoices found: ' . count($invoice_apiResponse->getInvoices());
@@ -751,38 +756,49 @@ class XeroController extends Controller
 
     public static function getWeeks() //TO get weeks with start and enddate
     {
-        $weeks          = array();
-        $dayOfWeek      = date('w');
-        $monday         = 0;
-        $diff           = $monday - $dayOfWeek;
-        $minus_weeks    = 1; // past 1 weeks
+        
+        
 
-        // create week range that starts with Thursday and ends with Wednesday for the past 3 months
-        for ($i = -2; $i <= $minus_weeks; $i++) {
-
-            $k = $i - 1;
-
-            $from_formula   = strtotime("-$i week $diff day");
-            $to_formula     = strtotime("-$k week " . ($diff - 1) . " day");
-            $ymd_week_range = date('Y-m-d', $from_formula) . ',' . date('Y-m-d', $to_formula);
-
-            $day_from   = date('j', $from_formula);
-            $day_to     = date('j', $to_formula);
-
-            $month_from = date('M', $from_formula);
-            $month_to   = date('M', $to_formula);
-
-            $year_from  = date('Y', $from_formula);
-            $year_to    = date('Y', $to_formula);
-
-            $weeks[$ymd_week_range] = "$month_from $day_from - $month_to $day_to";
-
-            $older  = Carbon::now()->subDays(8)->startOfWeek(Carbon::SUNDAY)->format('Y-m-d'). ',' .'older';
-            $future = Carbon::now()->addDays(14)->endOfWeek(Carbon::SUNDAY)->format('Y-m-d'). ',' .'future';
-            $weeks[$older] =  Carbon::now()->subDays(8)->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
-            $weeks[$future] =  Carbon::now()->addDays(14)->endOfWeek(Carbon::SUNDAY)->format('Y-m-d');
-
+        // Create an empty array for storing weeks
+        $weeks = [];
+        // echo (Carbon::now());
+        // echo (Carbon::now()->subWeeks(0));
+        // echo (Carbon::now()->subWeeks(0)->startOfWeek());
+        // echo (Carbon::THURSDAY);
+         
+        // echo( Carbon::now()->addWeeks(1)->startOfWeek());
+        // echo( Carbon::now()->addWeeks(1)->endOfWeek());
+        
+        // Define the number of weeks to generate (past 3 months ≈ 12 weeks)
+        $numWeeks = 4;
+        
+        // Define the starting weekday (0 = Sunday, 6 = Saturday)
+        $startOfWeek = Carbon::THURSDAY; // Start the week on Thursday
+        
+        // Loop to generate week ranges for the past 12 weeks
+        for ($i = 0; $i < $numWeeks; $i++) {
+            // Calculate the start and end of the week
+            $from = Carbon::now()->subWeeks($i)->startOfWeek(); // Start of the week (Thursday)
+            $to = Carbon::now()->subWeeks($i)->endOfWeek(); // End of the week (Wednesday)
+        
+            // Format the date range
+            $ymd_week_range = $from->format('Y-m-d') . ',' . $to->format('Y-m-d');
+        
+            // Format the week description (e.g., 'Feb 2 - Jan 25')
+            $weeks[$ymd_week_range] = $from->format('M j') . ' - ' . $to->format('M j');
+            
         }
+        
+        // Add "older" and "future" ranges
+        $older = Carbon::now()->subWeeks($numWeeks )->endOfWeek()->format('Y-m-d') . ',' . 'older';
+        $future = Carbon::now()->addWeeks(1)->startOfWeek()->format('Y-m-d') . ',' . 'future';
+        
+        // Adding "older" and "future" ranges to the weeks array
+        $weeks[$older] = 'Older';
+        $weeks[$future] = 'Future';
+        
+        // Print the weeks array (optional)
+        //dd($weeks);
         return $weeks;
     }
 

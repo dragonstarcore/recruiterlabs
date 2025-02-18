@@ -11,6 +11,8 @@ use App\Http\Controllers\XeroController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\JobController;
+use \Webfox\Xero\Controllers\AuthorizationController;
+use \Webfox\Xero\Controllers\AuthorizationCallbackController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -65,4 +67,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/ga', [HomeController::class, 'getAnalyticsData']);
     Route::get('/jobadder', [\App\Http\Controllers\JobadderController::class, 'jobadder'])->name('jobadder');
     Route::get('/jobadder_data', [\App\Http\Controllers\JobadderController::class, 'get_jobs'])->name('get_jobs');
+ 
+    Route::get('/xero/auth/authorize', AuthorizationController::class)->name('xero.auth.authorize');
+    Route::get('/xero/auth/callback', AuthorizationCallbackController::class)->name('xero.auth.callback');
+
+
+
 });
