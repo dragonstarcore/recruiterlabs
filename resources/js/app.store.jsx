@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import appReducer from "./app.slice";
-import homeReducer from "./pages/home/home.slice";
 import businessReducer from "./pages/business/business.slice";
 import xeroReducer from "./pages/forecast/forecast.slice";
 import staffReducer from "./pages/staff/staff.slice";
@@ -16,7 +15,6 @@ export const store = configureStore({
     reducer: {
         app: appReducer,
         [apiService.reducerPath]: apiService.reducer,
-        home: homeReducer,
         business: businessReducer,
         xero: xeroReducer,
         employee: staffReducer,

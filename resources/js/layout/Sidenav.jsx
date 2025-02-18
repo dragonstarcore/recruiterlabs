@@ -3,11 +3,14 @@ import {
     AppstoreOutlined,
     BarChartOutlined,
     BookOutlined,
+    CloudUploadOutlined,
     CreditCardOutlined,
     DashboardOutlined,
     DeploymentUnitOutlined,
     PoundCircleOutlined,
+    PoundOutlined,
     SettingOutlined,
+    SnippetsOutlined,
     TeamOutlined,
     UserSwitchOutlined,
 } from "@ant-design/icons";
@@ -64,7 +67,7 @@ function Sidenav({ color = "#555555" }) {
                             background: page === "jobs" ? color : "",
                         }}
                     >
-                        {<ApartmentOutlined />}
+                        {<SnippetsOutlined />}
                     </span>
                     <span className="label">My Job </span>
                 </NavLink>
@@ -81,7 +84,7 @@ function Sidenav({ color = "#555555" }) {
                             background: page === "jobshared" ? color : "",
                         }}
                     >
-                        {<ApartmentOutlined />}
+                        {<CloudUploadOutlined />}
                     </span>
                     <span className="label">Job sharing</span>
                 </NavLink>
@@ -91,14 +94,11 @@ function Sidenav({ color = "#555555" }) {
         },
         {
             label: (
-                // <NavLink to="/performance">
-                <NavLink to="/recruiterlabs/jobadder">
+                <NavLink to="/performance">
                     <span
                         className="icon"
                         style={{
-                            background:
-                                page === "recruiterlabs/jobadder" ? color : "",
-                            // background: page === "performance" ? color : "",
+                            background: page === "performance" ? color : "",
                         }}
                     >
                         {<BarChartOutlined />}
@@ -107,8 +107,7 @@ function Sidenav({ color = "#555555" }) {
                 </NavLink>
             ),
             role: [2],
-            // key: "performance",
-            key: "recruiterlabs/jobadder",
+            key: "performance",
         },
         {
             label: (
@@ -119,9 +118,9 @@ function Sidenav({ color = "#555555" }) {
                             background: page === "financeforecast" ? color : "",
                         }}
                     >
-                        {<PoundCircleOutlined />}
+                        {<PoundOutlined />}
                     </span>
-                    <span className="label">Finance and Forecast</span>
+                    <span className="label">Finance & Forecast</span>
                 </NavLink>
             ),
             key: "financeforecast",

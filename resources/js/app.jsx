@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "@ant-design/v5-patch-for-react-19";
 import {
     BrowserRouter as Router,
     Routes,
     Route,
     Navigate,
+    useLocation,
 } from "react-router-dom";
 import { Provider, useSelector } from "react-redux";
 import { ConfigProvider } from "antd";
@@ -53,6 +53,13 @@ const PrivateRoute = ({ children }) => {
     return isAuth ? children : <Navigate to="/login" />;
 };
 
+const RedirectWithParams = ({ to }) => {
+    const location = useLocation();
+    const search = location.search; // get current query parameters
+    
+    return <Navigate to={`${to}${search}`} replace />;
+};
+
 const App = () => {
     return (
         <Provider store={store}>
@@ -75,8 +82,7 @@ const App = () => {
                                                 element={<Business />}
                                             />
                                             <Route
-                                                path="recruiterlabs/jobadder"
-                                                // path="performance"
+                                                path="performance"
                                                 element={<Performance />}
                                             />
                                             <Route
@@ -167,7 +173,18 @@ const App = () => {
                                                 path="profile"
                                                 element={<Profile />}
                                             />
-                                            {/* Redirect any unknown routes to home */}
+                                            <Route
+                                                path="recruiterlabs/jobadder"
+                                                element={
+                                                    <RedirectWithParams to="/performance" />
+                                                }
+                                            />
+                                            <Route
+                                                path="jobadder"
+                                                element={
+                                                    <Navigate to="/performance" />
+                                                }
+                                            />
                                             <Route
                                                 path="*"
                                                 element={
