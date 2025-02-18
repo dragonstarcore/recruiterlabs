@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Card, Typography } from "antd";
 
 import JobContainer from "./home.job";
+import HomeGoogle from "./home.google";
 
 const { Paragraph } = Typography;
 
@@ -13,6 +14,7 @@ const Dashboard = () => {
         return (
             <div className="dash">
                 <JobContainer />
+                <HomeGoogle />
             </div>
         );
 

@@ -17,7 +17,7 @@ export default function PerformanceHomeContainer({ data = {} }) {
 
     const [dateRange, setDateRange] = useState([null, null]);
 
-    const [filterType, setFilterType] = useState("all");
+    const [filterType, setFilterType] = useState("month");
 
     const [graphData, setGraphData] = useState({
         jobs: [],
