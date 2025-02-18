@@ -70,13 +70,13 @@ return [
          * Unless you wish to change the default behaviour you should not need to
          * change this
          ************************************************************************/
-        'redirect_uri'               => 'xero.auth.callback',
+        'redirect_uri'               => env('XERO_REDIRECT_URL'),
 
         /************************************************************************
          * If the 'redirect_uri' is not a route name, but rather a full url set
          * this to true and we won't wrap it in `route()`
          ************************************************************************/
-        'redirect_full_url'          => false,
+        'redirect_full_url'          => true,
 
         /************************************************************************
          * Urls for Xero's Oauth integration, you shouldn't need to change these
