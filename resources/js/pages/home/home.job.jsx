@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Card, Spin } from "antd";
+import { Card, Flex, Spin } from "antd";
 import { toast } from "react-toastify";
 
 import PerformanceHomeContainer from "../performance/performance.home";
@@ -30,7 +30,9 @@ export default function Performance() {
     }, [error]);
 
     return isLoading ? (
-        <Spin size="large" fullscreen />
+        <Flex justify="center" align="center">
+            <Spin />
+        </Flex>
     ) : data?.ok ? (
         <PerformanceHomeContainer data={data.data} />
     ) : (
