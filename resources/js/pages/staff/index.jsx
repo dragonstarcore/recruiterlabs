@@ -142,15 +142,23 @@ const MyStaffPage = ({}) => {
             </Card>
 
             {/* Staff List Table */}
-            <Card style={{ marginTop: "20px" }} title="My Staff List">
-                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
-                    <Col span={6}>
-                        <Input
-                            placeholder="Search..."
-                            addonBefore={<SearchOutlined />}
-                        />
-                    </Col>
-                </Flex>
+            <Card
+                style={{ marginTop: "20px" }}
+                title="My Staff List"
+                extra={
+                    <Flex
+                        justify="flex-end"
+                        style={{ marginBottom: "10px", width: "100%" }}
+                    >
+                        <Col span={24}>
+                            <Input
+                                placeholder="Search..."
+                                addonBefore={<SearchOutlined />}
+                            />
+                        </Col>
+                    </Flex>
+                }
+            >
                 <Table
                     columns={columns}
                     dataSource={staffData.employees.map((employee) => ({
@@ -167,15 +175,20 @@ const MyStaffPage = ({}) => {
             </Card>
 
             {/* HR Documents Table */}
-            <Card style={{ marginTop: "20px" }} title="General Documents">
-                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
-                    <Col span={6}>
-                        <Input
-                            placeholder="Search..."
-                            addonBefore={<SearchOutlined />}
-                        />
-                    </Col>
-                </Flex>
+            <Card
+                style={{ marginTop: "20px" }}
+                title="General Documents"
+                extra={
+                    <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
+                        <Col span={24}>
+                            <Input
+                                placeholder="Search..."
+                                addonBefore={<SearchOutlined />}
+                            />
+                        </Col>
+                    </Flex>
+                }
+            >
                 <Table
                     columns={[
                         {

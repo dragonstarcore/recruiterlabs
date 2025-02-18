@@ -570,9 +570,9 @@ class UserController extends Controller
             $client_details->account_number = $request->account_number;
             $client_details->iban  = $request->iban;
             $client_details->swift_code = $request->swift_code;
-
+             
             // Start: TO save user(client) logo
-            if ($request->logo != null) {
+            if ($request->logo != null && $request->logo!='undefined') {
                 $dir = public_path('client_documents/');
                 if (!file_exists($dir)) {
                     mkdir($dir, 0777, true);
