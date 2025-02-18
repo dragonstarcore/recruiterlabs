@@ -6,12 +6,18 @@ const getToken = () => {
     return localStorage.getItem("token");
 };
 
+const getCsrfToken = () => {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+};
+
 const customFetchBaseQuery = async (args, api, extraOptions) => {
     const baseResponse = await fetchBaseQuery({
         baseUrl: URI,
         prepareHeaders: (headers) => {
             const token = getToken();
+            const csrfToken = getCsrfToken();
             if (token) headers.set("Authorization", `Bearer ${token}`);
+            if (csrfToken) headers.set("X-CSRF-TOKEN", csrfToken);
             return headers;
         },
     })(args, api, extraOptions);
