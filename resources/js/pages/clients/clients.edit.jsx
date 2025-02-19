@@ -9,9 +9,7 @@ import {
 import {
     Form,
     Input,
-    DatePicker,
     Button,
-    Table,
     Row,
     Col,
     Flex,
@@ -26,12 +24,7 @@ import {
     message,
 } from "antd";
 
-import {
-    UploadOutlined,
-    EyeOutlined,
-    SearchOutlined,
-    DeleteOutlined,
-} from "@ant-design/icons";
+import { UploadOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import {
     useFetchClientQuery,
@@ -47,16 +40,11 @@ const MyStaffPage = ({}) => {
     const { data, isLoading, isSuccess } = useFetchClientQuery(id, {
         refetchOnMountOrArgChange: true,
     });
-    const user = data?.user;
     const [isCommunityChecked, setIsCommunityChecked] = useState(false);
 
-    const [
-        updateClient,
-        { isLoading: isLoadingUpdate, isSuccess: isUpdatingSuccess },
-    ] = useUpdateClientMutation();
+    const [updateClient] = useUpdateClientMutation();
 
     const [form] = Form.useForm();
-    const [file, setFile] = useState(null);
     const [logofileList, setLogofileList] = useState([]);
     const [docFile, setDocFile] = useState([]);
     const handleCommunityChange = (e) => {
@@ -73,12 +61,7 @@ const MyStaffPage = ({}) => {
         }
     };
 
-    const handleDocumentRequest = async ({
-        file,
-        fileList,
-        onSuccess,
-        onError,
-    }) => {
+    const handleDocumentRequest = async ({ file, onSuccess }) => {
         try {
             setDocFile([...docFile, file]);
             onSuccess();
@@ -170,73 +153,7 @@ const MyStaffPage = ({}) => {
             console.log(err);
         }
     };
-    const showIcon = (file) => {
-        console.log("file", file);
-        if (file.file_ext == "pdf" || file.file_ext == "doc")
-            return (
-                <>
-                    <Image
-                        src={"/assets/images/" + file.file_ext + ".png"}
-                        className="rounded-pill"
-                        width={70}
-                        height={50}
-                        alt="File Thumbnail"
-                    />
-                    <>{file.file}</>
-                </>
-            );
-        if (file?.type == "application/pdf") {
-            return (
-                <>
-                    <Image
-                        src={"/assets/images/pdf.png"}
-                        className="rounded-pill"
-                        width={70}
-                        height={50}
-                        alt="File Thumbnail"
-                    />
-                    <>{file.file}</>
-                </>
-            );
-        }
-        if (file?.type == "application/doc") {
-            return (
-                <>
-                    <Image
-                        src={"/assets/images/doc.png"}
-                        className="rounded-pill"
-                        width={70}
-                        height={50}
-                        alt="File Thumbnail"
-                    />
-                    <>{file.file}</>
-                </>
-            );
-        }
-        if (file?.id)
-            return (
-                <Image
-                    src={
-                        "/" + file?.file ||
-                        URL.createObjectURL(file?.originFileObj)
-                    }
-                    className="rounded-pill"
-                    width={70}
-                    height={50}
-                    alt="File Thumbnail"
-                />
-            );
-        if (file?.uid)
-            return (
-                <Image
-                    src={URL.createObjectURL(file?.originFileObj)}
-                    className="rounded-pill"
-                    width={70}
-                    height={50}
-                    alt="File Thumbnail"
-                />
-            );
-    };
+
     if (isLoading) return <Spin />;
     return (
         <Card title="Staff Details">
@@ -305,8 +222,12 @@ const MyStaffPage = ({}) => {
                             ]}
                         >
                             <Select placeholder="Select Status">
-                                <Option value={1}>Active</Option>
-                                <Option value={0}>Inactive</Option>
+                                <Option key="1" value={1}>
+                                    Active
+                                </Option>
+                                <Option key="0" value={0}>
+                                    Inactive
+                                </Option>
                             </Select>
                         </Form.Item>
                     </Col>
@@ -413,12 +334,9 @@ const MyStaffPage = ({}) => {
                                     <div>Upload</div>
                                 </div>
                             </Upload>
-                            <small>[ Preferable size 500 × 450 px ]</small>
                         </Form.Item>
                     </Col>
                 </Row>
-
-                <Form.Item label="Bank Details"></Form.Item>
 
                 <Row gutter={16}>
                     <Col span={12}>

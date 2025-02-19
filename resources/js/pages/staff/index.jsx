@@ -6,10 +6,8 @@ import {
     Table,
     Input,
     Button,
-    Switch,
     Avatar,
     Typography,
-    Space,
     message,
     Flex,
 } from "antd";
@@ -21,20 +19,16 @@ import {
     FileAddOutlined,
 } from "@ant-design/icons";
 import { Calendar, momentLocalizer } from "react-big-calendar"; // or fullcalendar-react
-import { format, parse, startOfWeek, getDay } from "date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // for react-big-calendar
 import moment from "moment";
 
-import { useSelector } from "react-redux";
 import { useFetchStaffQuery, useFetchFullEventsQuery } from "./staff.service";
 const localizer = momentLocalizer(moment);
-const { Title } = Typography;
 
 const MyStaffPage = ({}) => {
     const navigate = useNavigate();
     const { data: staffData, isLoading } = useFetchStaffQuery();
     const { data: calendarData } = useFetchFullEventsQuery();
-    console.log(staffData);
 
     const handleSwitchChange = (checked) => {
         message.info(
@@ -170,7 +164,7 @@ const MyStaffPage = ({}) => {
                         id: employee.id,
                     }))}
                     pagination={false}
-                    rowKey="key"
+                    rowKey="id"
                 />
             </Card>
 

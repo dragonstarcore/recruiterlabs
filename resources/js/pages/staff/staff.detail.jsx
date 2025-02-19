@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    useParams,
-} from "react-router-dom";
+import { BrowserRouter as Router, useParams } from "react-router-dom";
 
 import {
     Form,
@@ -16,7 +11,6 @@ import {
     Col,
     Flex,
     Card,
-    Upload,
     Typography,
     Spin,
 } from "antd";

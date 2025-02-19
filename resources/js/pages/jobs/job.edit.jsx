@@ -58,7 +58,6 @@ export default function Jobs({}) {
 
     const handleFormSubmit = async () => {
         const jobValue = form.getFieldsValue();
-        console.log(jobValue);
 
         try {
             const { data } = await editJob({
@@ -66,7 +65,6 @@ export default function Jobs({}) {
                 id,
                 start_date: jobValue.start_date.format("YYYY-MM-DD"),
             });
-            // console.log(data?.job);
             dispatch(
                 setJob(
                     jobs.map((e) => (e.id != id ? e : { ...e, ...data.job }))
@@ -79,10 +77,6 @@ export default function Jobs({}) {
         } catch (err) {
             console.log(err);
         }
-    };
-    const handleDateChange = (date, dateString) => {
-        console.log("Selected Date:", date);
-        console.log("Formatted Date:", dateString);
     };
 
     useEffect(() => {

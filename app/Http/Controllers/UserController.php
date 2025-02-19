@@ -329,7 +329,29 @@ class UserController extends Controller
         }
         return response()->json(['user' => $user ], 200);
     }
+    public function search(Request $request)
+        {
+            // Get the search query from the request
+            $search_client = $request->search_client; // assuming 'title' is the search term you are sending from the frontend
 
+            // Check if the authenticated user's role is '1' (admin or superuser)
+             
+
+                $query = User::query();
+                
+                // If there's a search query, filter tickets by title
+                if ($search_client) {
+                    $query->where('name', 'like', '%' . $search_client . '%');
+                }
+                
+                $users = $query->with('user_details', 'user_documents', 'xero_details', 'jobadder_details')->get();
+                
+                return response()->json(['users' => $users], 200);
+           
+           
+ 
+             
+        }
     // public function update_client_business(Request $request, string $id)
     // {
     //     // dd($request->toArray());

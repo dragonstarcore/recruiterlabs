@@ -1,42 +1,27 @@
 import React, { useState } from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
     Form,
     Input,
-    DatePicker,
     Button,
-    Table,
     Row,
     Col,
     Flex,
-    Card,
     Typography,
     Spin,
     Select,
     Checkbox,
     Upload,
-    Image,
     Tabs,
     message,
 } from "antd";
 import { useNavigate } from "react-router-dom";
-import {
-    UploadOutlined,
-    EyeOutlined,
-    SearchOutlined,
-    DeleteOutlined,
-} from "@ant-design/icons";
+import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { setClient } from "./clients.slice";
 import { useSelector, useDispatch } from "react-redux";
 const { Option } = Select;
-const { TabPane } = Tabs;
-const { Title, Text } = Typography;
+
 import { useCreateClientMutation } from "./clients.service";
 import ShowIcon from "../staff/showIcon";
 import "./style.css";
@@ -100,12 +85,7 @@ const MyStaffPage = ({}) => {
         }
     };
 
-    const handleDocumentRequest = async ({
-        file,
-        fileList,
-        onSuccess,
-        onError,
-    }) => {
+    const handleDocumentRequest = async ({ onSuccess }) => {
         try {
             onSuccess();
         } catch (err) {
@@ -127,9 +107,14 @@ const MyStaffPage = ({}) => {
             setFileList(newFileList);
         }
     };
-    const handleDeleteDocument = (uid) => {
-        console.log(uid);
-        setFileList((fileList) => fileList.filter((f) => f.uid !== uid));
+    const handleDeleteDocument = (file) => {
+        setFileList(
+            fileList.filter((f) => {
+                const deleteIdentifier = file.id || file.uid;
+                const fileIdentifier = f.id || f.uid;
+                return fileIdentifier !== deleteIdentifier;
+            })
+        );
     };
     if (isUploading)
         return (
@@ -184,8 +169,12 @@ const MyStaffPage = ({}) => {
                         ]}
                     >
                         <Select placeholder="Select Status">
-                            <Option value="1">Active</Option>
-                            <Option value="0">Inactive</Option>
+                            <Option key="1" value="1">
+                                Active
+                            </Option>
+                            <Option key="0" value="0">
+                                Inactive
+                            </Option>
                         </Select>
                     </Form.Item>
                 </Col>
@@ -333,42 +322,52 @@ const MyStaffPage = ({}) => {
             </Row>
 
             <Form.Item label="API Details">
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="Xero" key="1">
-                        <Row gutter={16}>
-                            <Col span={12}>
-                                <Form.Item
-                                    name="xero_client_id"
-                                    label="Client Id"
-                                >
-                                    <Input placeholder="Client Id" />
-                                </Form.Item>
-                            </Col>
+                <Tabs
+                    defaultActiveKey="1"
+                    items={[
+                        {
+                            key: "1",
+                            label: "Xero",
+                            children: (
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="xero_client_id"
+                                            label="Client Id"
+                                        >
+                                            <Input placeholder="Client Id" />
+                                        </Form.Item>
+                                    </Col>
 
-                            <Col span={12}>
-                                <Form.Item
-                                    name="xero_client_secret"
-                                    label="Client Secret"
-                                >
-                                    <Input placeholder="Client Secret" />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </TabPane>
-
-                    <TabPane tab="Google Analytics" key="2">
-                        <Row gutter={16}>
-                            <Col span={12}>
-                                <Form.Item
-                                    name="analytics_view_id"
-                                    label="Analytics Property Id"
-                                >
-                                    <Input placeholder="Property Id" />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                </Tabs>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="xero_client_secret"
+                                            label="Client Secret"
+                                        >
+                                            <Input placeholder="Client Secret" />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            ),
+                        },
+                        {
+                            key: "2",
+                            label: "Google Analytics",
+                            children: (
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="analytics_view_id"
+                                            label="Analytics Property Id"
+                                        >
+                                            <Input placeholder="Property Id" />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            ),
+                        },
+                    ]}
+                ></Tabs>
             </Form.Item>
 
             <Row gutter={16}>
@@ -412,11 +411,15 @@ const MyStaffPage = ({}) => {
                                 style={{ width: "100%", margin: 0 }}
                                 placeholder="Select Document Type"
                             >
-                                <Option value="4">Marketing & brand</Option>
-                                <Option value="5">
+                                <Option key="4" value="4">
+                                    Marketing & brand
+                                </Option>
+                                <Option key="5" value="5">
                                     Legal business documentation
                                 </Option>
-                                <Option value="6">Templates</Option>
+                                <Option key="6" value="6">
+                                    Templates
+                                </Option>
                             </Select>
                         </Form.Item>
                     </Col>
@@ -425,7 +428,7 @@ const MyStaffPage = ({}) => {
                         <Button
                             type="default"
                             icon={<DeleteOutlined />}
-                            onClick={() => handleDeleteDocument(file.uid)}
+                            onClick={() => handleDeleteDocument(file)}
                             color="danger"
                             variant="solid"
                             className="upload__img-close3"

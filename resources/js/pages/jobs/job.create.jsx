@@ -56,11 +56,9 @@ export default function Tickets({}) {
 
     const handleFormSubmit = async () => {
         const ticketValue = form.getFieldsValue();
-        console.log(ticketValue);
 
         try {
             const { data } = await editTicket({ ...ticketValue, id });
-            // console.log(data?.ticket);
             dispatch(
                 setTicket(
                     tickets.map((e) => (e.id != id ? e : { ...e, ticketValue }))

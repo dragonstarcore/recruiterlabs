@@ -17,7 +17,7 @@ class TicketController extends Controller
     public function index()
     {
         if (Auth::user()->role_type==1) {
-            $tickets = Ticket::all()->with('user');
+            $tickets = Ticket::where('user_id',Auth::user()->id)->get();
             return response()->json(['tickets'=>$tickets],200);
         } elseif (Auth::user()->role_type==2) {
             $tickets = Ticket::where('user_id',Auth::user()->id)->get();

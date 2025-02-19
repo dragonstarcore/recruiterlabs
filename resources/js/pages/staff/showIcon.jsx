@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Image } from "antd";
-import { useNavigate, useParams } from "react-router-dom";
 
 const ShowIcon = (file) => {
-    console.log("file", file);
     if (file.file_ext == "pdf")
         return (
             <>

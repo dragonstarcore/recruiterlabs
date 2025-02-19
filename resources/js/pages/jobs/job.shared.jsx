@@ -85,8 +85,6 @@ export default function Jobs() {
     const { search_title, setSearch_title } = useState();
     const [questions, setQuestions] = useState();
     const handleSubmit = async () => {
-        console.log(job_id);
-
         await applyJob({ job_id, user_id, questions });
 
         setIsModalOpen(false); // Close the modal after submission
@@ -128,7 +126,6 @@ export default function Jobs() {
         setSalary(e.target.value);
     };
     const OnSearchStartDate = (value) => {
-        console.log(moment(value).format("YYYY-MM-DD"));
         setStartDate(moment(value).format("YYYY-MM-DD"));
     };
     const OnJobTypeChange = (value) => {
@@ -139,7 +136,6 @@ export default function Jobs() {
     };
 
     const Onfilter = async () => {
-        console.log(searchTitle);
         try {
             const filters = {
                 job_title: searchTitle,

@@ -8,13 +8,10 @@ const ChartContainer = ({
     YaxisTitle,
     color,
 }) => {
-    console.log(chartData);
-
     const formatData = (data = []) => {
         if (!data) return;
         const names = [];
         const values = [];
-        console.log(data);
         // Ensure data exists and contains 'name' and 'y'
         Object.values(data).forEach((item) => {
             if (item && item.name && item.y !== undefined) {

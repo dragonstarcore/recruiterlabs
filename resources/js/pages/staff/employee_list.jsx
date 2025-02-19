@@ -6,11 +6,8 @@ import {
     Table,
     Input,
     Button,
-    Switch,
     Avatar,
     Typography,
-    Space,
-    Image,
     message,
     Flex,
     Form,
@@ -19,14 +16,12 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import {
     EyeOutlined,
-    FileOutlined,
     SearchOutlined,
     FileAddOutlined,
     UploadOutlined,
     DeleteOutlined,
 } from "@ant-design/icons";
 import { Calendar, momentLocalizer } from "react-big-calendar"; // or fullcalendar-react
-import { format, parse, startOfWeek, getDay } from "date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // for react-big-calendar
 import moment from "moment";
 
@@ -41,7 +36,6 @@ import {
 } from "./staff.service";
 import { setEmployee } from "./staff.slice";
 const localizer = momentLocalizer(moment);
-const { Title } = Typography;
 import ShowIcon from "./showIcon";
 
 const Employee_listPage = ({}) => {
@@ -61,10 +55,7 @@ const Employee_listPage = ({}) => {
     const { data: calendarData } = useFetchEventsQuery(user_id, {
         refetchOnMountOrArgChange: true,
     });
-    const [
-        addDocument,
-        { isLoading: isLoadingUpdate, isSuccess: isUpdatingSuccess },
-    ] = useAddDocumentMutation();
+    const [addDocument] = useAddDocumentMutation();
     const [deleteStaff] = useDeleteStaffMutation();
 
     const [searchEmployee] = useSearchEmployeeMutation();
@@ -88,11 +79,7 @@ const Employee_listPage = ({}) => {
         });
         dispatch(setEmployee(data?.employee_list));
     };
-    const handleSwitchChange = (checked) => {
-        message.info(
-            `Calendar view is now ${checked ? "enabled" : "disabled"}`
-        );
-    };
+
     const OnDeleteStaff = async (id) => {
         try {
             const result = await deleteStaff({ user_id, id });
@@ -191,8 +178,6 @@ const Employee_listPage = ({}) => {
         setFileList(updatedList);
     };
     // Transform employee data for the table
-    const [currentPage, setCurrentPage] = useState(1); // current page number
-    const [pageSize, setPageSize] = useState(5); // number of items per page
     useEffect(() => {
         if (isSuccess) {
             setFileList(employeeData?.user?.user_hr_documents);
@@ -210,14 +195,9 @@ const Employee_listPage = ({}) => {
     };
     if (isLoading) return <>Loading</>;
     const totalCount = employeeData.employees?.length || 0;
-    const onPageChange = (page, pageSize) => {
-        setCurrentPage(page); // Update current page
-        setPageSize(pageSize); // Update page size if the user changes it
-    };
     const onFinish = async (values, id) => {
         try {
             const formData = new FormData();
-            console.log("fileList", fileList);
             fileList.map((file, index) => {
                 if (file.id) {
                     formData.append("old_images[]", file.id);
@@ -245,7 +225,12 @@ const Employee_listPage = ({}) => {
         }
     };
 
-    if (isLoading) return <>Loading</>;
+    if (isLoading)
+        return (
+            <Flex justify="center" align="center">
+                <Spin />
+            </Flex>
+        );
 
     return (
         <div className="content">
@@ -287,24 +272,24 @@ const Employee_listPage = ({}) => {
                 style={{ marginTop: "20px" }}
                 title="My Staff List"
                 extra={
-                    <Button
-                        type="primary"
-                        onClick={() => navigate("/staff/create/" + user_id)}
-                    >
-                        Create
-                    </Button>
+                    <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
+                        <Col span={24} style={{ marginRight: "20px" }}>
+                            <Input
+                                placeholder="Search..."
+                                addonBefore={<SearchOutlined />}
+                                value={employee_search}
+                                onChange={(e) => OnSearchEmployee(e)}
+                            />
+                        </Col>
+                        <Button
+                            type="primary"
+                            onClick={() => navigate("/staff/create/" + user_id)}
+                        >
+                            Create
+                        </Button>
+                    </Flex>
                 }
             >
-                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
-                    <Col span={6}>
-                        <Input
-                            placeholder="Search..."
-                            addonBefore={<SearchOutlined />}
-                            value={employee_search}
-                            onChange={(e) => OnSearchEmployee(e)}
-                        />
-                    </Col>
-                </Flex>
                 <Table
                     columns={columns}
                     dataSource={employee_list.map((employee) => ({
@@ -316,22 +301,27 @@ const Employee_listPage = ({}) => {
                         id: employee.id,
                     }))}
                     pagination={false}
-                    rowKey="key"
+                    rowKey="id"
                 />
             </Card>
 
             {/* HR Documents Table */}
-            <Card style={{ marginTop: "20px" }} title="General Documents">
-                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
-                    <Col span={6}>
-                        <Input
-                            placeholder="Search..."
-                            addonBefore={<SearchOutlined />}
-                            value={str_search}
-                            onChange={(e) => OnSearchStr(e)}
-                        />
-                    </Col>
-                </Flex>
+            <Card
+                style={{ marginTop: "20px" }}
+                title="General Documents"
+                extra={
+                    <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
+                        <Col span={24}>
+                            <Input
+                                placeholder="Search..."
+                                addonBefore={<SearchOutlined />}
+                                value={str_search}
+                                onChange={(e) => OnSearchStr(e)}
+                            />
+                        </Col>
+                    </Flex>
+                }
+            >
                 <Form
                     layout="vertical"
                     form={form}

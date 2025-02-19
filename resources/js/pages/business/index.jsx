@@ -15,6 +15,7 @@ import {
     Image,
     Collapse,
     Tabs,
+    Flex,
 } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
@@ -22,7 +23,6 @@ const { Header } = Layout;
 const { Option } = Select;
 
 const { Panel } = Collapse;
-const { TabPane } = Tabs;
 
 import {
     useFetchBusinessQuery,
@@ -133,122 +133,158 @@ export default function Business() {
                         </Row>
                     </Col>
                     <Col span={18}>
-                        <Tabs defaultActiveKey="1">
-                            <TabPane tab="Company Details" key="1">
-                                <Row
-                                    gutter={[10, 20]}
-                                    style={{
-                                        borderRadius: "8px",
-                                    }}
-                                >
-                                    <Col span={6}>
-                                        <Text>Company Name:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.company_name}
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>Company Number:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.company_number}
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>Registered Address:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {
-                                                user?.user_details
-                                                    ?.registered_address
-                                            }
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>VAT Number:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.vat_number}
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>Authentication Code:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {
-                                                user?.user_details
-                                                    ?.authentication_code
-                                            }
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>Company UTR:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.company_utr}
-                                        </Text>
-                                    </Col>
-                                </Row>
-                            </TabPane>
-
-                            <TabPane tab="Bank Details" key="2">
-                                <Row
-                                    gutter={[10, 20]}
-                                    style={{
-                                        borderRadius: "8px",
-                                        marginTop: "20px",
-                                    }}
-                                >
-                                    <Col span={6}>
-                                        <Text>Bank Name:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.bank_name}
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>Sort Code:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.sort_code}
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>Account Number:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.account_number}
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>IBAN:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.iban}
-                                        </Text>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Text>Swift Code:</Text>
-                                    </Col>
-                                    <Col span={18}>
-                                        <Text strong>
-                                            {user?.user_details?.swift_code}
-                                        </Text>
-                                    </Col>
-                                </Row>{" "}
-                            </TabPane>
-                        </Tabs>
+                        <Tabs
+                            defaultActiveKey="1"
+                            items={[
+                                {
+                                    key: "1",
+                                    label: "Company Details",
+                                    children: (
+                                        <Row
+                                            gutter={[10, 20]}
+                                            style={{
+                                                borderRadius: "8px",
+                                            }}
+                                        >
+                                            <Col span={6}>
+                                                <Text>Company Name:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.company_name
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>Company Number:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.company_number
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>Registered Address:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.registered_address
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>VAT Number:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.vat_number
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>
+                                                    Authentication Code:
+                                                </Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.authentication_code
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>Company UTR:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.company_utr
+                                                    }
+                                                </Text>
+                                            </Col>
+                                        </Row>
+                                    ),
+                                },
+                                {
+                                    key: 2,
+                                    label: "Bank Details",
+                                    children: (
+                                        <Row
+                                            gutter={[10, 20]}
+                                            style={{
+                                                borderRadius: "8px",
+                                                marginTop: "20px",
+                                            }}
+                                        >
+                                            <Col span={6}>
+                                                <Text>Bank Name:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.bank_name
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>Sort Code:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.sort_code
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>Account Number:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.account_number
+                                                    }
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>IBAN:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {user?.user_details?.iban}
+                                                </Text>
+                                            </Col>
+                                            <Col span={6}>
+                                                <Text>Swift Code:</Text>
+                                            </Col>
+                                            <Col span={18}>
+                                                <Text strong>
+                                                    {
+                                                        user?.user_details
+                                                            ?.swift_code
+                                                    }
+                                                </Text>
+                                            </Col>
+                                        </Row>
+                                    ),
+                                },
+                            ]}
+                        ></Tabs>
                     </Col>
                 </Row>
 
@@ -273,9 +309,11 @@ export default function Business() {
                                     allowClear
                                     onChange={(value) => OnChangeSelect(value)}
                                 >
-                                    <Option value="">All</Option>
+                                    <Option key="" value="">
+                                        All
+                                    </Option>
                                     {documents.map((doc) => (
-                                        <Option value={doc.id}>
+                                        <Option key={doc.id} value={doc.id}>
                                             {doc.title}
                                         </Option>
                                     ))}
@@ -285,217 +323,216 @@ export default function Business() {
                     </Col>
                     <Col span={8}></Col>
                     <Col span={6}>
-                        <Form.Item name="title_search">
-                            <Input
-                                value={search_title}
-                                onChange={(e) => OnChangeTitle(e)}
-                                placeholder="Search..."
-                                addonBefore={<SearchOutlined />}
-                            />
-                        </Form.Item>
+                        <Form form={form}>
+                            <Form.Item name="title_search">
+                                <Input
+                                    value={search_title}
+                                    onChange={(e) => OnChangeTitle(e)}
+                                    placeholder="Search..."
+                                    addonBefore={<SearchOutlined />}
+                                />
+                            </Form.Item>
+                        </Form>
                     </Col>
                 </Row>
 
-                <Table
-                    className="employee_list"
-                    style={{
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                        borderRadius: "8px",
-                    }}
-                    bordered
-                    rowClassName="table-row-hover"
-                    columns={[
-                        {
-                            title: "#",
-                            dataIndex: "index",
-                            key: "index",
-                            render: (text, record, index) => index + 1,
-                        },
-                        {
-                            title: "Image",
-                            dataIndex: "file",
-                            key: "file",
-                            render: (file) => {
-                                let image;
-                                if (file) {
-                                    const extension = file.split(".").pop();
-                                    if (extension === "pdf") {
-                                        image = "/assets/images/pdf.png";
-                                    } else if (
-                                        ["doc", "docx"].includes(extension)
-                                    ) {
-                                        image = "/assets/images/doc.jpg";
-                                    } else {
-                                        image = `/public/${file}`;
-                                    }
-                                } else {
-                                    image = "/assets/images/default_user.jpg";
-                                }
-                                return (
-                                    <Image
-                                        src={image}
-                                        width={36}
-                                        height={36}
-                                        style={{ borderRadius: "50%" }}
-                                        alt=""
-                                        preview={false}
-                                    />
-                                );
+                {!isJobadderLoading ? (
+                    <Table
+                        className="employee_list"
+                        style={{
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                            borderRadius: "8px",
+                        }}
+                        bordered
+                        rowClassName="table-row-hover"
+                        rowKey="id"
+                        columns={[
+                            {
+                                title: "#",
+                                key: "index",
+                                render: (text, record, index) => index + 1,
                             },
-                        },
-                        {
-                            title: "Title",
-                            dataIndex: "title",
-                            key: "title",
-                            sorter: (a, b) => a.title.localeCompare(b.title),
-
-                            filterDropdown: ({
-                                setSelectedKeys,
-                                selectedKeys,
-                                confirm,
-                                clearFilters,
-                            }) => (
-                                <div style={{ padding: 8 }}>
-                                    <Input
-                                        value={selectedKeys[0]}
-                                        onChange={(e) =>
-                                            setSelectedKeys(
-                                                e.target.value
-                                                    ? [e.target.value]
-                                                    : []
-                                            )
+                            {
+                                title: "Image",
+                                dataIndex: "file",
+                                key: "file",
+                                render: (file) => {
+                                    let image;
+                                    if (file) {
+                                        const extension = file.split(".").pop();
+                                        if (extension === "pdf") {
+                                            image = "/assets/images/pdf.png";
+                                        } else if (
+                                            ["doc", "docx"].includes(extension)
+                                        ) {
+                                            image = "/assets/images/doc.jpg";
+                                        } else {
+                                            image = `/public/${file}`;
                                         }
-                                        placeholder="Search by name"
-                                        style={{
-                                            width: 188,
-                                            marginBottom: 8,
-                                            display: "block",
-                                        }}
-                                    />
-                                    <Button
-                                        type="primary"
-                                        size="small"
-                                        onClick={() => confirm()}
-                                        style={{ marginRight: 8 }}
-                                    >
-                                        Search
-                                    </Button>
-                                    <Button
-                                        onClick={() => clearFilters()}
-                                        size="small"
-                                        style={{ marginRight: 8 }}
-                                    >
-                                        Reset
-                                    </Button>
-                                </div>
-                            ),
-                            onFilter: (value, record) =>
-                                record.title
-                                    .toLowerCase()
-                                    .includes(value.toLowerCase()), // Filter function for name
-
-                            render: (title) =>
-                                title
-                                    ? title.charAt(0).toUpperCase() +
-                                      title.slice(1)
-                                    : "",
-                        },
-                        {
-                            title: "Type",
-                            dataIndex: "type_id",
-                            key: "type_id",
-                            sorter: (a, b) => a.type_id - b.type_id,
-                            render: (type_id) => {
-                                if (type_id == "4") return "Marketing & brand";
-                                if (type_id == "5")
-                                    return "Legal business documentation";
-                                if (type_id == "6") return "Templates";
-                                return "";
+                                    } else {
+                                        image =
+                                            "/assets/images/default_user.jpg";
+                                    }
+                                    return (
+                                        <Image
+                                            src={image}
+                                            width={36}
+                                            height={36}
+                                            style={{ borderRadius: "50%" }}
+                                            alt=""
+                                            preview={false}
+                                        />
+                                    );
+                                },
                             },
-                        },
-                        {
-                            title: "View",
-                            dataIndex: "file",
-                            key: "view",
-                            render: (file) =>
-                                file ? (
-                                    <Button
-                                        type="primary"
-                                        size="small"
-                                        href={`https://www.recstack.co/public/${file}`}
-                                        target="_blank"
-                                        icon={<EyeOutlined />}
-                                    >
-                                        View
-                                    </Button>
-                                ) : null,
-                        },
-                    ]}
-                    dataSource={user?.user_documents}
-                    pagination={{
-                        current: currentPage, // Current page number
-                        pageSize: pageSize, // Number of items per page
-                        total: totalCount, // Total number of items
-                        onChange: onPageChange,
-                        showSizeChanger: true, // Show size changer dropdown (optional)
-                        pageSizeOptions: ["5", "10", "20", "50"], // Page size options
-                    }}
-                    scroll={{ x: true }}
-                />
+                            {
+                                title: "Title",
+                                dataIndex: "title",
+                                key: "title",
+                                sorter: (a, b) =>
+                                    a.title.localeCompare(b.title),
+
+                                render: (title) =>
+                                    title
+                                        ? title.charAt(0).toUpperCase() +
+                                          title.slice(1)
+                                        : "",
+                            },
+                            {
+                                title: "Type",
+                                dataIndex: "type_id",
+                                key: "type_id",
+                                sorter: (a, b) => a.type_id - b.type_id,
+                                render: (type_id) => {
+                                    if (type_id == "4")
+                                        return "Marketing & brand";
+                                    if (type_id == "5")
+                                        return "Legal business documentation";
+                                    if (type_id == "6") return "Templates";
+                                    return "";
+                                },
+                            },
+                            {
+                                title: "View",
+                                dataIndex: "file",
+                                key: "view",
+                                render: (file) =>
+                                    file ? (
+                                        <Button
+                                            type="primary"
+                                            size="small"
+                                            href={`https://www.recstack.co/public/${file}`}
+                                            target="_blank"
+                                            icon={<EyeOutlined />}
+                                        >
+                                            View
+                                        </Button>
+                                    ) : null,
+                            },
+                        ]}
+                        dataSource={user?.user_documents}
+                        pagination={{
+                            current: currentPage, // Current page number
+                            pageSize: pageSize, // Number of items per page
+                            total: totalCount, // Total number of items
+                            onChange: onPageChange,
+                            showSizeChanger: true, // Show size changer dropdown (optional)
+                            pageSizeOptions: ["5", "10", "20", "50"], // Page size options
+                        }}
+                        scroll={{ x: true }}
+                    />
+                ) : (
+                    <Flex justify="center">
+                        <Spin size="large" />
+                    </Flex>
+                )}
             </Card>
             <div style={{ marginTop: "10px" }}>
-                <Collapse defaultActiveKey={["1"]}>
-                    <Panel header="API Details" key="1">
-                        <Card>
-                            <Tabs defaultActiveKey="1">
-                                <TabPane tab="Xero" key="1">
-                                    <Row gutter={16}>
-                                        <Col span={6}>
-                                            <label>Client Id:</label>
-                                        </Col>
-                                        <Col span={18}>
-                                            <Text>
-                                                {user?.xero_details
-                                                    ?.client_id || "N/A"}
-                                            </Text>
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={16}
-                                        style={{ marginTop: "10px" }}
-                                    >
-                                        <Col span={6}>
-                                            <label>Client Secret:</label>
-                                        </Col>
-                                        <Col span={18}>
-                                            <Text>
-                                                {user?.xero_details
-                                                    ?.client_secret || "N/A"}
-                                            </Text>
-                                        </Col>
-                                    </Row>
-                                </TabPane>
-
-                                <TabPane tab="Google Analytics" key="2">
-                                    <Row gutter={16}>
-                                        <Col span={6}>
-                                            <label>
-                                                Analytics Property Id:
-                                            </label>
-                                        </Col>
-                                        <Col span={18}>
-                                            <Text>
-                                                {user?.jobadder_details
-                                                    ?.analytics_view_id ||
-                                                    "N/A"}
-                                            </Text>
-                                        </Col>
-                                    </Row>
-                                </TabPane>
-                            </Tabs>
-                        </Card>
-                    </Panel>
-                </Collapse>
+                <Collapse
+                    defaultActiveKey={["1"]}
+                    items={[
+                        {
+                            key: 1,
+                            label: "API Details",
+                            children: (
+                                <Card>
+                                    <Tabs
+                                        defaultActiveKey="1"
+                                        items={[
+                                            {
+                                                key: "1",
+                                                label: "Xero",
+                                                children: (
+                                                    <>
+                                                        <Row gutter={16}>
+                                                            <Col span={6}>
+                                                                <label>
+                                                                    Client Id:
+                                                                </label>
+                                                            </Col>
+                                                            <Col span={18}>
+                                                                <Text>
+                                                                    {user
+                                                                        ?.xero_details
+                                                                        ?.client_id ||
+                                                                        "N/A"}
+                                                                </Text>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row
+                                                            gutter={16}
+                                                            style={{
+                                                                marginTop:
+                                                                    "10px",
+                                                            }}
+                                                        >
+                                                            <Col span={6}>
+                                                                <label>
+                                                                    Client
+                                                                    Secret:
+                                                                </label>
+                                                            </Col>
+                                                            <Col span={18}>
+                                                                <Text>
+                                                                    {user
+                                                                        ?.xero_details
+                                                                        ?.client_secret ||
+                                                                        "N/A"}
+                                                                </Text>
+                                                            </Col>
+                                                        </Row>
+                                                    </>
+                                                ),
+                                            },
+                                            {
+                                                key: "2",
+                                                label: "Google Analytics",
+                                                children: (
+                                                    <Row gutter={16}>
+                                                        <Col span={6}>
+                                                            <label>
+                                                                Analytics
+                                                                Property Id:
+                                                            </label>
+                                                        </Col>
+                                                        <Col span={18}>
+                                                            <Text>
+                                                                {user
+                                                                    ?.jobadder_details
+                                                                    ?.analytics_view_id ||
+                                                                    "N/A"}
+                                                            </Text>
+                                                        </Col>
+                                                    </Row>
+                                                ),
+                                            },
+                                        ]}
+                                    ></Tabs>
+                                </Card>
+                            ),
+                        },
+                    ]}
+                ></Collapse>
             </div>
         </>
     );

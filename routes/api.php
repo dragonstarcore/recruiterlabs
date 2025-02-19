@@ -70,4 +70,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/xero/auth/authorize', AuthorizationController::class)->name('xero.auth.authorize');
     Route::get('/xero/auth/callback', AuthorizationCallbackController::class)->name('xero.auth.callback');
     Route::get('/get_cv', [\App\Http\Controllers\JobadderController::class, 'get_CV_Attachment'])->name('get_cv');
+    Route::post('/users_search', [App\Http\Controllers\UserController::class, 'search']);
 });

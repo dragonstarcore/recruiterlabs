@@ -3,14 +3,9 @@ import {
     Card,
     Row,
     Col,
-    Table,
     Input,
     Button,
-    Switch,
-    Avatar,
-    Typography,
     Upload,
-    Space,
     message,
     Flex,
     Spin,
@@ -22,30 +17,27 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
     UploadOutlined,
     EyeOutlined,
-    SearchOutlined,
-    FileOutlined,
-    FileAddOutlined,
     InboxOutlined,
     DeleteOutlined,
 } from "@ant-design/icons";
-import { Calendar, momentLocalizer } from "react-big-calendar"; // or fullcalendar-react
-import { format, parse, startOfWeek, getDay } from "date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // for react-big-calendar
-import moment from "moment";
 
 import { useAddStaffMutation, useGetStaffQuery } from "./staff.service";
-const localizer = momentLocalizer(moment);
-const { Title } = Typography;
 import ShowIcon from "./showIcon";
 const MyStaffPage = ({}) => {
     const { user_id } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
+    const [logofileList, setLogofileList] = useState([
+        {
+            uid: "-1", // Unique ID for the file
+            name: "logo", // File name
+            status: "done", // File status
+            url: "", // Full URL of the image
+        },
+    ]);
     const { data, isLoading } = useGetStaffQuery(user_id);
-    const [
-        addStaff,
-        { isLoading: isLoadingUpdate, isSuccess: isUpdatingSuccess },
-    ] = useAddStaffMutation();
+    const [addStaff] = useAddStaffMutation();
     const [file, setFile] = useState(null);
     const onFinish = async (values, id) => {
         // Handle the form submission logic here
@@ -75,12 +67,13 @@ const MyStaffPage = ({}) => {
         }
     };
     const [fileList, setFileList] = useState([]);
-    const handleFileChange = async (info) => {
+    const handleFileChange = async ({ fileList }) => {
         if (info.file.status === "done") {
             message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === "error") {
             message.error(`${info.file.name} file upload failed.`);
         }
+        setLogofileList(fileList);
     };
     const handleupload = async ({ file, onSuccess, onError }) => {
         try {
@@ -90,12 +83,7 @@ const MyStaffPage = ({}) => {
             console.log(err);
         }
     };
-    const handleDocumentRequest = async ({
-        file,
-        fileList,
-        onSuccess,
-        onError,
-    }) => {
+    const handleDocumentRequest = async ({ onSuccess }) => {
         try {
             onSuccess();
         } catch (err) {
@@ -111,7 +99,21 @@ const MyStaffPage = ({}) => {
         }));
         setFileList(updatedList);
     };
-    if (isLoading) return <Spin />;
+    const handleDeleteDocument = (file) => {
+        setFileList(
+            fileList.filter((f) => {
+                const deleteIdentifier = file.id || file.uid;
+                const fileIdentifier = f.id || f.uid;
+                return fileIdentifier !== deleteIdentifier;
+            })
+        );
+    };
+    if (isLoading)
+        return (
+            <Flex justify="center" align="center">
+                <Spin />
+            </Flex>
+        );
     return (
         <Card title="Staff Details">
             <Form
@@ -199,6 +201,7 @@ const MyStaffPage = ({}) => {
                     <Upload
                         maxCount={1}
                         customRequest={handleupload}
+                        fileList={logofileList}
                         listType="picture-card"
                         onChange={handleFileChange}
                     >
@@ -207,14 +210,9 @@ const MyStaffPage = ({}) => {
                             <div>Upload</div>
                         </div>
                     </Upload>
-                    <small>Preferable size 500 × 450 px</small>
                 </Form.Item>
 
                 {/* Other Details */}
-                <Form.Item
-                    label={<strong>Other Details</strong>}
-                    name="other_details"
-                />
 
                 {/* Bank Name Field */}
                 <Form.Item label="Bank Name" name="bank_name">
@@ -298,73 +296,66 @@ const MyStaffPage = ({}) => {
                             Click to Upload Documents
                         </Button>
                     </Upload>
-                    {fileList &&
-                        fileList.map((file) => (
-                            <Row
-                                gutter={[16, 16]}
-                                key={file.id}
-                                className="image_box_data"
-                                style={{ marginTop: "10px" }}
-                            >
-                                <Col span={3}>{ShowIcon(file)}</Col>
-                                <Col span={2}>
-                                    {file?.file
-                                        ? file?.file.split("/")[2]
-                                        : file?.name}
-                                </Col>
-                                <Col span={6}>
-                                    <Form.Item
-                                        style={{ margin: 0 }}
-                                        name={`image_title_${file.uid}`}
-                                    >
-                                        <Input
-                                            placeholder="Enter title"
-                                            required
-                                        />
-                                    </Form.Item>
-                                </Col>
-
-                                {file.id && (
-                                    <Col span={2}>
-                                        <Button
-                                            type="primary"
-                                            icon={<EyeOutlined />}
-                                        >
-                                            View
-                                        </Button>
-                                    </Col>
-                                )}
-                                {!file.id && <Col span={2}></Col>}
-                                <Col span={2}>
-                                    <Button
-                                        type="default"
-                                        icon={<DeleteOutlined />}
-                                        onClick={() =>
-                                            handleDeleteDocument(file)
-                                        }
-                                        color="danger"
-                                        variant="solid"
-                                        className="upload__img-close3"
-                                    >
-                                        Delete
-                                    </Button>
-                                </Col>
-                            </Row>
-                        ))}
                 </Form.Item>
+                {fileList.map((file, i) => (
+                    <Row
+                        gutter={[16, 16]}
+                        key={i}
+                        className="image_box_data"
+                        style={{ margin: "10px" }}
+                    >
+                        <Col span={3}>{ShowIcon(file)}</Col>
+                        <Col span={2}>
+                            {file?.file ? file?.file.split("/")[2] : file?.name}
+                        </Col>
+                        <Col span={6}>
+                            <Form.Item
+                                style={{ margin: 0 }}
+                                name={`image_title_${file.uid}`}
+                            >
+                                <Input placeholder="Enter title" required />
+                            </Form.Item>
+                        </Col>
+
+                        {file.id && (
+                            <Col span={2}>
+                                <Button type="primary" icon={<EyeOutlined />}>
+                                    View
+                                </Button>
+                            </Col>
+                        )}
+                        {!file.id && <Col span={2}></Col>}
+                        <Col span={2}>
+                            <Button
+                                type="default"
+                                icon={<DeleteOutlined />}
+                                onClick={() => handleDeleteDocument(file)}
+                                color="danger"
+                                variant="solid"
+                                className="upload__img-close3"
+                            >
+                                Delete
+                            </Button>
+                        </Col>
+                    </Row>
+                ))}
 
                 {/* Form Buttons */}
                 <Form.Item wrapperCol={{ span: 18, offset: 6 }}>
-                    <Button
-                        type="default"
-                        onClick={() => navigate("/employee_list/" + user_id)}
-                        style={{ marginRight: "10px" }}
-                    >
-                        Discard
-                    </Button>
-                    <Button type="primary" htmlType="submit">
-                        Save <i className="ph-paper-plane-tilt ms-2"></i>
-                    </Button>
+                    <Flex justify="flex-end">
+                        <Button
+                            type="default"
+                            onClick={() =>
+                                navigate("/employee_list/" + user_id)
+                            }
+                            style={{ marginRight: "10px" }}
+                        >
+                            Discard
+                        </Button>
+                        <Button type="primary" htmlType="submit">
+                            Save <i className="ph-paper-plane-tilt ms-2"></i>
+                        </Button>
+                    </Flex>
                 </Form.Item>
             </Form>
         </Card>

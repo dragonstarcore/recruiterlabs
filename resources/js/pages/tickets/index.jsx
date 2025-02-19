@@ -13,7 +13,6 @@ import {
     Spin,
     Col,
     Flex,
-    Row,
     Drawer,
     Select,
 } from "antd";
@@ -51,36 +50,24 @@ export default function Tickets() {
         deleteTicket,
         { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess },
     ] = useDeleteTicketMutation();
-    const [
-        searchTicket,
-        { isLoading: isSearchLoading, isSuccess: isSearchSuccess },
-    ] = useSearchTicketMutation();
+    const [searchTicket, { isLoading: isSearchLoading }] =
+        useSearchTicketMutation();
 
     const [isDrawer, setIsDrawer] = useState(false);
     const [addTicket] = useAddTicketMutation();
     const [ticketId, setTicketId] = useState(null);
     const { search_title, setSearch_title } = useState();
 
-    console.log("###");
-    console.log("BisSuccess", isSuccess);
-    console.log("BisLoading", isLoading);
-    console.log("Bdata", data);
     useEffect(() => {
         if (isSuccess) {
-            console.log("###");
-            console.log("isSuccess", isSuccess);
-            console.log("isLoading", isLoading);
-            console.log("data", data);
             dispatch(setTicket(data?.tickets));
         }
     }, [isSuccess, data, dispatch]);
     const handleFormSubmit = async () => {
         const ticketValue = form.getFieldsValue();
-        console.log(ticketValue);
         setIsDrawer(false);
         try {
             const { data } = await addTicket(ticketValue);
-            console.log(data?.ticket);
             dispatch(setTicket([...tickets, data?.ticket]));
             message.success("Ticket added successfully!");
             form.resetFields();
@@ -89,25 +76,25 @@ export default function Tickets() {
         }
     };
     const handleEdit = (ticketId) => {
-        console.log(ticketId);
-        //setTicketId(ticketId);
-        //setIsEditDrawer(true);
         navigate("/tickets/" + ticketId);
-        // Handle the edit functionality here, for example navigate to the edit page
     };
     const handleDelete = async (ticketId) => {
         // Perform delete logic here, e.g., call an API to delete the ticket
         try {
+            setTicketId(ticketId);
             await deleteTicket(ticketId);
-            dispatch(
-                setTicket(tickets.filter((ticket) => ticket.id != ticketId))
-            );
-            //dispatch(removeTicket());
-            message.success("Ticket deleted successfully!");
         } catch (err) {
             console.log(err);
         }
     };
+    useEffect(() => {
+        if (isDeleteSuccess) {
+            dispatch(
+                setTicket(tickets.filter((ticket) => ticket.id != ticketId))
+            );
+            message.success("Ticket deleted successfully!");
+        }
+    }, [isDeleteSuccess]);
     const OnOpenDrawer = () => {
         setIsDrawer(true);
     };
@@ -179,12 +166,10 @@ export default function Tickets() {
     ];
 
     const OnSearchTitle = async (e) => {
-        console.log(e.target.value);
         try {
             const { data } = await searchTicket({
                 search_title: e.target.value,
             });
-            console.log(data);
             dispatch(setTicket(data?.tickets));
         } catch (err) {
             console.log(err);
@@ -209,35 +194,45 @@ export default function Tickets() {
             <Card
                 title="Tickets List"
                 extra={
-                    <Button type="primary" onClick={OnOpenDrawer}>
-                        Create
-                    </Button>
+                    <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
+                        <Col span={24} style={{ marginRight: "10px" }}>
+                            <Input
+                                value={search_title}
+                                onChange={(e) => OnSearchTitle(e)}
+                                placeholder="Search..."
+                                addonBefore={<SearchOutlined />}
+                            />
+                        </Col>
+                        <Button type="primary" onClick={OnOpenDrawer}>
+                            Create
+                        </Button>
+                    </Flex>
                 }
             >
-                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
-                    <Col span={6}>
-                        <Input
-                            value={search_title}
-                            onChange={(e) => OnSearchTitle(e)}
-                            placeholder="Search..."
-                            addonBefore={<SearchOutlined />}
-                        />
-                    </Col>
-                </Flex>
-                <Table
-                    columns={columns}
-                    dataSource={tickets}
-                    rowKey="key"
-                    pagination={{
-                        current: currentPage, // Current page number
-                        pageSize: pageSize, // Number of items per page
-                        total: totalCount, // Total number of items
-                        onChange: onPageChange,
-                        showSizeChanger: true, // Show size changer dropdown (optional)
-                        pageSizeOptions: ["5", "10", "20", "50"], // Page size options
-                    }}
-                />
-
+                {!isSearchLoading ? (
+                    <Table
+                        columns={columns}
+                        dataSource={tickets}
+                        rowKey="id"
+                        pagination={{
+                            current: currentPage, // Current page number
+                            pageSize: pageSize, // Number of items per page
+                            total: totalCount, // Total number of items
+                            onChange: onPageChange,
+                            showSizeChanger: true, // Show size changer dropdown (optional)
+                            pageSizeOptions: ["5", "10", "20", "50"], // Page size options
+                        }}
+                    />
+                ) : (
+                    <Flex justify="center" align="center">
+                        <Spin />
+                    </Flex>
+                )}
+                {isDeleteLoading && (
+                    <Flex justify="center" align="center">
+                        <Spin />
+                    </Flex>
+                )}
                 <Drawer
                     title="Create Ticket"
                     open={isDrawer}

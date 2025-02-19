@@ -15,7 +15,6 @@ const XeroConnection = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const authorizationCode = urlParams.get("code");
-        console.log(authorizationCode);
         if (authorizationCode) {
             getAccessToken(urlParams);
         }
@@ -43,7 +42,6 @@ const XeroConnection = () => {
     const [fetchXeroredirect, {}] = useFetchXeroredirectMutation();
     const getXeroUrl = async () => {
         const { data } = await fetchXeroredirect();
-        console.log(data.url);
         // Open a new tab and navigate to the desired URL
 
         window.location.assign(data.url);

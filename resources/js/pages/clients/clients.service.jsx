@@ -17,6 +17,13 @@ export const clientApi = apiService.injectEndpoints({
                 url: "/client_doc_search/" + data + "/edit",
             }),
         }),
+        searchClient: builder.mutation({
+            query: (data) => ({
+                url: "/users_search",
+                method: "POST",
+                body: data,
+            }),
+        }),
         createClient: builder.mutation({
             query: (data) => ({
                 url: "/users/",
@@ -53,4 +60,5 @@ export const {
     useFetchClientListQuery,
     useCreateClientMutation,
     useDeleteMutation,
+    useSearchClientMutation,
 } = clientApi;

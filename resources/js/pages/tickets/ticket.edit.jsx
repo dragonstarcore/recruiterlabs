@@ -1,21 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    Card,
-    Table,
-    Button,
-    Space,
-    Popconfirm,
-    message,
-    Form,
-    Input,
-    Spin,
-    Col,
-    Flex,
-    Row,
-    Drawer,
-    Select,
-    List,
-} from "antd";
+import { Button, message, Form, Input, Spin, Flex, Select, List } from "antd";
 import {
     SearchOutlined,
     EditOutlined,
@@ -28,11 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 const { TextArea } = Input;
 const { Option } = Select;
 
-import {
-    useGetTicketQuery,
-    useEditTicketMutation,
-    useSearchTicketMutation,
-} from "./tickets.service";
+import { useGetTicketQuery, useEditTicketMutation } from "./tickets.service";
 
 import { setTicket } from "./tickets.slice";
 export default function Tickets({}) {
@@ -46,21 +26,16 @@ export default function Tickets({}) {
         refetchOnMountOrArgChange: true,
     });
 
-    const [
-        editTicket,
-        { isLoading: isLoadingTicket, isSuccess: isSuccessTicket },
-    ] = useEditTicketMutation();
+    const [editTicket] = useEditTicketMutation();
 
     const tickets = useSelector((apps) => apps.ticket.tickets);
     const name = useSelector((apps) => apps.app.user.name);
 
     const handleFormSubmit = async () => {
         const ticketValue = form.getFieldsValue();
-        console.log(ticketValue);
 
         try {
             const { data } = await editTicket({ ...ticketValue, id });
-            // console.log(data?.ticket);
             dispatch(
                 setTicket(
                     tickets.map((e) => (e.id != id ? e : { ...e, ticketValue }))

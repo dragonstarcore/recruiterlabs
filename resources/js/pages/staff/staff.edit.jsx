@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
     Form,
     Input,
     DatePicker,
     Button,
-    Table,
     Row,
     Col,
     Flex,
@@ -25,12 +19,9 @@ import {
 import {
     UploadOutlined,
     EyeOutlined,
-    SearchOutlined,
     InboxOutlined,
     DeleteOutlined,
 } from "@ant-design/icons";
-import moment from "moment";
-const { Title } = Typography;
 
 import { useFetchEmployeeQuery, useUpdateStaffMutation } from "./staff.service";
 import ShowIcon from "./showIcon";
@@ -45,26 +36,14 @@ const MyStaffPage = ({}) => {
         }
     );
 
-    const [
-        updateStaff,
-        { isLoading: isLoadingUpdate, isSuccess: isUpdatingSuccess },
-    ] = useUpdateStaffMutation();
-
-    const [currentPage, setCurrentPage] = useState(1); // current page number
-    const [pageSize, setPageSize] = useState(5); // number of items per page
+    const [updateStaff] = useUpdateStaffMutation();
 
     const employee = data?.employee;
-    const employee_details = data?.employee?.employee_details;
-    const employeeDocuments = data?.employee?.employee_documents;
 
     const [logofilelist, setLogofilelist] = useState([]);
-    const onPageChange = (page, pageSize) => {
-        setCurrentPage(page); // Update current page
-        setPageSize(pageSize); // Update page size if the user changes it
-    };
+
     const handleFileChange = async ({ fileList }) => {
         setLogofilelist(fileList);
-        console.log(fileList);
     };
     const handleupload = async ({ file, onSuccess, onError }) => {
         try {
@@ -74,12 +53,7 @@ const MyStaffPage = ({}) => {
         }
     };
     const [fileList, setFileList] = useState([]);
-    const handleDocumentRequest = async ({
-        file,
-        fileList,
-        onSuccess,
-        onError,
-    }) => {
+    const handleDocumentRequest = async ({ onSuccess }) => {
         try {
             onSuccess();
         } catch (err) {
@@ -172,20 +146,10 @@ const MyStaffPage = ({}) => {
                 );
             }
         });
-
+        message.error("employee updated successfully");
         try {
-            //const { error } = await updateStaff({
-            //     ...values,
-            //     employee_id,
-            //     user_id,
-            // });
-            const { aserror } = await updateStaff(formData);
-            // if (error) {
-            //     message.error(`employee failed successfully`);
-            //     return;
-            // }
-            message.success(`employee updated successfully`);
-            // navigate("/employee_list/" + user_id);
+            await updateStaff(formData);
+            message.success("employee updated successfully");
         } catch (err) {
             message.error(`employee update failed`);
         }
@@ -302,11 +266,6 @@ const MyStaffPage = ({}) => {
                         </Form.Item>
                     </Col>
 
-                    {/* Other Details */}
-                    <Col span={24}>
-                        <Title level={5}>Other Details</Title>
-                    </Col>
-
                     {/* Bank Name */}
                     <Col span={24}>
                         <Form.Item label="Bank Name" name="bank_name">
@@ -390,65 +349,65 @@ const MyStaffPage = ({}) => {
                                     Upload Documents
                                 </Button>
                             </Upload>
-                            {fileList &&
-                                fileList.map((file) => (
-                                    <Row
-                                        gutter={[16, 16]}
-                                        key={file.id}
-                                        className="image_box_data"
-                                        style={{ marginTop: "10px" }}
-                                    >
-                                        <Col span={3}>{ShowIcon(file)}</Col>
-                                        <Col span={2}>
-                                            {file?.file
-                                                ? file?.file.split("/")[2]
-                                                : file?.name}
-                                        </Col>
-                                        <Col span={6}>
-                                            <Form.Item
-                                                style={{ margin: 0 }}
-                                                name={`image_title_${
-                                                    file?.id || file.uid
-                                                }`}
-                                                initialValue={
-                                                    file.id ? file.title : null
-                                                }
-                                            >
-                                                <Input
-                                                    placeholder="Enter title"
-                                                    required
-                                                />
-                                            </Form.Item>
-                                        </Col>
+                        </Form.Item>
+                        {fileList &&
+                            fileList.map((file, i) => (
+                                <Row
+                                    gutter={[16, 16]}
+                                    key={i}
+                                    className="image_box_data"
+                                    style={{ marginTop: "10px" }}
+                                >
+                                    <Col span={3}>{ShowIcon(file)}</Col>
+                                    <Col span={2}>
+                                        {file?.file
+                                            ? file?.file.split("/")[2]
+                                            : file?.name}
+                                    </Col>
+                                    <Col span={6}>
+                                        <Form.Item
+                                            style={{ margin: 0 }}
+                                            name={`image_title_${
+                                                file?.id || file.uid
+                                            }`}
+                                            initialValue={
+                                                file.id ? file.title : null
+                                            }
+                                        >
+                                            <Input
+                                                placeholder="Enter title"
+                                                required
+                                            />
+                                        </Form.Item>
+                                    </Col>
 
-                                        {file.id && (
-                                            <Col span={2}>
-                                                <Button
-                                                    type="primary"
-                                                    icon={<EyeOutlined />}
-                                                >
-                                                    View
-                                                </Button>
-                                            </Col>
-                                        )}
-                                        {!file.id && <Col span={2}></Col>}
+                                    {file.id && (
                                         <Col span={2}>
                                             <Button
-                                                type="default"
-                                                icon={<DeleteOutlined />}
-                                                onClick={() =>
-                                                    handleDeleteDocument(file)
-                                                }
-                                                color="danger"
-                                                variant="solid"
-                                                className="upload__img-close3"
+                                                type="primary"
+                                                icon={<EyeOutlined />}
                                             >
-                                                Delete
+                                                View
                                             </Button>
                                         </Col>
-                                    </Row>
-                                ))}
-                        </Form.Item>
+                                    )}
+                                    {!file.id && <Col span={2}></Col>}
+                                    <Col span={2}>
+                                        <Button
+                                            type="default"
+                                            icon={<DeleteOutlined />}
+                                            onClick={() =>
+                                                handleDeleteDocument(file)
+                                            }
+                                            color="danger"
+                                            variant="solid"
+                                            className="upload__img-close3"
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            ))}
                     </Col>
                 </Row>
                 <Flex justify="flex-end">

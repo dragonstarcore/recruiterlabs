@@ -78,7 +78,6 @@ export default function Jobs() {
 
     const handleFormSubmit = async () => {
         const jobValue = form.getFieldsValue();
-        console.log(jobValue.start_date.format("YYYY-MM-DD"));
 
         const jobData = {
             ...jobValue,
@@ -89,7 +88,6 @@ export default function Jobs() {
         setIsDrawer(false);
         try {
             const { data } = await addJob(jobData);
-            console.log(data?.job);
             dispatch(setJob([...jobs, data?.job]));
             message.success("job added successfully!");
             form.resetFields();
@@ -98,9 +96,6 @@ export default function Jobs() {
         }
     };
     const handleEdit = (jobId) => {
-        console.log(jobId);
-        //setJobId(jobId);
-        //setIsEditDrawer(true);
         navigate("/jobs/" + jobId);
         // Handle the edit functionality here, for example navigate to the edit page
     };
@@ -149,7 +144,6 @@ export default function Jobs() {
         setSalary(e.target.value);
     };
     const OnSearchStartDate = (value) => {
-        console.log(moment(value).format("YYYY-MM-DD"));
         setStartDate(moment(value).format("YYYY-MM-DD"));
     };
     const OnJobTypeChange = (value) => {
@@ -252,7 +246,6 @@ export default function Jobs() {
     ];
 
     const Onfilter = async () => {
-        console.log(searchTitle);
         try {
             const filters = {
                 job_title: searchTitle,
@@ -405,7 +398,7 @@ export default function Jobs() {
                         <Table
                             columns={columns}
                             dataSource={jobs}
-                            rowKey="key"
+                            rowKey="id"
                             pagination={{
                                 current: currentPage, // Current page number
                                 pageSize: pageSize, // Number of items per page
@@ -458,9 +451,15 @@ export default function Jobs() {
                             ]}
                         >
                             <Select placeholder="Select job type">
-                                <Option value={null}>Select job type</Option>
-                                <Option value="Permanent">Permanent</Option>
-                                <Option value="Contract">Contract</Option>
+                                <Option key="" value={null}>
+                                    Select job type
+                                </Option>
+                                <Option key="Permanent" value="Permanent">
+                                    Permanent
+                                </Option>
+                                <Option key="Contract" value="Contract">
+                                    Contract
+                                </Option>
                             </Select>
                         </Form.Item>
 
@@ -476,11 +475,15 @@ export default function Jobs() {
                             ]}
                         >
                             <Select placeholder="Select recruitment type">
-                                <Option value={null}>
+                                <Option key="" value={null}>
                                     Select recruitment type
                                 </Option>
-                                <Option value="Contingent">Contingent</Option>
-                                <Option value="Retained">Retained</Option>
+                                <Option key="Contingent" value="Contingent">
+                                    Contingent
+                                </Option>
+                                <Option key="Retained" value="Retained">
+                                    Retained
+                                </Option>
                             </Select>
                         </Form.Item>
 
@@ -618,9 +621,15 @@ export default function Jobs() {
                             ]}
                         >
                             <Select placeholder="Select status">
-                                <Option value={null}>select status</Option>
-                                <Option value={1}>inactive</Option>
-                                <Option value={2}>active</Option>
+                                <Option key="" value={null}>
+                                    select status
+                                </Option>
+                                <Option key={1} value={1}>
+                                    inactive
+                                </Option>
+                                <Option key={2} value={2}>
+                                    active
+                                </Option>
                             </Select>
                         </Form.Item>
 

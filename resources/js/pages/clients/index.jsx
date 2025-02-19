@@ -26,14 +26,20 @@ import {
     MailOutlined,
 } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { useFetchClientsQuery, useDeleteMutation } from "./clients.service";
+import {
+    useFetchClientsQuery,
+    useDeleteMutation,
+    useSearchClientMutation,
+} from "./clients.service";
 
 import { setClient } from "./clients.slice";
 const MyClientPage = ({}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const [search_name, setSearch_name] = useState("");
     const [deleteClient, { isLoading: isDeleteLoading }] = useDeleteMutation();
+    const [searchClient, { isLoading: isSuccessLoading }] =
+        useSearchClientMutation();
     const OnhandleDelete = async (id) => {
         try {
             await deleteClient(id);
@@ -56,8 +62,8 @@ const MyClientPage = ({}) => {
             render: (text, record) => (
                 <img
                     src={
-                        record.user_details.logo
-                            ? "/" + record.user_details.logo
+                        record?.user_details?.logo
+                            ? "/" + record?.user_details?.logo
                             : "/assets/images/default_user.jpg"
                     }
                     alt="Logo"
@@ -144,41 +150,55 @@ const MyClientPage = ({}) => {
     });
     useEffect(() => {
         if (isSuccess) {
-            console.log(data?.users);
             dispatch(setClient(data?.users));
         }
     }, [isSuccess, data]);
 
     const clients = useSelector((apps) => apps.client.clients);
-    console.log(clients);
     const totalCount = clients?.length || 0;
     const onPageChange = (page, pageSize) => {
         setCurrentPage(page); // Update current page
         setPageSize(pageSize); // Update page size if the user changes it
     };
-
+    const OnChangeName = async (e) => {
+        setSearch_name(e.target.value);
+        try {
+            const search = { search_client: e.target.value };
+            const res = await searchClient(search).unwrap();
+            dispatch(setClient(res?.users));
+        } catch (err) {
+            console.log(err);
+        }
+    };
     if (isLoading) return <>Loading</>;
     return (
         <div className="content">
             <Card
                 title={"Clients List"}
                 extra={
-                    <Button
-                        type="primary"
-                        onClick={() => navigate("/clients/create")}
-                    >
-                        Create
-                    </Button>
+                    <>
+                        <Flex
+                            justify="flex-end"
+                            style={{ marginBottom: "10px" }}
+                        >
+                            <Col span={24} style={{ marginRight: "20px" }}>
+                                <Input
+                                    placeholder="Search..."
+                                    addonBefore={<SearchOutlined />}
+                                    value={search_name}
+                                    onChange={(e) => OnChangeName(e)}
+                                />
+                            </Col>
+                            <Button
+                                type="primary"
+                                onClick={() => navigate("/clients/create")}
+                            >
+                                Create
+                            </Button>
+                        </Flex>
+                    </>
                 }
             >
-                <Flex justify="flex-end" style={{ marginBottom: "10px" }}>
-                    <Col span={6}>
-                        <Input
-                            placeholder="Search..."
-                            addonBefore={<SearchOutlined />}
-                        />
-                    </Col>
-                </Flex>
                 <Table
                     columns={columns}
                     dataSource={clients}
@@ -190,7 +210,7 @@ const MyClientPage = ({}) => {
                         showSizeChanger: true, // Show size changer dropdown (optional)
                         pageSizeOptions: ["5", "10", "20", "50"], // Page size options
                     }}
-                    rowKey="key"
+                    rowKey="id"
                 />
             </Card>
         </div>
