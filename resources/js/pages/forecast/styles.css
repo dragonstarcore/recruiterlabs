@@ -1,0 +1,109 @@
+.forecast-header {
+    display: flex;
+    flex-wrap: wrap;
+
+    .forecast-header-title {
+        width: 100%;
+        min-width: 200px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+
+        h2 {
+            width: 20%;
+            margin-bottom: 0;
+            min-width: 100px;
+        }
+
+        span {
+            color: #888888;
+            width: 40%;
+            min-width: 150px;
+        }
+    }
+
+    .forecast-form {
+        display: flex;
+        width: 50%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .forecast-header-datapicker {
+        width: 30%;
+        margin: 0.5rem;
+        min-width: 200px;
+    }
+
+    .forecast-header-filter {
+        margin: 0.5rem;
+        min-width: 200px;
+    }
+}
+
+.forecast-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.bar-chart {
+    background: transparent
+        linear-gradient(62deg, #00369e 0%, #005cfd 53%, #a18dff 100%) 0% 0%
+        no-repeat padding-box;
+    box-shadow: 0px 4px 6px #0000001f;
+
+    border-radius: 8px;
+}
+
+.job-card-number {
+    font-size: 2rem !important;
+    font-weight: bold !important;
+}
+
+.stastic-title {
+    font-size: 1.2rem;
+    color: #ffffff;
+    font-weight: normal;
+
+    text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ff00ff,
+        0 0 20px #ff00ff, 0 0 25px #ff00ff, 0 0 30px #ff00ff;
+
+    animation: pulsate 2s ease-in-out infinite alternate;
+}
+
+/* Keyframes for a dynamic pulsing effect */
+@keyframes pulsate {
+    from {
+        text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ff00ff,
+            0 0 20px #ff00ff, 0 0 25px #ff00ff, 0 0 30px #ff00ff;
+    }
+    to {
+        text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 25px #ff00ff,
+            0 0 30px #ff00ff, 0 0 35px #ff00ff, 0 0 40px #ff00ff;
+    }
+}
+
+@keyframes signin {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.stastic-card {
+    background: transparent
+        linear-gradient(62deg, #00369e 0%, #005cfd 53%, #a18dff 100%) 0% 0%
+        no-repeat padding-box;
+
+    animation: signin 0.6s ease-out forwards;
+
+    .ant-card-body {
+        padding: 0.5rem 2rem !important;
+    }
+}
