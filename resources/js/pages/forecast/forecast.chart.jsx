@@ -51,7 +51,7 @@ export default function ForecastChart({
         valueAxis.title.text = "Amount";
         valueAxis.renderer.grid.template.strokeOpacity = 0.1;
 
-        let barSeries = chart.series.push(new am4charts.ColumnSeries3D());
+        let barSeries = chart.series.push(new am4charts.ColumnSeries());
         barSeries.name = "Bills";
         barSeries.dataFields.valueY = "bills";
         barSeries.dataFields.categoryX = "category";
