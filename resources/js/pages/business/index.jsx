@@ -114,10 +114,7 @@ export default function Business() {
                             <Col span={24}>
                                 {user?.user_details?.logo ? (
                                     <img
-                                        src={
-                                            "https://www.recstack.co/public/" +
-                                            `${user?.user_details?.logo}`
-                                        }
+                                        src={`./${user?.user_details?.logo}`}
                                         alt="Business Logo"
                                         style={{
                                             width: "100%",
