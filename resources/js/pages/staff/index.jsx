@@ -30,12 +30,6 @@ const MyStaffPage = ({}) => {
     const { data: staffData, isLoading } = useFetchStaffQuery();
     const { data: calendarData } = useFetchFullEventsQuery();
 
-    const handleSwitchChange = (checked) => {
-        message.info(
-            `Calendar view is now ${checked ? "enabled" : "disabled"}`
-        );
-    };
-
     const columns = [
         {
             title: "#",

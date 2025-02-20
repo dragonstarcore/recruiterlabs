@@ -33,7 +33,8 @@ import {
     useSearchTicketMutation,
     useAddTicketMutation,
 } from "./tickets.service";
-import { setTicket, removeTicket } from "./tickets.slice";
+import { setTicket } from "./tickets.slice";
+import { toast } from "react-toastify";
 
 export default function Tickets() {
     const navigate = useNavigate();
@@ -69,7 +70,10 @@ export default function Tickets() {
         try {
             const { data } = await addTicket(ticketValue);
             dispatch(setTicket([...tickets, data?.ticket]));
-            message.success("Ticket added successfully!");
+
+            toast.success("Ticket added successfully", {
+                position: "top-right",
+            });
             form.resetFields();
         } catch (err) {
             console.log(err);
@@ -92,7 +96,10 @@ export default function Tickets() {
             dispatch(
                 setTicket(tickets.filter((ticket) => ticket.id != ticketId))
             );
-            message.success("Ticket deleted successfully!");
+
+            toast.success("Ticket deleted successfully", {
+                position: "top-right",
+            });
         }
     }, [isDeleteSuccess]);
     const OnOpenDrawer = () => {

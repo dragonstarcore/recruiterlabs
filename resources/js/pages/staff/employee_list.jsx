@@ -24,7 +24,7 @@ import {
 import { Calendar, momentLocalizer } from "react-big-calendar"; // or fullcalendar-react
 import "react-big-calendar/lib/css/react-big-calendar.css"; // for react-big-calendar
 import moment from "moment";
-
+import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import {
     useFetchEmployeeListQuery,
@@ -84,9 +84,14 @@ const Employee_listPage = ({}) => {
         try {
             const result = await deleteStaff({ user_id, id });
             dispatch(setEmployee(employee_list.filter((e) => e.id != id)));
-            message.success(`Employee deleted successfully`);
+
+            toast.success("Employee deleted successfully", {
+                position: "top-right",
+            });
         } catch (err) {
-            message.error(`Employee delete failed`);
+            toast.error("Employee delete failed", {
+                position: "top-right",
+            });
         }
     };
 
@@ -219,7 +224,9 @@ const Employee_listPage = ({}) => {
             });
             formData.append("user_id", id);
             await addDocument(formData);
-            message.success(`Document changed successfully`);
+            toast.success("Document changed successfully", {
+                position: "top-right",
+            });
         } catch (err) {
             console.log(err);
         }

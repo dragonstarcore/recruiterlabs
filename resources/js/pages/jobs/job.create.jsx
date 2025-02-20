@@ -33,7 +33,7 @@ import {
     useEditTicketMutation,
     useSearchTicketMutation,
 } from "./tickets.service";
-
+import { toast } from "react-toastify";
 import { setTicket } from "./tickets.slice";
 export default function Tickets({}) {
     const navigate = useNavigate();
@@ -67,7 +67,10 @@ export default function Tickets({}) {
             form.resetFields();
             navigate("/tickets");
             //OnCloseEdit();
-            // message.success("Ticket added successfully!");
+
+            toast.success("Ticket added successfully", {
+                position: "top-right",
+            });
         } catch (err) {
             console.log(err);
         }

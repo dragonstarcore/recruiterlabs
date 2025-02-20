@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, message, Form, Input, Spin, Flex, Select, List } from "antd";
-import {
-    SearchOutlined,
-    EditOutlined,
-    SendOutlined,
-    DeleteOutlined,
-} from "@ant-design/icons";
+import { SendOutlined } from "@ant-design/icons";
+import { setTicket } from "./tickets.slice";
 
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,8 +9,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 import { useGetTicketQuery, useEditTicketMutation } from "./tickets.service";
-
-import { setTicket } from "./tickets.slice";
+import { toast } from "react-toastify";
 export default function Tickets({}) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -42,7 +37,10 @@ export default function Tickets({}) {
                 )
             );
             form.resetFields();
-            message.success("Ticket updated successfully!");
+
+            toast.success("Ticket updated successfully", {
+                position: "top-right",
+            });
             navigate("/tickets");
         } catch (err) {
             console.log(err);

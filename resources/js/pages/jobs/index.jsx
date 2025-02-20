@@ -31,8 +31,7 @@ import {
     BankOutlined,
     FileTextOutlined,
 } from "@ant-design/icons";
-import dayjs from "dayjs";
-
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 const { TextArea } = Input;
 const { Option } = Select;
@@ -89,7 +88,9 @@ export default function Jobs() {
         try {
             const { data } = await addJob(jobData);
             dispatch(setJob([...jobs, data?.job]));
-            message.success("job added successfully!");
+            toast.success("job added successfully", {
+                position: "top-right",
+            });
             form.resetFields();
         } catch (err) {
             console.log(err);
@@ -105,7 +106,9 @@ export default function Jobs() {
             await deleteJob(jobId);
             dispatch(setJob(jobs.filter((job) => job.id != jobId)));
             //dispatch(removeJob());
-            message.success("job deleted successfully!");
+            toast.success("job deleted successfully", {
+                position: "top-right",
+            });
         } catch (err) {
             console.log(err);
         }

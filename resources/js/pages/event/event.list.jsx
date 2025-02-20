@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFetchEventsQuery, useManageEventsMutation } from "./event.service";
 import { setEvent } from "./event.slice";
 import "./style.css";
-
+import { toast } from "react-toastify";
 const EventList = ({}) => {
     const { user_id } = useParams();
     const dispatch = useDispatch();
@@ -35,7 +35,9 @@ const EventList = ({}) => {
             type: "delete",
         }).unwrap();
         dispatch(setEvent(eventsData.filter((e) => e.id != id)));
-        message.success("event deleted sucessfully");
+        toast.success("Event deleted successfully", {
+            position: "top-right",
+        });
     };
     const totalCount = eventsData?.length || 0;
     const [currentPage, setCurrentPage] = useState(1); // current page number

@@ -18,15 +18,10 @@ import {
     DatePicker,
     List,
 } from "antd";
-import {
-    SearchOutlined,
-    EditOutlined,
-    SendOutlined,
-    DeleteOutlined,
-} from "@ant-design/icons";
-import moment from "moment";
-import dayjs from "dayjs";
+import { SendOutlined } from "@ant-design/icons";
 
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 const { TextArea } = Input;
@@ -73,7 +68,9 @@ export default function Jobs({}) {
 
             //navigate("/jobs");
             //OnCloseEdit();
-            message.success("Job updated successfully!");
+            toast.success("job updated successfully", {
+                position: "top-right",
+            });
         } catch (err) {
             console.log(err);
         }

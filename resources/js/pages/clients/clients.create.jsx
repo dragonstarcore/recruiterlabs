@@ -21,7 +21,7 @@ import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { setClient } from "./clients.slice";
 import { useSelector, useDispatch } from "react-redux";
 const { Option } = Select;
-
+import { toast } from "react-toastify";
 import { useCreateClientMutation } from "./clients.service";
 import ShowIcon from "../staff/showIcon";
 import "./style.css";
@@ -58,7 +58,9 @@ const MyStaffPage = ({}) => {
 
             const result = await createClient(formData);
             dispatch(setClient([...clients, result.user]));
-            message.success(`Client added successfully`);
+            toast.success("Client added successfully", {
+                position: "top-right",
+            });
         } catch (err) {
             console.log(err);
         }
@@ -69,13 +71,7 @@ const MyStaffPage = ({}) => {
     const handleCommunityChange = (e) => {
         setIsCommunityChecked(e.target.checked);
     };
-    const handleFileChange = async (info) => {
-        if (info.file.status === "done") {
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === "error") {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    };
+    const handleFileChange = async (info) => {};
     const handleupload = async ({ file, onSuccess, onError }) => {
         try {
             setFile(file);
@@ -95,17 +91,9 @@ const MyStaffPage = ({}) => {
     const handleDocumentChange = ({ fileList: newFileList, file, event }) => {
         // You can control when to remove the files here
         // For example, removing files after upload completion
-        if (file.status === "done") {
-            // Successfully uploaded, remove it from the list
-            //setFileList([]);
-            message.success(`${file.name} file uploaded successfully.`);
-        } else if (file.status === "error") {
-            // Error while uploading, you may want to handle it
-            message.error(`${file.name} file upload failed.`);
-        } else {
-            // Keep the files in the list for further operations
-            setFileList(newFileList);
-        }
+
+        // Keep the files in the list for further operations
+        setFileList(newFileList);
     };
     const handleDeleteDocument = (file) => {
         setFileList(

@@ -7,7 +7,6 @@ import { UserOutlined } from "@ant-design/icons";
 import { useEditProfileMutation } from "./profile.service";
 
 import BgProfile from "./../../../imgs/bg-profile.jpg";
-
 function Profile() {
     const [form] = Form.useForm();
 

@@ -21,7 +21,7 @@ import {
     DeleteOutlined,
 } from "@ant-design/icons";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // for react-big-calendar
-
+import { toast } from "react-toastify";
 import { useAddStaffMutation, useGetStaffQuery } from "./staff.service";
 import ShowIcon from "./showIcon";
 const MyStaffPage = ({}) => {
@@ -60,19 +60,19 @@ const MyStaffPage = ({}) => {
         formData.append("user_id", id);
         try {
             await addStaff(formData);
-            message.success(`employee added successfully`);
+            toast.success("Employee added successfully", {
+                position: "top-right",
+            });
             navigate("/employee_list/" + id);
         } catch (err) {
+            toast.error("Employee add failed", {
+                position: "top-right",
+            });
             message.error(`employee add failed`);
         }
     };
     const [fileList, setFileList] = useState([]);
     const handleFileChange = async ({ fileList }) => {
-        if (info.file.status === "done") {
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === "error") {
-            message.error(`${info.file.name} file upload failed.`);
-        }
         setLogofileList(fileList);
     };
     const handleupload = async ({ file, onSuccess, onError }) => {

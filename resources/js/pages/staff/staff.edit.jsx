@@ -22,7 +22,7 @@ import {
     InboxOutlined,
     DeleteOutlined,
 } from "@ant-design/icons";
-
+import { toast } from "react-toastify";
 import { useFetchEmployeeQuery, useUpdateStaffMutation } from "./staff.service";
 import ShowIcon from "./showIcon";
 import dayjs from "dayjs";
@@ -146,12 +146,16 @@ const MyStaffPage = ({}) => {
                 );
             }
         });
-        message.error("employee updated successfully");
+
         try {
             await updateStaff(formData);
-            message.success("employee updated successfully");
+            toast.success("Employee updated successfully", {
+                position: "top-right",
+            });
         } catch (err) {
-            message.error(`employee update failed`);
+            toast.error("Employee update failed", {
+                position: "top-right",
+            });
         }
     };
     if (isLoading) return <Spin />;

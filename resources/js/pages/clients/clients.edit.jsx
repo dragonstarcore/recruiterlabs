@@ -21,9 +21,8 @@ import {
     Upload,
     Image,
     Tabs,
-    message,
 } from "antd";
-
+import { toast } from "react-toastify";
 import { UploadOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import {
@@ -148,7 +147,9 @@ const MyStaffPage = ({}) => {
             });
             formData.append("id", id);
             const result = await updateClient(formData);
-            message.success(`Client updated successfully`);
+            toast.success("Client updated successfully", {
+                position: "top-right",
+            });
         } catch (err) {
             console.log(err);
         }
@@ -196,17 +197,7 @@ const MyStaffPage = ({}) => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item
-                            label="Password"
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    type: "password",
-                                    message: "Please input a password!",
-                                },
-                            ]}
-                        >
+                        <Form.Item label="Password" name="password">
                             <Input />
                         </Form.Item>
                     </Col>
