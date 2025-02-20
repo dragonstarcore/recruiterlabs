@@ -573,13 +573,8 @@ class UserController extends Controller
             $client->name = $request->name;
             $client->email  = $request->email;
             $client->status = $request->status;
-            if($request->password){
-
-                if ($client->password == $request->password) {
-                    $client->password = $client->password;
-                } else {
-                    $client->password = Hash::make($request->password);
-                }
+            if($request->password!=null){
+                $client->password = Hash::make($request->password);
             }
             $client->save();
             $client_details = UserDetail::where('user_id', $id)->first();

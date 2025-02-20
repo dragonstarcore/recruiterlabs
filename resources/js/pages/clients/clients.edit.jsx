@@ -114,6 +114,7 @@ const MyStaffPage = ({}) => {
     const onFinish = async (values, id) => {
         try {
             const formData = new FormData();
+            console.log(values);
             for (const key in values) {
                 formData.append(key, values[key]);
             }
@@ -198,7 +199,7 @@ const MyStaffPage = ({}) => {
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item label="Password" name="password">
-                            <Input />
+                            <Input type="password" />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
