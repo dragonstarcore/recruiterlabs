@@ -573,7 +573,7 @@ class UserController extends Controller
             $client->name = $request->name;
             $client->email  = $request->email;
             $client->status = $request->status;
-            if($request->password!=null){
+            if ($request->filled('password')) {
                 $client->password = Hash::make($request->password);
             }
             $client->save();

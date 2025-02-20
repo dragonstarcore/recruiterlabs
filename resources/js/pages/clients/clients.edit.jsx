@@ -102,6 +102,7 @@ const MyStaffPage = ({}) => {
             form.setFieldsValue({
                 ...data?.user,
                 ...data?.user.user_details,
+                password: "",
                 xero_client_id: data?.user.xero_details.client_id,
                 xero_client_secret: data?.user.xero_details.client_secret,
                 analytics_view_id:

@@ -5,7 +5,6 @@ import {
     Input,
     Form,
     Table,
-    Layout,
     Typography,
     Button,
     Row,
@@ -17,27 +16,35 @@ import {
     Tabs,
     Flex,
 } from "antd";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-const { Title, Text } = Typography;
-const { Header } = Layout;
-const { Option } = Select;
 
-const { Panel } = Collapse;
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 
 import {
     useFetchBusinessQuery,
     useFetchDocumentQuery,
     useFetchBusinessSearchMutation,
 } from "./business.service";
+
 import { setBusiness, setDoc_types } from "./business.slice";
+
+import pdfIcon from "../../../imgs/pdf.webp";
+import docsIcon from "../../../imgs/docs.png";
+import xlsxIcon from "../../../imgs/xlsx.png";
+
 import "./style.css";
+const { Text } = Typography;
+const { Option } = Select;
 
 export default function Business() {
     const dispatch = useDispatch();
+
     const [form] = Form.useForm();
+
     const [type_search, setType_search] = useState("");
     const [search_title, setSearch_title] = useState("");
+
     const { data, isError, isSuccess, isLoading } = useFetchBusinessQuery();
+
     const {
         data: docData,
         isSuccess: isDocSucess,
@@ -49,27 +56,35 @@ export default function Business() {
             dispatch(setBusiness(data.user));
         }
     }, [isSuccess, data]);
+
     useEffect(() => {
         if (isDocSucess) {
             dispatch(setDoc_types(docData.documents));
         }
     }, [isDocSucess, docData]);
+
     const [
         fetchBusinessSearch,
         { isLoading: isJobadderLoading, isSuccess: isJobadderSuccess, error },
     ] = useFetchBusinessSearchMutation();
 
     const user = useSelector((apps) => apps.business.businessData.user);
+
     const documents = useSelector(
         (apps) => apps.business.businessData.doc_types
     );
+
     const totalCount = user?.user_documents.length || 0;
+
     const [currentPage, setCurrentPage] = useState(1); // current page number
+
     const [pageSize, setPageSize] = useState(5); // number of items per page
+
     const onPageChange = (page, pageSize) => {
         setCurrentPage(page); // Update current page
         setPageSize(pageSize); // Update page size if the user changes it
     };
+
     const OnChangeSelect = async (value) => {
         setType_search(value);
         try {
@@ -80,6 +95,7 @@ export default function Business() {
             console.log(err);
         }
     };
+
     const OnChangeTitle = async (e) => {
         setSearch_title(e.target.value);
         try {
@@ -90,12 +106,14 @@ export default function Business() {
             console.log(err);
         }
     };
+
     if (isLoading || isDocLoading)
         return (
             <div className="business-body">
                 <Spin size="large" />
             </div>
         );
+
     return (
         <>
             <Card
@@ -292,16 +310,15 @@ export default function Business() {
                 {/* Logo Section */}
 
                 {/* Company Documents Section */}
-                <Row gutter={16} style={{ marginTop: "20px", padding: "20px" }}>
-                    <Col span={4}>
-                        <h5>
-                            <b>Company Documents Filter:</b>
-                        </h5>
+                <Row gutter={16} style={{ marginTop: "20px", padding: "1rem" }}>
+                    <Col span={6}>
+                        <h3>Company Documents Filter:</h3>
                     </Col>
-                    <Col span={5}>
+                    <Col span={6}>
                         <Form form={form}>
                             <Form.Item name="type_search">
                                 <Select
+                                    size="large"
                                     placeholder="Filter By Document Type"
                                     allowClear
                                     onChange={(value) => OnChangeSelect(value)}
@@ -318,8 +335,7 @@ export default function Business() {
                             </Form.Item>
                         </Form>
                     </Col>
-                    <Col span={8}></Col>
-                    <Col span={6}>
+                    <Col span={10}>
                         <Form form={form}>
                             <Form.Item name="title_search">
                                 <Input
@@ -336,10 +352,6 @@ export default function Business() {
                 {!isJobadderLoading ? (
                     <Table
                         className="employee_list"
-                        style={{
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                            borderRadius: "8px",
-                        }}
                         bordered
                         rowClassName="table-row-hover"
                         rowKey="id"
@@ -355,14 +367,19 @@ export default function Business() {
                                 key: "file",
                                 render: (file) => {
                                     let image;
+
                                     if (file) {
                                         const extension = file.split(".").pop();
                                         if (extension === "pdf") {
-                                            image = "/assets/images/pdf.png";
+                                            image = pdfIcon;
                                         } else if (
                                             ["doc", "docx"].includes(extension)
                                         ) {
-                                            image = "/assets/images/doc.jpg";
+                                            docsIcon;
+                                        } else if (
+                                            ["xls", "xlsx"].includes(extension)
+                                        ) {
+                                            xlsxIcon;
                                         } else {
                                             image = `/public/${file}`;
                                         }
@@ -372,9 +389,9 @@ export default function Business() {
                                     }
                                     return (
                                         <Image
-                                            src={image}
-                                            width={36}
-                                            height={36}
+                                            src={pdfIcon}
+                                            width={48}
+                                            height={48}
                                             style={{ borderRadius: "50%" }}
                                             alt=""
                                             preview={false}
@@ -418,7 +435,7 @@ export default function Business() {
                                         <Button
                                             type="primary"
                                             size="small"
-                                            href={`https://www.recstack.co/public/${file}`}
+                                            href={`./${file}`}
                                             target="_blank"
                                             icon={<EyeOutlined />}
                                         >

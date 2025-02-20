@@ -1,10 +1,10 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import { Card, Tooltip } from "antd";
 
 import pdfIcon from "../../../imgs/pdf.webp";
 import docsIcon from "../../../imgs/docs.png";
 import xlsxIcon from "../../../imgs/xlsx.png";
-import { NavLink } from "react-router-dom";
 
 const truncateTitle = (title) => {
     return title.length > 20 ? `${title.substring(0, 17)}...` : title;
