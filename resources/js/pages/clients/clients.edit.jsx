@@ -213,7 +213,7 @@ const MyStaffPage = ({}) => {
                                 },
                             ]}
                         >
-                            <Select placeholder="Select Status">
+                            <Select placeholder="Select Status" size="large">
                                 <Option key="1" value={1}>
                                     Active
                                 </Option>
