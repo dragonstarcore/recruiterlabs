@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
     Form,
@@ -14,12 +9,10 @@ import {
     Col,
     Flex,
     Card,
-    Typography,
     Spin,
     Select,
     Checkbox,
     Upload,
-    Image,
     Tabs,
 } from "antd";
 import { toast } from "react-toastify";
@@ -31,9 +24,10 @@ import {
 } from "./clients.service";
 import "./style.css";
 import ShowIcon from "../staff/showIcon";
+
 const { Option } = Select;
-const { Title } = Typography;
 const { TabPane } = Tabs;
+
 const MyStaffPage = ({}) => {
     const { id } = useParams();
     const { data, isLoading, isSuccess } = useFetchClientQuery(id, {
@@ -49,9 +43,11 @@ const MyStaffPage = ({}) => {
     const handleCommunityChange = (e) => {
         setIsCommunityChecked(e.target.checked);
     };
+
     const handleFileChange = async ({ fileList }) => {
         setLogofileList(fileList);
     };
+
     const handleupload = async ({ file, onSuccess, onError }) => {
         try {
             onSuccess(); // Call onSuccess if the upload succeeds
@@ -68,6 +64,7 @@ const MyStaffPage = ({}) => {
             console.log(err);
         }
     };
+
     const handleDocumentChange = ({ fileList: newFileList, file, event }) => {
         // You can control when to remove the files here
         // For example, removing files after upload completion
@@ -87,8 +84,9 @@ const MyStaffPage = ({}) => {
             })
         );
     };
+
     const [fileList, setFileList] = useState([]);
-    const [initialValue, setInitialValue] = useState({});
+
     useEffect(() => {
         if (isSuccess) {
             setFileList(data?.user?.user_documents);
@@ -111,6 +109,7 @@ const MyStaffPage = ({}) => {
             });
         }
     }, [isSuccess, form, data]);
+
     const onFinish = async (values, id) => {
         try {
             const formData = new FormData();
@@ -157,6 +156,7 @@ const MyStaffPage = ({}) => {
     };
 
     if (isLoading) return <Spin />;
+
     return (
         <Card title="Staff Details">
             <Form
