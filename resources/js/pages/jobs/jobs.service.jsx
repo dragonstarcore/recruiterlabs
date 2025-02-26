@@ -2,65 +2,48 @@ import { apiService } from "../../app.service";
 
 export const jobApi = apiService.injectEndpoints({
     endpoints: (builder) => ({
+        fetchJobs: builder.query({
+            query: () => ({
+                url: "/jobs",
+            }),
+            providesTags: ["Jobs"],
+        }),
         fetchJob: builder.query({
-            query: (data) => ({
-                url: "/jobs?user_id=" + data,
+            query: (id) => ({
+                url: `/jobs/${id}`,
             }),
+            providesTags: ["Job"],
         }),
-        fetchSharedJob: builder.query({
-            query: (data) => ({
-                url: "/jobshared?user_id=" + data,
-            }),
-        }),
-        deleteJob: builder.mutation({
-            query: (data) => ({
-                url: "/jobs/" + data,
-                method: "DELETE",
-            }),
-        }),
-        getJob: builder.query({
-            query: (data) => ({
-                url: "/jobs/" + data + "/edit",
-            }),
-        }),
-        editJob: builder.mutation({
-            query: (data) => ({
-                url: "/jobs/" + data?.id,
-                method: "PUT",
-                body: data,
-            }),
-        }),
-        addJob: builder.mutation({
+        createJob: builder.mutation({
             query: (data) => ({
                 url: "/jobs",
                 method: "POST",
                 body: data,
             }),
+            invalidatesTags: ["Jobs"],
         }),
-        searchJob: builder.mutation({
-            query: (data) => ({
-                url: "/jobs/search",
-                method: "POST",
+        editJob: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `jobs/${id}`,
+                method: "PUT",
                 body: data,
             }),
+            invalidatesTags: ["Job"],
         }),
-        applyJob: builder.mutation({
-            query: (data) => ({
-                url: "/jobs/apply",
-                method: "POST",
-                body: data,
+        deleteJob: builder.mutation({
+            query: (id) => ({
+                url: `/jobs/${id}`,
+                method: "DELETE",
             }),
+            invalidatesTags: ["Jobs"],
         }),
     }),
 });
 
 export const {
+    useFetchJobsQuery,
     useFetchJobQuery,
+    useCreateJobMutation,
     useDeleteJobMutation,
-    useGetJobQuery,
     useEditJobMutation,
-    useAddJobMutation,
-    useSearchJobMutation,
-    useFetchSharedJobQuery,
-    useApplyJobMutation,
 } = jobApi;

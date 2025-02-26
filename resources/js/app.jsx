@@ -47,6 +47,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "../css/app.css";
 import "../css/responsive.css";
+import JobShow from "./pages/jobs/job.show";
+import JobCreate from "./pages/jobs/job.create";
 
 const PrivateRoute = ({ children }) => {
     const isAuth = useSelector((state) => state.app.isAuth);
@@ -56,7 +58,7 @@ const PrivateRoute = ({ children }) => {
 const RedirectWithParams = ({ to }) => {
     const location = useLocation();
     const search = location.search; // get current query parameters
-    
+
     return <Navigate to={`${to}${search}`} replace />;
 };
 
@@ -150,8 +152,16 @@ const App = () => {
                                                 element={<Jobsharepage />}
                                             />
                                             <Route
-                                                path="jobs/:id"
+                                                path="jobs/create"
+                                                element={<JobCreate />}
+                                            />
+                                            <Route
+                                                path="jobs/edit/:id"
                                                 element={<JobEdit />}
+                                            />
+                                            <Route
+                                                path="jobs/:id"
+                                                element={<JobShow />}
                                             />
                                             <Route
                                                 path="tickets/:id?"

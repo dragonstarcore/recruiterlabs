@@ -1,102 +1,95 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useParams, NavLink, useNavigate } from "react-router-dom";
+
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import {
-    Card,
-    Table,
-    Button,
-    Space,
-    Popconfirm,
-    message,
     Form,
     Input,
-    Spin,
-    Col,
-    Flex,
-    Row,
-    InputNumber,
-    Drawer,
     Select,
     DatePicker,
-    List,
+    InputNumber,
+    Button,
+    Card,
+    Tag,
 } from "antd";
-import { SendOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
-import dayjs from "dayjs";
-import { toast } from "react-toastify";
-import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-const { TextArea } = Input;
+import { useEditJobMutation, useFetchJobQuery } from "./jobs.service";
+
 const { Option } = Select;
+const { TextArea } = Input;
 
-import {
-    useGetJobQuery,
-    useEditJobMutation,
-    useSearchJobMutation,
-} from "./jobs.service";
-
-import { setJob } from "./jobs.slice";
-export default function Jobs({}) {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { id } = useParams();
-    const [jobData, setJobData] = useState(null);
+export default function JobEdit() {
     const [form] = Form.useForm();
 
-    const { data, isLoading, isSuccess } = useGetJobQuery(id, {
-        refetchOnMountOrArgChange: true,
-    });
+    const navigate = useNavigate();
 
-    const [editJob, { isLoading: isLoadingJob, isSuccess: isSuccessJob }] =
+    const { id } = useParams();
+
+    const { data = { job: {} }, isLoading } = useFetchJobQuery(id);
+
+    const [editJob, { isLoading: editJobIsLoading, isSuccess, isError }] =
         useEditJobMutation();
 
-    const jobs = useSelector((apps) => apps.job.jobs);
-    const name = useSelector((apps) => apps.app.user.name);
+    useEffect(() => {
+        form.setFieldsValue({
+            ...data?.job,
+            start_date: data.job.start_date ? dayjs(data.job.start_date) : null,
+        });
+    }, [form, data]);
 
-    const handleFormSubmit = async () => {
-        const jobValue = form.getFieldsValue();
-
-        try {
-            const { data } = await editJob({
-                ...jobValue,
-                id,
-                start_date: jobValue.start_date.format("YYYY-MM-DD"),
-            });
-            dispatch(
-                setJob(
-                    jobs.map((e) => (e.id != id ? e : { ...e, ...data.job }))
-                )
-            );
-
-            //navigate("/jobs");
-            //OnCloseEdit();
-            toast.success("job updated successfully", {
-                position: "top-right",
-            });
-        } catch (err) {
-            console.log(err);
-        }
+    const onFinish = (values) => {
+        editJob({
+            id,
+            data: {
+                ...values,
+                start_date: values.start_date.format("YYYY-MM-DD"),
+            },
+        });
     };
 
     useEffect(() => {
         if (isSuccess) {
-            form.setFieldsValue({
-                ...data?.job,
-                start_date: dayjs(data?.job.start_date, "YYYY-MM-DD"),
-            });
+            toast.success("Job updated successfully!");
+            form.resetFields();
+            navigate("/jobs");
         }
-    }, [isSuccess, form, data]);
+    }, [isSuccess, form]);
 
-    if (isLoading)
-        return (
-            <Flex justify="center" align="center">
-                <Spin />
-            </Flex>
-        );
+    useEffect(() => {
+        if (isError) toast.error("Job updated failed!");
+    }, [isError]);
+
     return (
-        <div>
-            <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
+        <Card
+            loading={isLoading}
+            title={<h2 style={{ marginBottom: "0px" }}>Edit a Job</h2>}
+            extra={
+                <NavLink to="/jobs">
+                    <Button type="primary">
+                        <ArrowLeftOutlined />
+                        Back
+                    </Button>
+                </NavLink>
+            }
+            style={{ padding: "2rem 4rem" }}
+        >
+            <Form
+                form={form}
+                disabled={editJobIsLoading}
+                name="editJob"
+                onFinish={onFinish}
+                labelCol={{
+                    span: 6,
+                }}
+                wrapperCol={{
+                    span: 18,
+                }}
+            >
                 <Form.Item
                     name="job_title"
-                    label="Job Title"
+                    label="Title"
                     rules={[
                         {
                             required: true,
@@ -104,7 +97,7 @@ export default function Jobs({}) {
                         },
                     ]}
                 >
-                    <Input placeholder="Enter job title" />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -117,7 +110,7 @@ export default function Jobs({}) {
                         },
                     ]}
                 >
-                    <Select placeholder="Select job type">
+                    <Select size="large">
                         <Option value="Permanent">Permanent</Option>
                         <Option value="Contract">Contract</Option>
                     </Select>
@@ -133,7 +126,7 @@ export default function Jobs({}) {
                         },
                     ]}
                 >
-                    <Select placeholder="Select recruitment type">
+                    <Select size="large">
                         <Option value="Contingent">Contingent</Option>
                         <Option value="Retained">Retained</Option>
                     </Select>
@@ -149,7 +142,20 @@ export default function Jobs({}) {
                         },
                     ]}
                 >
-                    <Input placeholder="Enter industry" />
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    name="job_description"
+                    label="Job Description"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input the job description!",
+                        },
+                    ]}
+                >
+                    <TextArea rows={4} />
                 </Form.Item>
 
                 <Form.Item
@@ -162,27 +168,83 @@ export default function Jobs({}) {
                         },
                     ]}
                 >
-                    <Input placeholder="Enter location" />
+                    <Input />
                 </Form.Item>
 
-                <Form.Item
-                    name="salary"
-                    label="Salary"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input the salary!",
-                        },
-                    ]}
-                >
-                    <InputNumber
-                        style={{ width: "100%" }}
-                        formatter={(value) =>
-                            `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        }
-                        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                        placeholder="Enter salary"
-                    />
+                <Form.Item label="Salary" style={{ marginBottom: 0 }}>
+                    <Form.Item
+                        name="salary_currency"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select a currency!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(20% - 8px)",
+                        }}
+                    >
+                        <Select size="large">
+                            <Option value="GBP">GBP</Option>
+                            <Option value="EUR">EUR</Option>
+                            <Option value="USD">USD</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="salary"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input the salary!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(80% - 8px)",
+                            margin: "0 8px",
+                        }}
+                    >
+                        <InputNumber size="large" style={{ width: "100%" }} />
+                    </Form.Item>
+                </Form.Item>
+
+                <Form.Item label="Fee" style={{ marginBottom: 0 }}>
+                    <Form.Item
+                        name="fee_currency"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select a currency!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(20% - 8px)",
+                        }}
+                    >
+                        <Select size="large">
+                            <Option value="GBP">GBP</Option>
+                            <Option value="EUR">EUR</Option>
+                            <Option value="USD">USD</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="fee"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input the fee!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(80% - 8px)",
+                            margin: "0 8px",
+                        }}
+                    >
+                        <InputNumber size="large" style={{ width: "100%" }} />
+                    </Form.Item>
                 </Form.Item>
 
                 <Form.Item
@@ -195,7 +257,7 @@ export default function Jobs({}) {
                         },
                     ]}
                 >
-                    <DatePicker style={{ width: "100%" }} />
+                    <DatePicker size="large" style={{ width: "100%" }} />
                 </Form.Item>
 
                 <Form.Item
@@ -209,45 +271,13 @@ export default function Jobs({}) {
                     ]}
                 >
                     <InputNumber
+                        size="large"
                         style={{ width: "100%" }}
                         formatter={(value) => `${value}%`}
                         parser={(value) => value.replace("%", "")}
-                        placeholder="Enter margin agreed"
                     />
                 </Form.Item>
 
-                <Form.Item
-                    name="fee"
-                    label="Fee"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input the fee!",
-                        },
-                    ]}
-                >
-                    <InputNumber
-                        style={{ width: "100%" }}
-                        formatter={(value) =>
-                            `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        }
-                        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                        placeholder="Enter fee"
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    name="job_description"
-                    label="Job Description"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input the job description!",
-                        },
-                    ]}
-                >
-                    <TextArea rows={4} placeholder="Enter job description" />
-                </Form.Item>
                 <Form.Item
                     name="status"
                     label="Job Status"
@@ -258,26 +288,24 @@ export default function Jobs({}) {
                         },
                     ]}
                 >
-                    <Select placeholder="Select status">
-                        <Option value={1}>inactive</Option>
-                        <Option value={2}>active</Option>
+                    <Select size="large">
+                        <Option key={1} value={1}>
+                            <Tag color="green">Active</Tag>
+                        </Option>
+                        <Option key={2} value={2}>
+                            <Tag color="red">Inactive</Tag>
+                        </Option>
                     </Select>
                 </Form.Item>
 
-                {/* Action buttons */}
-                <Flex justify="flex-end">
-                    <Button
-                        type="default"
-                        style={{ marginRight: 8 }}
-                        onClick={() => window.history.back()}
-                    >
-                        Discard
-                    </Button>
-                    <Button type="primary" htmlType="submit">
-                        Save {<SendOutlined />}
-                    </Button>
-                </Flex>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ float: "right" }}
+                >
+                    Submit
+                </Button>
             </Form>
-        </div>
+        </Card>
     );
 }

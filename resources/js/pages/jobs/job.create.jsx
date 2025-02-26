@@ -1,210 +1,300 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+
 import {
-    Card,
-    Table,
-    Button,
-    Space,
-    Popconfirm,
-    message,
     Form,
     Input,
-    Spin,
-    Col,
-    Flex,
-    Row,
-    Drawer,
     Select,
-    List,
+    DatePicker,
+    InputNumber,
+    Button,
+    Card,
+    Tag,
 } from "antd";
-import {
-    SearchOutlined,
-    EditOutlined,
-    SendOutlined,
-    DeleteOutlined,
-} from "@ant-design/icons";
-
-import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-const { TextArea } = Input;
-const { Option } = Select;
-
-import {
-    useGetTicketQuery,
-    useEditTicketMutation,
-    useSearchTicketMutation,
-} from "./tickets.service";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
-import { setTicket } from "./tickets.slice";
-export default function Tickets({}) {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { id } = useParams();
-    const [ticketData, setTicketData] = useState(null);
+
+import { useCreateJobMutation } from "./jobs.service";
+
+const { Option } = Select;
+const { TextArea } = Input;
+
+export default function JobCreate() {
     const [form] = Form.useForm();
 
-    const { data, isLoading, isSuccess } = useGetTicketQuery(id, {
-        refetchOnMountOrArgChange: true,
-    });
+    const navigate = useNavigate();
 
-    const [
-        editTicket,
-        { isLoading: isLoadingTicket, isSuccess: isSuccessTicket },
-    ] = useEditTicketMutation();
+    const [createJob, { isLoading, isSuccess, isError }] =
+        useCreateJobMutation();
 
-    const tickets = useSelector((apps) => apps.ticket.tickets);
-    const name = useSelector((apps) => apps.app.user.name);
-
-    const handleFormSubmit = async () => {
-        const ticketValue = form.getFieldsValue();
-
-        try {
-            const { data } = await editTicket({ ...ticketValue, id });
-            dispatch(
-                setTicket(
-                    tickets.map((e) => (e.id != id ? e : { ...e, ticketValue }))
-                )
-            );
-            form.resetFields();
-            navigate("/tickets");
-            //OnCloseEdit();
-
-            toast.success("Ticket added successfully", {
-                position: "top-right",
-            });
-        } catch (err) {
-            console.log(err);
-        }
+    const onFinish = (values) => {
+        createJob({
+            ...values,
+            start_date: values.start_date.format("YYYY-MM-DD"),
+        });
     };
+
     useEffect(() => {
         if (isSuccess) {
-            form.setFieldsValue({
-                ...data.ticket,
-                message: "",
-            });
+            toast.success("Job created successfully!");
+            form.resetFields();
+            navigate("/jobs");
         }
-    }, [isSuccess, form, data]);
+    }, [isSuccess, form]);
 
-    if (isLoading)
-        return (
-            <Flex justify="center" align="center">
-                <Spin />
-            </Flex>
-        );
+    useEffect(() => {
+        if (isError) toast.error("Job creation failed!");
+    }, [isError]);
+
     return (
-        <div>
-            <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
+        <Card
+            title={<h2 style={{ marginBottom: "0px" }}>Create a Job</h2>}
+            extra={
+                <NavLink to="/jobs">
+                    <Button type="primary">
+                        <ArrowLeftOutlined />
+                        Back
+                    </Button>
+                </NavLink>
+            }
+            style={{ padding: "2rem 4rem" }}
+        >
+            <Form
+                disabled={isLoading}
+                form={form}
+                name="createJob"
+                onFinish={onFinish}
+                labelCol={{
+                    span: 6,
+                }}
+                wrapperCol={{
+                    span: 18,
+                }}
+                initialValues={{
+                    fee_currency: "GBP",
+                    salary_currency: "GBP",
+                    status: 1,
+                }}
+            >
                 <Form.Item
-                    label="Team"
-                    name="team"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please select a team",
-                        },
-                    ]}
-                >
-                    <Select placeholder="Choose Team" disabled>
-                        <Option value="Operations">Operations</Option>
-                        <Option value="Marketing">Marketing</Option>
-                        <Option value="Finance">Finance</Option>
-                    </Select>
-                </Form.Item>
-
-                {/* Title */}
-                <Form.Item
+                    name="job_title"
                     label="Title"
-                    name="title"
                     rules={[
                         {
                             required: true,
-                            message: "Please enter a title",
-                        },
-                        { max: 255, message: "Title is too long!" },
-                    ]}
-                >
-                    <Input placeholder="Title" disabled />
-                </Form.Item>
-
-                {/* Description */}
-                <Form.Item
-                    label="Description"
-                    name="description"
-                    disabled
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please enter a description",
+                            message: "Please input the job title!",
                         },
                     ]}
                 >
-                    <TextArea
-                        disabled
-                        rows={3}
-                        placeholder="Enter description here"
-                    />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
-                    label="Priority"
-                    name="priority"
+                    name="job_type"
+                    label="Job Type"
                     rules={[
                         {
                             required: true,
-                            message: "Please select a priority",
+                            message: "Please select the job type!",
                         },
                     ]}
                 >
-                    <Select placeholder="Select Priority">
-                        <Option value="Low">Low</Option>
-                        <Option value="Medium">Medium</Option>
-                        <Option value="High">High</Option>
+                    <Select size="large">
+                        <Option value="Permanent">Permanent</Option>
+                        <Option value="Contract">Contract</Option>
                     </Select>
                 </Form.Item>
 
-                {/* Message */}
                 <Form.Item
-                    label="Message"
-                    name="message"
+                    name="recruitment_type"
+                    label="Recruitment Type"
                     rules={[
                         {
                             required: true,
-                            message: "Please enter a message",
+                            message: "Please select the recruitment type!",
                         },
                     ]}
                 >
-                    <TextArea rows={3} placeholder="Enter your message here" />
+                    <Select size="large">
+                        <Option value="Contingent">Contingent</Option>
+                        <Option value="Retained">Retained</Option>
+                    </Select>
                 </Form.Item>
 
-                <Form.Item label="History">
-                    <List
-                        size="small"
-                        bordered
-                        dataSource={data.history}
-                        renderItem={(item) => (
-                            <List.Item>
-                                <h3>{item.user}</h3>
-                                {item.message}
-                            </List.Item>
-                        )}
+                <Form.Item
+                    name="industry"
+                    label="Industry"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input the industry!",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    name="job_description"
+                    label="Job Description"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input the job description!",
+                        },
+                    ]}
+                >
+                    <TextArea rows={4} />
+                </Form.Item>
+
+                <Form.Item
+                    name="location"
+                    label="Location"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input the location!",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Salary" style={{ marginBottom: 0 }}>
+                    <Form.Item
+                        name="salary_currency"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select a currency!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(20% - 8px)",
+                        }}
+                    >
+                        <Select size="large">
+                            <Option value="GBP">GBP</Option>
+                            <Option value="EUR">EUR</Option>
+                            <Option value="USD">USD</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="salary"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input the salary!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(80% - 8px)",
+                            margin: "0 8px",
+                        }}
+                    >
+                        <InputNumber size="large" style={{ width: "100%" }} />
+                    </Form.Item>
+                </Form.Item>
+
+                <Form.Item label="Fee" style={{ marginBottom: 0 }}>
+                    <Form.Item
+                        name="fee_currency"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select a currency!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(20% - 8px)",
+                        }}
+                    >
+                        <Select size="large">
+                            <Option value="GBP">GBP</Option>
+                            <Option value="EUR">EUR</Option>
+                            <Option value="USD">USD</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="fee"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input the fee!",
+                            },
+                        ]}
+                        style={{
+                            display: "inline-block",
+                            width: "calc(80% - 8px)",
+                            margin: "0 8px",
+                        }}
+                    >
+                        <InputNumber size="large" style={{ width: "100%" }} />
+                    </Form.Item>
+                </Form.Item>
+
+                <Form.Item
+                    name="start_date"
+                    label="Start Date"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select the start date!",
+                        },
+                    ]}
+                >
+                    <DatePicker size="large" style={{ width: "100%" }} />
+                </Form.Item>
+
+                <Form.Item
+                    name="margin_agreed"
+                    label="Margin Agreed"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input the margin agreed!",
+                        },
+                    ]}
+                >
+                    <InputNumber
+                        size="large"
+                        style={{ width: "100%" }}
+                        formatter={(value) => `${value}%`}
+                        parser={(value) => value.replace("%", "")}
                     />
                 </Form.Item>
 
-                {/* Priority */}
+                <Form.Item
+                    name="status"
+                    label="Job Status"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select the status!",
+                        },
+                    ]}
+                >
+                    <Select size="large">
+                        <Option key={1} value={1}>
+                            <Tag color="green">Active</Tag>
+                        </Option>
+                        <Option key={2} value={2}>
+                            <Tag color="red">Inactive</Tag>
+                        </Option>
+                    </Select>
+                </Form.Item>
 
-                {/* Action buttons */}
-                <Flex justify="flex-end">
-                    <Button
-                        type="default"
-                        style={{ marginRight: 8 }}
-                        onClick={() => window.history.back()}
-                    >
-                        Discard
-                    </Button>
-                    <Button type="primary" htmlType="submit">
-                        Save {<SendOutlined />}
-                    </Button>
-                </Flex>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ float: "right" }}
+                >
+                    Submit
+                </Button>
             </Form>
-        </div>
+        </Card>
     );
 }
