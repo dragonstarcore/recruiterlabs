@@ -1,0 +1,78 @@
+.user-show {
+    min-height: 74vh; /* Full viewport height */
+}
+
+.profile-sub-bg {
+    height: 280px;
+    margin-top: -90px;
+    border-radius: 12px;
+    box-shadow: 0 20px 27px rgb(0 0 0 / 5%);
+    background-size: cover;
+    background-position: 50%;
+}
+
+.user-profile {
+    padding: 0.5rem 2rem;
+}
+
+.user-detail {
+    margin-top: -40px;
+    background-color: #ffffff;
+    min-height: 55vh;
+}
+
+.user-show-avatar {
+    position: absolute;
+    margin-top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid #fff;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
+}
+
+.user-show-section {
+    padding: 80px 16px 16px;
+    text-align: center;
+}
+
+.user-keywords-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+    justify-content: center;
+}
+
+.user-show-location {
+    font-family: auto;
+    color: #666666;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    font-weight: 400;
+}
+
+.user-show-email {
+    font-family: auto;
+    color: #666666;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    font-weight: 400;
+}
+
+.user-show-section h2 {
+    font-weight: bold;
+    font-family: cursive;
+    color: #444444;
+}
+
+.user-show-section strong {
+    margin-top: 1rem;
+    color: #5a5a5a;
+}
+
+.user-show-section p {
+    color: #444444;
+}

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+
 import { Card, Input, Tag, Tooltip, Button, Select } from "antd";
 import { MailOutlined, AimOutlined } from "@ant-design/icons";
 
@@ -120,23 +122,27 @@ export default function Community() {
             <div className="community-card">
                 {filteredUsers.map((item, index) => (
                     <div key={index} className="card-container">
-                        <div className="header-container">
-                            <div className="full-width-image">
+                        <NavLink to={`/community/${item.id}`}>
+                            <div className="header-container">
+                                <div className="full-width-image">
+                                    <img
+                                        src={BgProfile}
+                                        alt="Subimage"
+                                        className="header-image"
+                                    />
+                                </div>
                                 <img
-                                    src={BgProfile}
-                                    alt="Subimage"
-                                    className="header-image"
+                                    src={`./${item.logo}`}
+                                    className="avatar-style"
+                                    alt="Logo"
                                 />
                             </div>
-                            <img
-                                src={`./${item.logo}`}
-                                className="avatar-style"
-                                alt="Logo"
-                            />
-                        </div>
+                        </NavLink>
 
                         <div className="content-section">
-                            <h2>{item.name}</h2>
+                            <NavLink to={`/community/${item.id}`}>
+                                <h2>{item.name}</h2>
+                            </NavLink>
 
                             <span className="card-container-email">
                                 <MailOutlined /> {item.email}

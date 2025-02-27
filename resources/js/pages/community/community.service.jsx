@@ -7,7 +7,13 @@ export const communityApi = apiService.injectEndpoints({
                 url: "/communities",
             }),
         }),
+        fetchCommunity: builder.query({
+            query: (id) => ({
+                url: `/communities/${id}`,
+            }),
+        }),
     }),
 });
 
-export const { useFetchCommunitiesQuery } = communityApi;
+export const { useFetchCommunitiesQuery, useFetchCommunityQuery } =
+    communityApi;

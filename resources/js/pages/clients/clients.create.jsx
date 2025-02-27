@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
     Form,
@@ -16,24 +17,35 @@ import {
     Tabs,
     message,
 } from "antd";
-import { useNavigate } from "react-router-dom";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { setClient } from "./clients.slice";
-import { useSelector, useDispatch } from "react-redux";
-const { Option } = Select;
 import { toast } from "react-toastify";
+
+import { setClient } from "./clients.slice";
+
 import { useCreateClientMutation } from "./clients.service";
+
 import ShowIcon from "../staff/showIcon";
+
 import "./style.css";
+
+const { Option } = Select;
+
 const MyStaffPage = ({}) => {
     const clients = useSelector((apps) => apps.client.clients);
+
     const dispatch = useDispatch();
+
     const navigate = useNavigate();
+
     const [form] = Form.useForm();
+
     const { id } = useParams();
+
     const [fileList, setFileList] = useState([]);
+
     const [createClient, { isLoading: isUploading }] =
         useCreateClientMutation();
+
     const [file, setFile] = useState(null);
 
     const onFinish = async (values) => {

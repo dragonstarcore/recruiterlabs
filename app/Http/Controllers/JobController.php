@@ -26,7 +26,7 @@ class JobController extends Controller
     public function getJob(string $job_id)
     {
 
-        $job = Job::where('id', $job_id)->first();
+        $job = Job::where('id', $job_id)->with('user')->first();
 
         return response()->json(['job' => $job]);
     }
@@ -67,7 +67,7 @@ class JobController extends Controller
             $job->save();
 
             // Send email to matching profiles
-            $this->sendNewJobEmail($job);
+            // $this->sendNewJobEmail($job);
 
             return response()->json(['job' => $job], 200);
         } catch (\Exception $e) {
@@ -120,7 +120,7 @@ class JobController extends Controller
 
     public function jobshared_list(Request $request)
     {
-        $jobs = Job::where('user_id', "!=", $request->query('user_id'))->with('user')->get();
+        $jobs = Job::where('user_id', "!=", Auth::user()->id)->with('user')->orderBy('created_at', 'desc')->get();
 
         return response()->json(['jobs' => $jobs], 200);
     }

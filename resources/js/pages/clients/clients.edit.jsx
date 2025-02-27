@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
     Form,
@@ -15,31 +15,40 @@ import {
     Upload,
     Tabs,
 } from "antd";
-import { toast } from "react-toastify";
 import { UploadOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import { toast } from "react-toastify";
 
 import {
     useFetchClientQuery,
     useUpdateClientMutation,
 } from "./clients.service";
-import "./style.css";
+
 import ShowIcon from "../staff/showIcon";
+
+import "./style.css";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 const MyStaffPage = ({}) => {
     const { id } = useParams();
+
+    const navigate = useNavigate();
+
     const { data, isLoading, isSuccess } = useFetchClientQuery(id, {
         refetchOnMountOrArgChange: true,
     });
+
     const [isCommunityChecked, setIsCommunityChecked] = useState(false);
 
     const [updateClient] = useUpdateClientMutation();
 
     const [form] = Form.useForm();
+
     const [logofileList, setLogofileList] = useState([]);
+
     const [docFile, setDocFile] = useState([]);
+
     const handleCommunityChange = (e) => {
         setIsCommunityChecked(e.target.checked);
     };
@@ -151,6 +160,8 @@ const MyStaffPage = ({}) => {
             toast.success("Client updated successfully", {
                 position: "top-right",
             });
+
+            navigate("/clients");
         } catch (err) {
             console.log(err);
         }

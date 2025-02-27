@@ -34,7 +34,9 @@ function Main({ children }) {
     return (
         <Layout
             className={`layout-dashboard ${
-                pathname === "profile" ? "layout-profile" : ""
+                pathname === "profile" || /community\/\d+/.test(pathname)
+                    ? "layout-profile"
+                    : ""
             } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
         >
             <Drawer

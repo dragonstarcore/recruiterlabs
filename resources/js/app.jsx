@@ -49,6 +49,8 @@ import "../css/app.css";
 import "../css/responsive.css";
 import JobShow from "./pages/jobs/job.show";
 import JobCreate from "./pages/jobs/job.create";
+import JobSharedJob from "./pages/jobs/job.sharedJob";
+import CommunityShow from "./pages/community/community.show";
 
 const PrivateRoute = ({ children }) => {
     const isAuth = useSelector((state) => state.app.isAuth);
@@ -152,6 +154,10 @@ const App = () => {
                                                 element={<Jobsharepage />}
                                             />
                                             <Route
+                                                path="jobshared/:id"
+                                                element={<JobSharedJob />}
+                                            />
+                                            <Route
                                                 path="jobs/create"
                                                 element={<JobCreate />}
                                             />
@@ -174,6 +180,10 @@ const App = () => {
                                             <Route
                                                 path="community"
                                                 element={<Community />}
+                                            />
+                                            <Route
+                                                path="community/:id"
+                                                element={<CommunityShow />}
                                             />
                                             <Route
                                                 path="apps"

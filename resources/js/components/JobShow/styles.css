@@ -1,0 +1,97 @@
+.job-show {
+    min-height: 74vh; /* Full viewport height */
+}
+
+.job-show-1 {
+    background-color: #ffffff;
+    padding: 1rem;
+}
+
+.job-show-title {
+    color: #555555;
+    font-weight: 400;
+    font-size: 2rem;
+    font-family: sans-serif;
+}
+
+.job-show-hr {
+    margin: 1rem 0px !important;
+}
+
+.job-show-tags {
+    background-color: #f8f8f8;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.job-show-desc {
+    margin-top: 1.4rem;
+    color: #666666;
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.job-show-content {
+    /* margin-top: 1rem; */
+    white-space: pre-wrap;
+    font-size: 1rem;
+    color: #666666;
+}
+
+.job-show-2 {
+    padding: 1rem;
+    background-color: #eeeeee;
+}
+
+.job-show-inter-button {
+    width: 100%;
+}
+
+.job-show-user-img {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 1rem !important;
+    margin-top: 1rem;
+    background-color: #ffffff;
+    padding: 0.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.job-show-user-img:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.job-show-user-detail {
+    margin-top: 1rem;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+.interest-message {
+    margin-top: 2rem;
+    background-color: #fafafa;
+    padding: 0.8rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.interest-message.active {
+    max-height: 2000rem;
+    opacity: 1;
+}
+
+.job-interest-title {
+    color: #444444;
+    font-size: 1.2rem;
+    font-weight: 100;
+    font-family: cursive;
+}
+
+.job-card-submit {
+    margin-top: 1rem;
+    width: 100%;
+}

@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/dashboard_jobadder', [JobadderController::class, 'dashboard_jobadder_data'])->name('dashboard_jobadder');
 
     Route::get('/communities', [CommunityController::class, 'index']);
+    Route::get('/communities/{community_id}', [CommunityController::class, 'show']);
 
     Route::get('/my_business', [UserController::class, 'my_business'])->name('my_business');
     Route::post('/my_business_search', [UserController::class, 'my_business'])->name('my_business_search');

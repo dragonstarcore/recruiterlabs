@@ -1,0 +1,30 @@
+.job-card {
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    padding: 0.2rem;
+    cursor: pointer;
+    background: #fafafa;
+    transition: transform 0.3s ease, box-shadow 0.3s, background-color 0.3s ease;
+}
+
+.job-card:hover {
+    background-color: #ffffff;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+
+    .job-card-title {
+        text-decoration: underline;
+    }
+}
+
+.job-card-user {
+    color: #555555;
+}
+
+.job-card-user:hover {
+    color: deepskyblue;
+}
+
+.job-card-title {
+    color: #333333;
+}

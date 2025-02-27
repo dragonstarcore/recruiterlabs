@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Community;
+use App\Models\Job;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
@@ -171,19 +172,38 @@ class CommunityController extends Controller
             }
             $community_user->save();
 
-            return redirect('communities')->with('success', 'User created successfully');
+            return response()->json([
+                'user' => $community_user,
+            ]);
         } catch (\Exception $e) {
-            // echo "$e"; exit;
-            return redirect()->back()->withInput()->with('danger', 'Sorry could not process.');
+            return response()->json(['msg' => $e->getmessage()], 400);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $community_id)
     {
-        //
+        try {
+            $user = Community::where('id', $community_id)->first();
+
+            if (!$user)
+                return response()->json(['msg' => "Can not found the data."], 400);
+
+            $jobs = Job::where('user_id', '=', $user->id)
+                ->where('status', '=', 1)
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'user' => $user,
+                'jobs' => $jobs
+            ]);
+        } catch (\Throwable $e) {;
+            return response()->json(['msg' => $e->getmessage()], 400);
+        }
     }
 
     /**

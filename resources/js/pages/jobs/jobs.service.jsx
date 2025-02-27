@@ -28,7 +28,7 @@ export const jobApi = apiService.injectEndpoints({
                 method: "PUT",
                 body: data,
             }),
-            invalidatesTags: ["Job"],
+            invalidatesTags: ["Job", "Jobs"],
         }),
         deleteJob: builder.mutation({
             query: (id) => ({
@@ -36,6 +36,12 @@ export const jobApi = apiService.injectEndpoints({
                 method: "DELETE",
             }),
             invalidatesTags: ["Jobs"],
+        }),
+        fetchSharedJob: builder.query({
+            query: () => ({
+                url: "/jobshared",
+            }),
+            providesTags: ["Jobs"],
         }),
     }),
 });
@@ -46,4 +52,5 @@ export const {
     useCreateJobMutation,
     useDeleteJobMutation,
     useEditJobMutation,
+    useFetchSharedJobQuery,
 } = jobApi;
