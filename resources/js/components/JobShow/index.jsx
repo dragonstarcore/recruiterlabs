@@ -171,18 +171,17 @@ export default function JobShowComponent({ job, loading }) {
                 lg={6}
                 xl={6}
             >
-                {userData.id === job.user_id ? (
-                    <NavLink to="/jobs">
-                        <Button
-                            type="primary"
-                            className="job-show-inter-button"
-                            onClick={handleButtonClick}
-                        >
-                            <ArrowLeftOutlined />
-                            GO BACK
-                        </Button>
-                    </NavLink>
-                ) : (
+                <div className="job-show-btns">
+                    <Button
+                        className="job-show-inter-button"
+                        onClick={() => {
+                            navigate(-1);
+                        }}
+                    >
+                        <ArrowLeftOutlined />
+                        GO BACK
+                    </Button>
+
                     <Button
                         type="primary"
                         className="job-show-inter-button"
@@ -190,7 +189,7 @@ export default function JobShowComponent({ job, loading }) {
                     >
                         I AM INTERESTED
                     </Button>
-                )}
+                </div>
 
                 <Avatar
                     shape="square"

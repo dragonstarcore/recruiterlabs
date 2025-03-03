@@ -1,11 +1,33 @@
 import React from "react";
 
-import { Col, Flex, Row, Spin, Tag, Tooltip } from "antd";
-import { AimOutlined, MailOutlined } from "@ant-design/icons";
+import {
+    Badge,
+    Card,
+    Col,
+    Flex,
+    Row,
+    Space,
+    Spin,
+    Tag,
+    Timeline,
+    Tooltip,
+} from "antd";
+import {
+    AimOutlined,
+    BorderlessTableOutlined,
+    CalendarOutlined,
+    DollarOutlined,
+    FieldTimeOutlined,
+    ForkOutlined,
+    MailOutlined,
+    PoundOutlined,
+} from "@ant-design/icons";
 
 import BgProfile from "./../../../imgs/user-back.jpg";
 
 import "./styles.css";
+import moment from "moment";
+import { NavLink } from "react-router-dom";
 
 const tagColors = ["magenta", "blue", "green", "volcano", "gold"];
 
@@ -37,7 +59,7 @@ function TagsList({ keywords }) {
     );
 }
 
-export default function UserShow({ user, loading }) {
+export default function UserShow({ user, jobs, loading }) {
     return loading ? (
         <Flex className="user-show" justify="center" align="center">
             <Spin />
@@ -52,15 +74,15 @@ export default function UserShow({ user, loading }) {
                     }}
                 ></div>
 
-                <Row className="user-profile" gutter={24}>
+                <Row className="user-profile" gutter={48}>
                     <Col
                         className="user-show-1"
                         span={24}
                         xs={24}
                         sm={24}
                         md={24}
-                        lg={12}
-                        xl={8}
+                        lg={10}
+                        xl={7}
                     >
                         <div className="user-detail">
                             <img
@@ -88,6 +110,11 @@ export default function UserShow({ user, loading }) {
                                 <strong>Specialism</strong>
 
                                 <TagsList keywords={user.keywords.split(",")} />
+
+                                <div style={{ marginTop: "1rem" }}>
+                                    <strong>Latest Job Post</strong>
+                                    <p>2025-01-01</p>
+                                </div>
                             </div>
                         </div>
                     </Col>
@@ -98,9 +125,96 @@ export default function UserShow({ user, loading }) {
                         xs={24}
                         sm={24}
                         md={24}
-                        lg={12}
-                        xl={16}
-                    ></Col>
+                        lg={14}
+                        xl={17}
+                    >
+                        <Timeline>
+                            {jobs.map((job) => (
+                                <Timeline.Item key={job.id}>
+                                    <Card
+                                        title={
+                                            job.status === 1 ? (
+                                                <NavLink to={`/jobs/${job.id}`}>
+                                                    {job.job_title}(
+                                                    {job.industry})
+                                                </NavLink>
+                                            ) : (
+                                                `${job.job_title} (${job.industry})`
+                                            )
+                                        }
+                                        extra={
+                                            job.status === 1 && (
+                                                <Badge
+                                                    status="processing"
+                                                    text="Active"
+                                                />
+                                            )
+                                        }
+                                    >
+                                        <Space>
+                                            <Tooltip title={"Salary"}>
+                                                <Tag
+                                                    icon={<PoundOutlined />}
+                                                    color="green"
+                                                >
+                                                    {Math.round(job.salary)}{" "}
+                                                    {job.salary_currency}
+                                                </Tag>
+                                            </Tooltip>
+                                            <Tooltip title={"Fee"}>
+                                                <Tag
+                                                    icon={<DollarOutlined />}
+                                                    color="red"
+                                                >
+                                                    {Math.round(job.fee)}{" "}
+                                                    {job.fee_currency}
+                                                </Tag>
+                                            </Tooltip>
+                                            <Tooltip title={"Posted Date"}>
+                                                <Tag
+                                                    icon={<FieldTimeOutlined />}
+                                                    color="cyan"
+                                                >
+                                                    Posted{" "}
+                                                    {moment(
+                                                        job.created_at
+                                                    ).fromNow()}
+                                                </Tag>
+                                            </Tooltip>
+                                            <Tooltip title={"Started Date"}>
+                                                <Tag
+                                                    icon={<CalendarOutlined />}
+                                                    color="blue"
+                                                >
+                                                    {new Date(
+                                                        job.start_date
+                                                    ).toLocaleDateString()}
+                                                </Tag>
+                                            </Tooltip>
+                                            <Tooltip title={"Job Type"}>
+                                                <Tag
+                                                    icon={
+                                                        <BorderlessTableOutlined />
+                                                    }
+                                                    color="magenta"
+                                                >
+                                                    {job.job_type}
+                                                </Tag>
+                                            </Tooltip>
+                                            <Tooltip title={"Recruitment Type"}>
+                                                <Tag
+                                                    icon={<ForkOutlined />}
+                                                    color="purple"
+                                                >
+                                                    {job.recruitment_type}
+                                                </Tag>
+                                            </Tooltip>
+                                        </Space>
+                                    </Card>
+                                </Timeline.Item>
+                            ))}
+                        </Timeline>
+                    </Col>
                 </Row>
             </>
         )

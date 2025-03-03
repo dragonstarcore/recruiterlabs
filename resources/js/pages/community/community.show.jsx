@@ -8,7 +8,8 @@ import UserShow from "../../components/UserShow";
 export default function CommunityShow() {
     const { id } = useParams();
 
-    const { data = { user: {} }, isFetching } = useFetchCommunityQuery(id);
+    const { data = { user: {}, jobs: [] }, isFetching } =
+        useFetchCommunityQuery(id);
 
-    return <UserShow user={data.user} loading={isFetching} />;
+    return <UserShow user={data.user} jobs={data.jobs} loading={isFetching} />;
 }
