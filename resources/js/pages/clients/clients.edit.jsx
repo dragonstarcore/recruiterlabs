@@ -236,39 +236,10 @@ const MyStaffPage = ({}) => {
                         </Form.Item>
                     </Col>
 
-                    <Col span={24}>
-                        <Form.Item name="send_email" valuePropName="checked">
-                            <Checkbox>Email confirmation</Checkbox>
-                        </Form.Item>
-                    </Col>
+                   
                 </Row>
-
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item name="community" valuePropName="checked">
-                            <Checkbox onChange={handleCommunityChange}>
-                                Add to community
-                            </Checkbox>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                {isCommunityChecked && (
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Specialism" name="keywords">
-                                <Input
-                                    name="keywords"
-                                    placeholder="Specialism"
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Industry" name="industry">
-                                <Input name="industry" placeholder="Industry" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                )}
+ 
+                 
                 <Row>
                     <Col span={12}>
                         <Form.Item label="Company Details"></Form.Item>
