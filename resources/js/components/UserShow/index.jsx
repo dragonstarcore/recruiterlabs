@@ -1,5 +1,7 @@
+import { NavLink } from "react-router-dom";
 import React from "react";
 
+import moment from "moment";
 import {
     Badge,
     Card,
@@ -26,8 +28,6 @@ import {
 import BgProfile from "./../../../imgs/user-back.jpg";
 
 import "./styles.css";
-import moment from "moment";
-import { NavLink } from "react-router-dom";
 
 const tagColors = ["magenta", "blue", "green", "volcano", "gold"];
 

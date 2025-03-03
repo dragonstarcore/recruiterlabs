@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import moment from "moment";
 import { toast } from "react-toastify";
@@ -33,17 +34,33 @@ import {
 } from "@ant-design/icons";
 
 import "./styles.css";
-import { useSelector } from "react-redux";
 
 const { TextArea } = Input;
 
-export default function JobShowComponent({ job, loading }) {
+export default function JobShowComponent({
+    job,
+    loading,
+    applyJob,
+    isSuccess,
+    isError,
+}) {
     const navigate = useNavigate();
 
     const userData = useSelector((apps) => apps.app.user);
 
     const [isInterested, setIsInterested] = useState(false);
     const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success("Mail sent successfully!");
+            navigate(-1);
+        }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        if (isError) toast.error("Mail sending failed!");
+    }, [isError]);
 
     useEffect(() => {
         if (isInterested) {
@@ -61,8 +78,7 @@ export default function JobShowComponent({ job, loading }) {
     };
 
     const submit = () => {
-        toast.success("Mail sent successfully!");
-        navigate("/jobshared");
+        applyJob({ id: job.id, data: { message } });
     };
 
     return loading ? (
@@ -171,25 +187,28 @@ export default function JobShowComponent({ job, loading }) {
                 lg={6}
                 xl={6}
             >
-                <div className="job-show-btns">
-                    <Button
-                        className="job-show-inter-button"
-                        onClick={() => {
-                            navigate(-1);
-                        }}
-                    >
-                        <ArrowLeftOutlined />
-                        GO BACK
-                    </Button>
-
-                    <Button
-                        type="primary"
-                        className="job-show-inter-button"
-                        onClick={handleButtonClick}
-                    >
-                        I AM INTERESTED
-                    </Button>
-                </div>
+                <Row gutter={8}>
+                    <Col span={24} xs={24} sm={24} md={24} lg={24} xl={12}>
+                        <Button
+                            className="job-show-inter-button"
+                            onClick={() => {
+                                navigate(-1);
+                            }}
+                        >
+                            <ArrowLeftOutlined />
+                            GO BACK
+                        </Button>
+                    </Col>
+                    <Col span={24} xs={24} sm={24} md={24} lg={24} xl={12}>
+                        <Button
+                            type="primary"
+                            className="job-show-inter-button"
+                            onClick={handleButtonClick}
+                        >
+                            I AM INTERESTED
+                        </Button>
+                    </Col>
+                </Row>
 
                 <Avatar
                     shape="square"

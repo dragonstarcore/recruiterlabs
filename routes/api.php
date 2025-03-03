@@ -92,5 +92,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/jobs/{job_id}', [JobController::class, 'destroy']);
 
     Route::get('/jobshared', [JobController::class, 'jobshared_list'])->name('job.shared');
-    Route::post('/jobs/apply', [JobController::class, 'apply'])->name('job.apply');
+    Route::post('/jobs/{job_id}/apply', [JobController::class, 'apply'])->name('job.apply');
 });

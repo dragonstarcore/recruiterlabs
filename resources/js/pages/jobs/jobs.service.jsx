@@ -43,6 +43,13 @@ export const jobApi = apiService.injectEndpoints({
             }),
             providesTags: ["Jobs"],
         }),
+        applyJob: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/jobs/${id}/apply`,
+                method: "POST",
+                body: data,
+            }),
+        }),
     }),
 });
 
@@ -53,4 +60,5 @@ export const {
     useDeleteJobMutation,
     useEditJobMutation,
     useFetchSharedJobQuery,
+    useApplyJobMutation,
 } = jobApi;

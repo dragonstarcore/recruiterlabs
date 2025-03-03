@@ -43,17 +43,10 @@
     background-color: #eeeeee;
 }
 
-.job-show-btns {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
 .job-show-inter-button {
-    margin: 0.2rem;
-    width: 45%;
-    min-width: 100px;
+    /* min-width: 100px; */
+    width: 100%;
+    margin-top: 0.5rem;
 }
 
 .job-show-user-img {

@@ -123,24 +123,50 @@ class JobController extends Controller
         $jobs = Job::where('user_id', "!=", Auth::user()->id)->with('user')->orderBy('created_at', 'desc')->get();
 
         return response()->json(['jobs' => $jobs], 200);
+
+
+        // $cur_user = Auth::user();
+
+        // $user = Community::where('email', '=', $cur_user->email)->first();
+
+        // if (is_null($user)) {
+        //     return response()->json(['jobs' => []], 200);
+        // }
+
+        // $keywords = explode(',', $user->keywords);
+
+        // $jobs = Job::where('user_id', '!=', $user->id)
+        //     ->where(function ($query) use ($user, $keywords) {
+        //         $query->where('industry', 'LIKE', $user->industry);
+
+        //         $query->orWhere(function ($subQuery) use ($keywords) {
+        //             foreach ($keywords as $keyword) {
+        //                 $subQuery->orWhere('job_title', 'LIKE', "%{$keyword}%")
+        //                     ->orWhere('job_description', 'LIKE', "%{$keyword}%");
+        //             }
+        //         });
+        //     })
+        //     ->with('user')
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
+
+        // return response()->json(['jobs' => $jobs], 200);
     }
 
-    public function apply(Request $request)
+    public function apply(string $job_id)
     {
-        if ($request->has('user_id') && $request->user_id) {
 
-            $user = User::where('id', $request->user_id)->first();
+        $user = User::where('id', Auth::user()->id)->first();
 
-            $job = Job::where('id', $request->job_id)->first();
+        $job = Job::where('id', $job_id)->first();
 
-            $interestedjob = [
-                'username' => $user->name,
-                'job_title' => $job->job_title,
-                'questions' => $job->questions
-            ];
+        $interestedjob = [
+            'username' => $user->name,
+            'job_title' => $job->job_title,
+            'questions' => $job->questions
+        ];
 
-            Mail::to($user->email)->send(new InterestJobNotification($interestedjob));
-        }
+        Mail::to($user->email)->send(new InterestJobNotification($interestedjob));
     }
 
     public function search(Request $request)

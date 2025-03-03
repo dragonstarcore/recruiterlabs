@@ -191,13 +191,9 @@ class CommunityController extends Controller
             if (!$user)
                 return response()->json(['msg' => "Can not found the data."], 400);
 
-            // $jobs = Job::where('user_id', '=', $user->id)
-            //     ->where('status', '=', 1)
-            //     ->with('user')
-            //     ->orderBy('created_at', 'desc')
-            //     ->get();
-
-            $jobs = Job::with('user')
+            $jobs = Job::where('user_id', '=', $user->id)
+                ->where('status', '=', 1)
+                ->with('user')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
