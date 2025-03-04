@@ -86,7 +86,7 @@ function Sidenav({ color = "#555555" }) {
                     >
                         {<CloudUploadOutlined />}
                     </span>
-                    <span className="label">Job sharing</span>
+                    <span className="label">Job Sharing</span>
                 </NavLink>
             ),
             role: [2],
