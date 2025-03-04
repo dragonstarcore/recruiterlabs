@@ -86,7 +86,7 @@ const App = () => {
                                                 element={<Business />}
                                             />
                                             <Route
-                                                path="performance"
+                                                path="jobadder"
                                                 element={<Performance />}
                                             />
                                             <Route
@@ -196,13 +196,7 @@ const App = () => {
                                             <Route
                                                 path="recruiterlabs/jobadder"
                                                 element={
-                                                    <RedirectWithParams to="/performance" />
-                                                }
-                                            />
-                                            <Route
-                                                path="jobadder"
-                                                element={
-                                                    <Navigate to="/performance" />
+                                                    <RedirectWithParams to="/jobadder" />
                                                 }
                                             />
                                             <Route
