@@ -144,20 +144,20 @@ return [
     ],
 
 
-    // 'jobadder_details' => [
-    //     'clientId'          => 'hkewwc2ywzzu7da3eskuylhijm',
-    //     'clientSecret'      => 'tshvpdkzil5e7pob2blv5omtciyx3ez2m3fz2ehkr5hksj7gm6oq',
-    //     'scope'             => 'read offline_access',
-    //     'redirectUri'       => 'https://recstack.co/jobadder',
-    //     // 'redirectUri'       => 'http://35.179.25.187/jobadder',
+     'jobadder_details' => [
+         'clientId'          => 'hkewwc2ywzzu7da3eskuylhijm',
+         'clientSecret'      => 'tshvpdkzil5e7pob2blv5omtciyx3ez2m3fz2ehkr5hksj7gm6oq',
+         'scope'             => 'read offline_access',
+         'redirectUri'       => 'https://recstack.co/jobadder',
+         // 'redirectUri'       => 'http://35.179.25.187/jobadder',
 
+     ],
+    // 'jobadder_details' => [
+    //  'clientId'          => 'lhytzr73qs5ublobvwumnd5vnu',
+    //    'clientSecret'      => '3xjvf426ohju3jmcfpvpde4mguum7ajdhiehsu3ndmoufnlrge54',
+    //    'scope'             => 'read offline_access',
+    //    'redirectUri'       => 'http://localhost/recruiterlabs/jobadder',
     // ],
-    'jobadder_details' => [
-        'clientId'          => 'lhytzr73qs5ublobvwumnd5vnu',
-        'clientSecret'      => '3xjvf426ohju3jmcfpvpde4mguum7ajdhiehsu3ndmoufnlrge54',
-        'scope'             => 'read offline_access',
-        'redirectUri'       => 'http://localhost/recruiterlabs/jobadder',
-    ],
 
 
 
