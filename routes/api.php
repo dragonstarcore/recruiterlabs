@@ -80,8 +80,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get_cv', [JobadderController::class, 'get_CV_Attachment'])->name('get_cv');
 
     Route::get('/xero', [XeroController::class, 'index'])->name('xero.auth.success');
-    Route::get('/xero/auth/authorize', AuthorizationController::class)->name('xero.auth.authorize');
-    Route::get('/xero/auth/callback', AuthorizationCallbackController::class)->name('xero.auth.callback');
+//    Route::get('/xero/auth/authorize', AuthorizationController::class)->name('xero.auth.authorize');
+//    Route::get('/xero/auth/callback', AuthorizationCallbackController::class)->name('xero.auth.callback');
 
     Route::post('/users_search', [UserController::class, 'search']);
 
