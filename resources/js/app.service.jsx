@@ -39,5 +39,3 @@ export const apiService = createApi({
     baseQuery: customFetchBaseQuery,
     endpoints: () => ({}),
 });
-
-export default apiService;

@@ -156,7 +156,7 @@ return [
         'clientId'          => 'lhytzr73qs5ublobvwumnd5vnu',
         'clientSecret'      => '3xjvf426ohju3jmcfpvpde4mguum7ajdhiehsu3ndmoufnlrge54',
         'scope'             => 'read offline_access',
-        'redirectUri'       => 'http://localhost/recruiterlabs/jobadder',
+        'redirectUri'       => 'https://recstack.co/recruiterlabs/jobadder',
     ],
 
 

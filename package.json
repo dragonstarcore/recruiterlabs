@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev_8000": "vite --port 8000",
     "build": "vite build"
   },
   "author": "",
