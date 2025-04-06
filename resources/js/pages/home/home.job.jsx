@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Card, Flex, Spin } from "antd";
 import { toast } from "react-toastify";
@@ -9,24 +9,31 @@ import { NavLink } from "react-router-dom";
 
 export default function Performance() {
     const { data, error, isLoading } = useFetchJobAdderDataQuery();
+    const [authorize_link, setAuthorizeLink] = useState('');
+
+    // useEffect(() => {
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const code = urlParams.get("code");
+    //
+    //     if (code) {
+    //         // setAuthorizationCode(code);
+    //         urlParams.delete("code");
+    //         window.history.replaceState(
+    //             {},
+    //             document.title,
+    //             window.location.pathname
+    //         );
+    //     }
+    // }, []);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get("code");
-
-        if (code) {
-            setAuthorizationCode(code);
-            urlParams.delete("code");
-            window.history.replaceState(
-                {},
-                document.title,
-                window.location.pathname
-            );
+        if (error) {
+            if (error.status === 302) {
+                setAuthorizeLink(error.data.auth_link);
+                return;
+            }
+            toast.error("Failed to get access token");
         }
-    }, []);
-
-    useEffect(() => {
-        if (error) toast.error("Failed to get access token");
     }, [error]);
 
     return isLoading ? (
@@ -38,7 +45,7 @@ export default function Performance() {
     ) : (
         <Card.Meta
             description={
-                <NavLink to="/performance">Connect Jobadder Account</NavLink>
+                <NavLink to={authorize_link}>Connect Jobadder Account</NavLink>
             }
         />
     );

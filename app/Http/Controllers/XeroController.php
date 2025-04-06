@@ -1,19 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use XeroAPI\XeroPHP\Models\Accounting\Invoice;
-use XeroAPI\XeroPHP\Models\Accounting\LineItem;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Webfox\Xero\OauthCredentialManager;
 use Auth;
 use Carbon\Carbon;
 use Artisan;
 use XeroAPI\XeroPHP\Api\OAuth2Api;
 use XeroAPI\XeroPHP\Api\AccountingApi;
-use XeroAPI\XeroPHP\Configuration;
-use GuzzleHttp\Client;
 
 // use XeroAPI\XeroPHP\Models\Accounting\User;
 class XeroController extends Controller
@@ -326,8 +320,14 @@ class XeroController extends Controller
         return $dashboard_data ?? null;
     }
 
-    public function index(Request $request, OauthCredentialManager $xeroCredentials)
+    public function index(Request $request)
     {
+        // TODO - assume failing authorization
+        return response()->json([]);
+
+
+
+
         // dd($xeroCredentials);
         //Start: Xero Connection
             try {
@@ -357,7 +357,7 @@ class XeroController extends Controller
                 $error = $e->getMessage();
             }
         //End: Xero Connection
-         
+
             $month = $this->getMonth();
         // End: Start and end date of last 6 month
 
@@ -617,7 +617,7 @@ class XeroController extends Controller
                         $parts1 = explode('+', $date1);
                         $value['due_date'] = $due_date = date("Y-m-d", $parts1[0] / 1000);
                     }
-                    
+
                     if(substr($value['invoice_number'], 0, 3)=='INV') {
 
                         if($value['status']!="DRAFT" && $value['status']!="PAID") {
@@ -727,7 +727,7 @@ class XeroController extends Controller
                         $item1--;
                     }
 
-                } 
+                }
 
                 if (count($invoice_apiResponse->getInvoices()) > 0) {
                     $message = 'Total invoices found: ' . count($invoice_apiResponse->getInvoices());
@@ -750,14 +750,14 @@ class XeroController extends Controller
             'account_watchlist'=> $account_watchlist ?? null,
             'balance'          => $balance ?? null,
             'total_cash'       => $total_cash ?? null,
-        ], 200); 
+        ], 200);
 
     }
 
     public static function getWeeks() //TO get weeks with start and enddate
     {
-        
-        
+
+
 
         // Create an empty array for storing weeks
         $weeks = [];
@@ -765,38 +765,38 @@ class XeroController extends Controller
         // echo (Carbon::now()->subWeeks(0));
         // echo (Carbon::now()->subWeeks(0)->startOfWeek());
         // echo (Carbon::THURSDAY);
-         
+
         // echo( Carbon::now()->addWeeks(1)->startOfWeek());
         // echo( Carbon::now()->addWeeks(1)->endOfWeek());
-        
+
         // Define the number of weeks to generate (past 3 months ≈ 12 weeks)
         $numWeeks = 4;
-        
+
         // Define the starting weekday (0 = Sunday, 6 = Saturday)
         $startOfWeek = Carbon::THURSDAY; // Start the week on Thursday
-        
+
         // Loop to generate week ranges for the past 12 weeks
         for ($i = 0; $i < $numWeeks; $i++) {
             // Calculate the start and end of the week
             $from = Carbon::now()->subWeeks($i)->startOfWeek(); // Start of the week (Thursday)
             $to = Carbon::now()->subWeeks($i)->endOfWeek(); // End of the week (Wednesday)
-        
+
             // Format the date range
             $ymd_week_range = $from->format('Y-m-d') . ',' . $to->format('Y-m-d');
-        
+
             // Format the week description (e.g., 'Feb 2 - Jan 25')
             $weeks[$ymd_week_range] = $from->format('M j') . ' - ' . $to->format('M j');
-            
+
         }
-        
+
         // Add "older" and "future" ranges
         $older = Carbon::now()->subWeeks($numWeeks )->endOfWeek()->format('Y-m-d') . ',' . 'older';
         $future = Carbon::now()->addWeeks(1)->startOfWeek()->format('Y-m-d') . ',' . 'future';
-        
+
         // Adding "older" and "future" ranges to the weeks array
         $weeks[$older] = 'Older';
         $weeks[$future] = 'Future';
-        
+
         // Print the weeks array (optional)
         //dd($weeks);
         return $weeks;

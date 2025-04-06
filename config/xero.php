@@ -1,6 +1,6 @@
 <?php
 
-use Webfox\Xero\Oauth2CredentialManagers\FileStore;
+use App\Xero\UserStorageProvider;
 
 return [
 

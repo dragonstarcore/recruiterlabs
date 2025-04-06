@@ -5,39 +5,30 @@ namespace App\Xero;
 
 use App\Models\User;
 use Illuminate\Session\Store;
+use Illuminate\Support\Facades\Auth;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Webfox\Xero\Oauth2Provider;
 use Webfox\Xero\OauthCredentialManager;
 
 class UserStorageProvider implements OauthCredentialManager
 {
+    protected Oauth2Provider $oauthProvider;
 
-    /** @var Oauth2Provider  */
-    protected $oauthProvider;
+    protected Store $session;
 
-    /** @var Store */
-    protected $session;
+    protected User $user;
 
-   /** @var User */
-    protected $user;
-
-      /** @var string */
-    //   protected $filePath;
     public function __construct(User $user, Store $session, Oauth2Provider $oauthProvider)
     {
         // print('__construct');
         $this->user          = $user;
         $this->oauthProvider = $oauthProvider;
         $this->session       = $session;
-       
+
         if($this->user->xero_oauth && time() >= $this->data('expires')){
             $this->refresh();
         }
-        
-    } 
-    
-    public function get_clientId(){
-        return \Auth::user()->client_id;
+
     }
 
     public function getAccessToken(): string
@@ -61,7 +52,7 @@ class UserStorageProvider implements OauthCredentialManager
     public function getTenants(): ?array
     {
         return $this->data('tenants');
-    } 
+    }
 
     public function getExpires(): int
     {
@@ -114,7 +105,7 @@ class UserStorageProvider implements OauthCredentialManager
             'expires'       => $token->getExpires(),
             'tenants'       => $tenants ?? $this->getTenants()
         ];
-        
+
         $this->user->save();
     }
 

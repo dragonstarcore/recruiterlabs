@@ -12,7 +12,11 @@ const { Paragraph } = Typography;
 const Dashboard = () => {
     const userData = useSelector((apps) => apps.app.user);
 
-    if (userData.role_type == 1)
+    if (userData.id === null) {
+        return <></>;
+    }
+
+    if (userData.role_type === 1)
         return (
             <Card title="Dashboard" bordered={false}>
                 <Typography>

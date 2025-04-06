@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.1",
         "bezhansalleh/filament-google-analytics": "2.0",
+        "doctrine/dbal": "3.5.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
@@ -17,7 +18,7 @@
         "rolandsaven/oauth2-jobadder": "^1.0",
         "spatie/laravel-analytics": "5.1",
         "spatie/laravel-permission": "^5.9",
-        "webfox/laravel-xero-oauth2": "^4.1"
+        "webfox/laravel-xero-oauth2": "4.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

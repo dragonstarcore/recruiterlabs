@@ -21,6 +21,11 @@ import { NavLink, useLocation } from "react-router-dom";
 function Sidenav({ color = "#555555" }) {
     const userData = useSelector((apps) => apps.app.user);
     const { pathname } = useLocation();
+
+    if (userData.id === null) {
+        return <></>;
+    }
+
     const page = pathname.replace("/", "");
 
     const menuItems = [

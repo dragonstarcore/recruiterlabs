@@ -10,6 +10,7 @@ import {
 import { Provider, useSelector } from "react-redux";
 import { ConfigProvider } from "antd";
 import { ToastContainer } from "react-toastify";
+import '@ant-design/v5-patch-for-react-19';
 
 import { store } from "./app.store";
 

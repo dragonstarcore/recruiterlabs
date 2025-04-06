@@ -158,6 +158,15 @@ return [
     //    'scope'             => 'read offline_access',
     //    'redirectUri'       => 'http://localhost/recruiterlabs/jobadder',
     // ],
+<<<<<<< HEAD
+=======
+    'jobadder_details' => [
+        'clientId'          => 'lhytzr73qs5ublobvwumnd5vnu',
+        'clientSecret'      => '3xjvf426ohju3jmcfpvpde4mguum7ajdhiehsu3ndmoufnlrge54',
+        'scope'             => 'read offline_access',
+        'redirectUri'       => 'https://recstack.co/recruiterlabs/jobadder',
+    ],
+>>>>>>> d05d8fe664c46af293924f12f554f17f870a26bb
 
 
 

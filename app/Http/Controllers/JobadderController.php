@@ -2,157 +2,200 @@
 
 namespace App\Http\Controllers;
 
-use Config;
-use Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Auth;
 use App\Models\JobadderDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
+use RolandSaven\OAuth2\Client\Provider\JobAdder;
 
-session_start();
+//session_start();
 class JobadderController extends Controller
 {
-    public static function index(Request $request)
-    {
-        try {
-
-
-            // $user = User::where('id',Auth::user()->id)->with('jobadder_details')->first();
-            // $str = '-------Start---------';
-            //  dd(1);
-            // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-            $provider = new \RolandSaven\OAuth2\Client\Provider\JobAdder([
-                //For local
-                'clientId'          => Config::get('app.jobadder_details.clientId'),
-                'clientSecret'      => Config::get('app.jobadder_details.clientSecret'),
-                'scope'             => Config::get('app.jobadder_details.scope'),
-                'redirectUri'       => Config::get('app.jobadder_details.redirectUri'),
-                //for server
-                // 'clientId'          => 'lhytzr73qs5ublobvwumnd5vnu',
-                // 'clientSecret'      => '3xjvf426ohju3jmcfpvpde4mguum7ajdhiehsu3ndmoufnlrge54',
-                // 'scope'             => 'read offline_access',
-                // 'redirectUri'       => 'https://recruiterlabsdash.co.uk/recruiterlabs/jobadder',
-            ]);
-
-            //save to jobadder
-            $JobadderDetail = JobadderDetail::where('user_id', Auth::user()->id)->first();
-
-            if (isset($JobadderDetail['code']) && $JobadderDetail['code'] != null) {
-                // $str = '!1';
-                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                $_GET['state'] = $JobadderDetail['state'];
-                $_SESSION['oauth2state'] = $JobadderDetail['state'];
-                Session::put('oauth2state', $JobadderDetail['state']);
-                // $oauth2state=Session::get('oauth2state');
-                $_GET['code'] = $JobadderDetail['code'];
-                $_GET['refresh_token'] = 'yes';
-            } else if (isset($_GET['code']) && $_GET['code'] != "" && isset($_GET['state']) && $_GET['state'] != "") {
-                // $str = '!2';
-                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                $JobadderDetail['code'] = $_GET['code'];
-                $JobadderDetail['state'] = $_GET['state'];
-                $JobadderDetail->save();
-                Session::put('oauth2state', $_GET['state']);
-            }
-
-            if (!isset($_GET['code'])) {
-                $str = '--!no code';
-                file_put_contents("jobadder.txt", PHP_EOL . $str, FILE_APPEND);
-                // If we don't have an authorization code then get one
-                $authUrl = $provider->getAuthorizationUrl();
-                // $_SESSION['oauth2state'] = $provider->getState();
-                // $oauth2state = Session::get('oauth2state') ? Session::get('oauth2state') : null;
-                header('Location: ' . $authUrl);
-                exit;
-
-                // Check given state against previously stored one to mitigate CSRF attack
-            } elseif (empty($_GET['state']) || ($_GET['state'] !== Session::get('oauth2state'))) {
-                // unset($_SESSION['oauth2state']);
-                Session::forget('oauth2state');
-                // $str = '--!Invalid state';
-                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                exit('Invalid state');
-            } else {
-                // dd('1');
-                // $str = '!3';
-                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                if (isset($_GET['refresh_token']) && $_GET['refresh_token'] == 'yes') {
-                    // $str = '!4';
-                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                    // Try to get an access token (using the authorization code grant)
-                    $token = $provider->getAccessToken('refresh_token', [
-                        'refresh_token' => $JobadderDetail['refresh_token']
-                    ]);
-                    $JobadderDetail['refresh_token_response'] = json_encode($token);
-                    dd(1);
-                } else {
-                    // $str = '!5';
-                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                    // Try to get an access token (using the authorization code grant)
-                    $token = $provider->getAccessToken('authorization_code', [
-                        'code' => $_GET['code']
-                    ]);
-                    $JobadderDetail['auth_response'] = json_encode($token);
-                }
-                // $str = '!6';
-                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                // file_put_contents("token.txt",json_encode($token));
-
-                $JobadderDetail['refresh_token'] = $token->getRefreshToken();
-                // $JobadderDetail['auth_response'] = json_encode($token);
-                $JobadderDetail->save();
-                // Optional: Now you have a token you can look up a users profile data
-                try {
-                    // $str = '!7';
-                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                    // We got an access token, let's now get the user's details
-                    $account = $provider->getResourceOwner($token);
-                    // Use these details to create a new profile
-                    Session::put('FullName', $account->getFullName());
-                    Session::put('Email', $account->getEmail());
-                } catch (Exception $e) {
-                    // $str = '8';
-                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                    // Failed to get user details
-                    exit('Oh dear...');
-                }
-                // $str = '!9';
-                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                // Use this to interact with an API on the users behalf
-                // $_SESSION['token'] = $token->getToken();
-                Session::put('token', $token->getToken());
-                $JobadderDetail['token'] = $token->getToken();
-                $JobadderDetail->save();
-                // $str = '!10';
-                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
-                return response()->json(['message' => 'Authorization successful', 'redirect' => '/jobadder_data']);
-            }
-        } catch (\throwable $e) {
-            dd($e);
-            // This can happen if the credentials have been revoked or there is an error with the organisation (e.g. it's expired)
-            return response()->json(['error' => 'Authorization failed', 'redirect' => '/client_error_page'], 500);
-        }
-    }
+//    public static function index(Request $request)
+//    {
+//        try {
+//            $config = [
+//                //For local
+//                'clientId'          => Config::get('app.jobadder_details.clientId'),
+//                'clientSecret'      => Config::get('app.jobadder_details.clientSecret'),
+//                'scope'             => Config::get('app.jobadder_details.scope'),
+//                'redirectUri'       => Config::get('app.jobadder_details.redirectUri'),
+//                //for server
+//                // 'clientId'          => 'lhytzr73qs5ublobvwumnd5vnu',
+//                // 'clientSecret'      => '3xjvf426ohju3jmcfpvpde4mguum7ajdhiehsu3ndmoufnlrge54',
+//                // 'scope'             => 'read offline_access',
+//                // 'redirectUri'       => 'https://recruiterlabsdash.co.uk/recruiterlabs/jobadder',
+//            ];
+//
+//            // for development
+//            if (env('APP_ENV') == 'local' && env('APP_DEBUG') === true) {
+//                $config['redirectUri'] = 'http://127.0.0.1:8000/recruiterlabs/jobadder';
+//            }
+//
+//            $provider = new \RolandSaven\OAuth2\Client\Provider\JobAdder($config);
+//
+//            //save to jobadder
+//            $JobadderDetail = JobadderDetail::where('user_id', Auth::user()->id)->first();
+//
+//            if (isset($JobadderDetail['code']) && $JobadderDetail['code'] != null) {
+//                // $str = '!1';
+//                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                $_GET['state'] = $JobadderDetail['state'];
+//                $_SESSION['oauth2state'] = $JobadderDetail['state'];
+//                Session::put('oauth2state', $JobadderDetail['state']);
+//                // $oauth2state=Session::get('oauth2state');
+//                $_GET['code'] = $JobadderDetail['code'];
+//                $_GET['refresh_token'] = 'yes';
+//            } else if (isset($_GET['code']) && $_GET['code'] != "" && isset($_GET['state']) && $_GET['state'] != "") {
+//                // $str = '!2';
+//                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                $JobadderDetail['code'] = $_GET['code'];
+//                $JobadderDetail['state'] = $_GET['state'];
+//                $JobadderDetail->save();
+//                Session::put('oauth2state', $_GET['state']);
+//            }
+//
+//            if (!isset($_GET['code'])) {
+//                $str = '--!no code';
+//                file_put_contents("jobadder.txt", PHP_EOL . $str, FILE_APPEND);
+//                // If we don't have an authorization code then get one
+//                $authUrl = $provider->getAuthorizationUrl();
+//                // $_SESSION['oauth2state'] = $provider->getState();
+//                // $oauth2state = Session::get('oauth2state') ? Session::get('oauth2state') : null;
+//                header('Location: ' . $authUrl);
+//                exit;
+//
+//                // Check given state against previously stored one to mitigate CSRF attack
+//            } elseif (empty($_GET['state']) || ($_GET['state'] !== Session::get('oauth2state'))) {
+//                // unset($_SESSION['oauth2state']);
+//                Session::forget('oauth2state');
+//                // $str = '--!Invalid state';
+//                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                exit('Invalid state');
+//            } else {
+//                // dd('1');
+//                // $str = '!3';
+//                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                if (isset($_GET['refresh_token']) && $_GET['refresh_token'] == 'yes') {
+//                    // $str = '!4';
+//                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                    // Try to get an access token (using the authorization code grant)
+//                    $token = $provider->getAccessToken('refresh_token', [
+//                        'refresh_token' => $JobadderDetail['refresh_token']
+//                    ]);
+//                    $JobadderDetail['refresh_token_response'] = json_encode($token);
+//                    dd(1);
+//                } else {
+//                    // $str = '!5';
+//                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                    // Try to get an access token (using the authorization code grant)
+//                    $token = $provider->getAccessToken('authorization_code', [
+//                        'code' => $_GET['code']
+//                    ]);
+//                    $JobadderDetail['auth_response'] = json_encode($token);
+//                }
+//                // $str = '!6';
+//                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                // file_put_contents("token.txt",json_encode($token));
+//
+//                $JobadderDetail['refresh_token'] = $token->getRefreshToken();
+//                // $JobadderDetail['auth_response'] = json_encode($token);
+//                $JobadderDetail->save();
+//                // Optional: Now you have a token you can look up a users profile data
+//                try {
+//                    // $str = '!7';
+//                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                    // We got an access token, let's now get the user's details
+//                    $account = $provider->getResourceOwner($token);
+//                    // Use these details to create a new profile
+//                    Session::put('FullName', $account->getFullName());
+//                    Session::put('Email', $account->getEmail());
+//                } catch (Exception $e) {
+//                    // $str = '8';
+//                    // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                    // Failed to get user details
+//                    exit('Oh dear...');
+//                }
+//                // $str = '!9';
+//                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                // Use this to interact with an API on the users behalf
+//                // $_SESSION['token'] = $token->getToken();
+//                Session::put('token', $token->getToken());
+//                $JobadderDetail['token'] = $token->getToken();
+//                $JobadderDetail->save();
+//                // $str = '!10';
+//                // file_put_contents("jobadder.txt",PHP_EOL .$str,FILE_APPEND);
+//                return response()->json(['message' => 'Authorization successful', 'redirect' => '/jobadder_data']);
+//            }
+//        } catch (\throwable $e) {
+//            dd($e);
+//            // This can happen if the credentials have been revoked or there is an error with the organisation (e.g. it's expired)
+//            return response()->json(['error' => 'Authorization failed', 'redirect' => '/client_error_page'], 500);
+//        }
+//    }
 
     public static function jobadder(Request $request)
     {
-        $JobadderDetail = JobadderDetail::where('user_id', Auth::user()->id)->first();
+        $jobadder_details = auth()->user()->jobadder_details;
+        $refresh_token = $jobadder_details->refresh_token;
+
+        // config variables
+        $client_id = config('app.jobadder_details.clientId');
+        $client_secret = config('app.jobadder_details.clientSecret');
+        $scope = preg_split('/[\s,]+/', config('app.jobadder_details.scope'), -1, PREG_SPLIT_NO_EMPTY);
+        $redirect_url = env('APP_ENV') === 'local' && env('APP_DEBUG') === true ? 'http://127.0.0.1:8000/recruiterlabs/jobadder' : config('app.jobadder_details.redirectUri');
+
+        // oauth2-jobadder provider
+        $provider = new JobAdder([
+            'clientId' =>  $client_id,
+            'clientSecret' => $client_secret,
+            'scope' => $scope,
+            'redirectUri' => $redirect_url
+        ]);
+
+        if (!empty($refresh_token)) {
+            // request access token
+            try {
+                $new_token = $provider->getAccessToken('refresh_token', [
+                    'refresh_token' => $refresh_token
+                ]);
+                $token = $new_token->getToken();
+                // TODO - save token
+
+            } catch (\Exception) {
+                // request authorization to user
+                $jobadder_details->refresh_token = null;
+                $jobadder_details->save();
+                $auth_link = $provider->getAuthorizationUrl();
+            }
+        } else {
+            // request authorization to user
+            $auth_link = $provider->getAuthorizationUrl();
+        }
+
+        if (isset($auth_link)) {
+            return response()->json(['auth_link' => $auth_link], 302);
+        }
 
         $client = new \GuzzleHttp\Client();
 
-        $uri = "https://id.jobadder.com/connect/authorize" . "?client_id=" . Config::get('app.jobadder_details.clientId') . "&response_type=code&scope=" . Config::get('app.jobadder_details.scope') . "&redirect_uri=" . Config::get('app.jobadder_details.redirectUri');
 
-        if (isset($JobadderDetail['refresh_token']) && $JobadderDetail['refresh_token'] != null) {
+
+        $uri = "https://id.jobadder.com/connect/authorize?client_id={$client_id}&response_type=code&scope={$scope}&redirect_uri={$redirect_url}";
+
+        if (!empty($jobadder_details['refresh_token'])) {
             try {
                 $response = $client->post('https://id.jobadder.com/connect/token', [
                     'form_params' => [
-                        'client_id'          => Config::get('app.jobadder_details.clientId'),
-                        'client_secret'      => Config::get('app.jobadder_details.clientSecret'),
+                        'client_id'          => $client_id,
+                        'client_secret'      => $client_secret,
                         'grant_type'         => "refresh_token",
-                        'refresh_token'      => $JobadderDetail['refresh_token'],
+                        'refresh_token'      => $jobadder_details['refresh_token'],
                     ],
                     'headers' => [
                         'Content-Type' => 'application/x-www-form-urlencoded',
@@ -160,22 +203,22 @@ class JobadderController extends Controller
                 ]);
 
                 $responseBody = json_decode($response->getBody(), true);
-                $JobadderDetail['token'] = $responseBody["access_token"];
-                $JobadderDetail['refresh_token'] = $responseBody["refresh_token"];
-                $JobadderDetail->save();
+                $jobadder_details['token'] = $responseBody["access_token"];
+                $jobadder_details['refresh_token'] = $responseBody["refresh_token"];
+                $jobadder_details->save();
             } catch (\Throwable $e) {
-                $JobadderDetail['refresh_token'] = null;
-                $JobadderDetail->save();
+                $jobadder_details['refresh_token'] = null;
+                $jobadder_details->save();
                 return response()->json(['err' => "redirect", 'uri' => $uri], 302);
             }
-        } elseif ($request->input('code') != 'undefined') {
+        } elseif (!empty($request->input('code'))) {
             try {
                 $response = $client->post('https://id.jobadder.com/connect/token', [
                     'form_params' => [
-                        'client_id'          => Config::get('app.jobadder_details.clientId'),
-                        'client_secret'      => Config::get('app.jobadder_details.clientSecret'),
+                        'client_id'          => $client_id,
+                        'client_secret'      => $client_secret,
                         'grant_type'         => "authorization_code",
-                        'redirect_uri'       => Config::get('app.jobadder_details.redirectUri'),
+                        'redirect_uri'       => $redirect_url,
                         'code'               => $request->input('code'),
                     ],
                     'headers' => [
@@ -184,9 +227,9 @@ class JobadderController extends Controller
                 ]);
 
                 $responseBody = json_decode($response->getBody(), true);
-                $JobadderDetail['token'] = $responseBody["access_token"];
-                $JobadderDetail['refresh_token'] = $responseBody["refresh_token"];
-                $JobadderDetail->save();
+                $jobadder_details['token'] = $responseBody["access_token"];
+                $jobadder_details['refresh_token'] = $responseBody["refresh_token"];
+                $jobadder_details->save();
             } catch (\Throwable $e) {
                 return response()->json(['err' => "Bad request."], 400);
             }
@@ -320,7 +363,7 @@ class JobadderController extends Controller
             $err = curl_error($curl);
             curl_close($curl);
             $response = json_decode($response, true);
-            
+
             if ($response != "") {
                 // dd('hi');
                 $attachment_id = $response['items'][0]['attachmentId'];
