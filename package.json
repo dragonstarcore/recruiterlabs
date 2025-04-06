@@ -13,6 +13,7 @@
   },
   "author": "",
   "license": "ISC",
+  "type": "module",
   "devDependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "laravel-vite-plugin": "^1.1.1",
