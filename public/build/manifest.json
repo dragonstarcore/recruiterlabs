@@ -1,0 +1,138 @@
+{
+  "_pdfmake-CoWc3oeR.js": {
+    "file": "assets/pdfmake-CoWc3oeR.js",
+    "name": "pdfmake",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.jsx"
+    ]
+  },
+  "node_modules/@amcharts/amcharts4/.internal/bundled/xlsx/xlsx.mjs": {
+    "file": "assets/xlsx-BcTeequp.js",
+    "name": "xlsx",
+    "src": "node_modules/@amcharts/amcharts4/.internal/bundled/xlsx/xlsx.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/@amcharts/amcharts4/.internal/canvg/index.js": {
+    "file": "assets/index-Dwzunoya.js",
+    "name": "index",
+    "src": "node_modules/@amcharts/amcharts4/.internal/canvg/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.jsx"
+    ]
+  },
+  "node_modules/@amcharts/amcharts4/.internal/pdfmake/vfs_fonts.js": {
+    "file": "assets/vfs_fonts-BbT5ejxm.js",
+    "name": "vfs_fonts",
+    "src": "node_modules/@amcharts/amcharts4/.internal/pdfmake/vfs_fonts.js",
+    "isDynamicEntry": true
+  },
+  "resources/imgs/2.webp": {
+    "file": "assets/2-D8TaipE2.webp",
+    "src": "resources/imgs/2.webp"
+  },
+  "resources/imgs/bg-profile.jpg": {
+    "file": "assets/bg-profile-BW1_oIlQ.jpg",
+    "src": "resources/imgs/bg-profile.jpg"
+  },
+  "resources/imgs/calendly.jpg": {
+    "file": "assets/calendly-B7tfX2qD.jpg",
+    "src": "resources/imgs/calendly.jpg"
+  },
+  "resources/imgs/card-bg.jpg": {
+    "file": "assets/card-bg-DgmApVjZ.jpg",
+    "src": "resources/imgs/card-bg.jpg"
+  },
+  "resources/imgs/docs.png": {
+    "file": "assets/docs-D6dAmjrA.png",
+    "src": "resources/imgs/docs.png"
+  },
+  "resources/imgs/dropbox.jpg": {
+    "file": "assets/dropbox-Og3jIG_j.jpg",
+    "src": "resources/imgs/dropbox.jpg"
+  },
+  "resources/imgs/jobadder.jpg": {
+    "file": "assets/jobadder-CxuI83cR.jpg",
+    "src": "resources/imgs/jobadder.jpg"
+  },
+  "resources/imgs/lastpass.jpg": {
+    "file": "assets/lastpass-DTXmEmh-.jpg",
+    "src": "resources/imgs/lastpass.jpg"
+  },
+  "resources/imgs/linkedin.jpg": {
+    "file": "assets/linkedin-oEnzh3_e.jpg",
+    "src": "resources/imgs/linkedin.jpg"
+  },
+  "resources/imgs/msoffice.jpg": {
+    "file": "assets/msoffice-BpcvHjWI.jpg",
+    "src": "resources/imgs/msoffice.jpg"
+  },
+  "resources/imgs/pdf.webp": {
+    "file": "assets/pdf-Cg_glaj4.webp",
+    "src": "resources/imgs/pdf.webp"
+  },
+  "resources/imgs/sharepoint.jpg": {
+    "file": "assets/sharepoint-D-JZJY6W.jpg",
+    "src": "resources/imgs/sharepoint.jpg"
+  },
+  "resources/imgs/sonovate.jpg": {
+    "file": "assets/sonovate-C2GrmFNg.jpg",
+    "src": "resources/imgs/sonovate.jpg"
+  },
+  "resources/imgs/sourcebreaker.jpg": {
+    "file": "assets/sourcebreaker-33RV98p9.jpg",
+    "src": "resources/imgs/sourcebreaker.jpg"
+  },
+  "resources/imgs/user-back.jpg": {
+    "file": "assets/user-back-BEEXh4x7.jpg",
+    "src": "resources/imgs/user-back.jpg"
+  },
+  "resources/imgs/vincere.jpg": {
+    "file": "assets/vincere-B_ibhso9.jpg",
+    "src": "resources/imgs/vincere.jpg"
+  },
+  "resources/imgs/xero.jpg": {
+    "file": "assets/xero-CGMgdXn9.jpg",
+    "src": "resources/imgs/xero.jpg"
+  },
+  "resources/imgs/xlsx.png": {
+    "file": "assets/xlsx-CWy7NmAV.png",
+    "src": "resources/imgs/xlsx.png"
+  },
+  "resources/js/app.jsx": {
+    "file": "assets/app-YjwvcxpR.js",
+    "name": "app",
+    "src": "resources/js/app.jsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "_pdfmake-CoWc3oeR.js",
+      "node_modules/@amcharts/amcharts4/.internal/pdfmake/vfs_fonts.js",
+      "node_modules/@amcharts/amcharts4/.internal/canvg/index.js",
+      "node_modules/@amcharts/amcharts4/.internal/bundled/xlsx/xlsx.mjs"
+    ],
+    "css": [
+      "assets/app-C38MY3JX.css"
+    ],
+    "assets": [
+      "assets/2-D8TaipE2.webp",
+      "assets/xero-CGMgdXn9.jpg",
+      "assets/jobadder-CxuI83cR.jpg",
+      "assets/linkedin-oEnzh3_e.jpg",
+      "assets/msoffice-BpcvHjWI.jpg",
+      "assets/dropbox-Og3jIG_j.jpg",
+      "assets/sharepoint-D-JZJY6W.jpg",
+      "assets/calendly-B7tfX2qD.jpg",
+      "assets/vincere-B_ibhso9.jpg",
+      "assets/sourcebreaker-33RV98p9.jpg",
+      "assets/sonovate-C2GrmFNg.jpg",
+      "assets/lastpass-DTXmEmh-.jpg",
+      "assets/pdf-Cg_glaj4.webp",
+      "assets/docs-D6dAmjrA.png",
+      "assets/xlsx-CWy7NmAV.png",
+      "assets/card-bg-DgmApVjZ.jpg",
+      "assets/bg-profile-BW1_oIlQ.jpg",
+      "assets/user-back-BEEXh4x7.jpg"
+    ]
+  }
+}
